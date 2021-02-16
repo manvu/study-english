@@ -1,9 +1,10 @@
 <template>
   <div class="quiz">
     <div class="quiz-header"></div>
-    <!-- <h1>Question {{ id + 1 }}</h1> -->
+    
     <div class="question">
-      <h3>{{ id + 1 + "." }} <span v-html="questionText"> </span></h3>
+      <h3 class="instruction">{{ id + 1 + "." }} {{ instruction }}</h3>
+      <h3><span v-html="questionText"> </span></h3>
     </div>
 
     <multiple-choice-choice-item
@@ -25,22 +26,23 @@ export default {
   watch: {
     selectedOption(state) {
       if (state !== null) {
-        
-        let underscores = this.originalQuestionText.match(/__*/g) 
-        this.questionText = this.originalQuestionText.replace(underscores, "<span style='color: red;'>" + this.choices[this.selectedOption] + "</span>")
+        let underscores = this.originalQuestionText.match(/__*/g);
+        this.questionText = this.originalQuestionText.replace(
+          underscores,
+          "<span style='color: red;'>" +
+            this.choices[this.selectedOption] +
+            "</span>"
+        );
       }
-    }
+    },
   },
-  props: ["id", "text", "choices"],
+  props: ["id", "text", "choices", "instruction"],
   data() {
     return {
       selectedOption: null,
       questionText: this.text,
       originalQuestionText: this.text,
     };
-  },
-  setup() {
-    return {};
   },
   methods: {
     selectOption(option) {
@@ -62,19 +64,6 @@ h2 {
   margin: 0;
   line-height: 0;
 }
-
-/* html,
-body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  background: -webkit-gradient(top, #2a4b87, #274882);
-  background: -webkit-linear-gradient(top, #2a4b87, #274882);
-  background: -moz-linear-gradient(top, #2a4b87, #274882);
-  background: -ms-linear-gradient(top, #2a4b87, #274882);
-  background: -o-linear-gradient(top, #2a4b87, #274882);
-  background-repeat: no-repeat;
-} */
 
 .quiz {
   width: 100%;
@@ -129,7 +118,6 @@ body {
   }
 }
 
-
 .button-control {
   display: flex;
   flex-direction: row;
@@ -138,8 +126,12 @@ body {
 }
 
 @media (max-width: 768px) {
-    .quiz {
-      width: 100%;
-    }
+  .quiz {
+    width: 100%;
+  }
+}
+
+.instruction {
+  font-weight: bold;
 }
 </style>

@@ -54,6 +54,12 @@ export default {
   margin-left: 0;
 }
 
+/* @media (max-width: 480px) {
+  #sidebar-wrapper {
+    display: none;
+  }
+} */
+
 @media (min-width: 768px) {
   #sidebar-wrapper {
     margin-left: 0;
