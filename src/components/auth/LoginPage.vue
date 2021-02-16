@@ -1,21 +1,6 @@
 <template>
   <div id="bg">
     <div class="module">
-      <!-- <ul>
-        <li class="tab activeTab">
-          <img src="https://i.imgur.com/Fk1Urva.png" alt="" class="icon" />
-        </li>
-        <li class="tab">
-          <img src="https://i.imgur.com/ZsRgIDD.png" alt="" class="icon" />
-        </li>
-        <li class="tab">
-          <img src="https://i.imgur.com/34Q50wo.png" alt="" class="icon" />
-        </li>
-        <li class="tab">
-          <img src="https://i.imgur.com/LCCJ06E.png" alt="" class="icon" />
-        </li>
-      </ul> -->
-
       <form @submit.prevent="authenticate" class="form">
         <h2 class="title">LOG IN YOUR ACCOUNT</h2>
         <input
@@ -33,12 +18,13 @@
         <input type="submit" value="Login" class="button green-button" />
         <!-- <input type="checkbox" name="remember-password"/> 
         <label for="remember-password">Remember passwored</label> -->
-        <input
-          type="button"
-          value="Forgot Password?"
-          class="button red-button"
-          @click="forgotPassword"
-        />
+        <router-link to="/forgotPassword">
+          <input
+            type="button"
+            value="Forgot Password?"
+            class="button red-button"
+        /></router-link>
+
         <router-link to="/register">Not signed up yet? Register</router-link>
       </form>
     </div>
@@ -64,13 +50,12 @@ export default {
     authenticate() {
       console.log(`Email is ${this.email} and password is ${this.password}`);
 
-      this.$store.dispatch("login", {email: this.email, password: this.password})
+      this.$store.dispatch("login", {
+        email: this.email,
+        password: this.password,
+      });
 
-      this.$router.push({ name: 'home' })
-    },
-    forgotPassword() {
-      let isEmailValid = this.validateEmail(this.email)
-      console.log(isEmailValid)
+      this.$router.push({ name: "home" });
     },
   },
 };

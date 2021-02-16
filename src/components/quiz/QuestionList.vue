@@ -2,24 +2,24 @@
   <div class="container d-flex">
     <similar-quiz></similar-quiz>
     <div class="question-wrapper">
-      <question-list-item
+      <multiple-choice-question-item
         v-for="(question, index) in questions"
         :key="question.id"
         :id="index"
         :text="question.text"
         :choices="question.choices"
-      ></question-list-item>
+      ></multiple-choice-question-item>
     </div>
     <question-palette :questions="questions"></question-palette>
   </div>
 </template>
 
 <script>
-import QuestionListItem from "./QuestionListItem.vue";
+import MultipleChoiceQuestionItem from "./question_types/multiple_choice/MultipleChoiceQuestionItem";
 import QuestionPalette from "./QuestionPalette.vue";
 import SimilarQuiz from './SimilarQuiz.vue';
 export default {
-  components: { QuestionListItem, QuestionPalette, SimilarQuiz },
+  components: { MultipleChoiceQuestionItem, QuestionPalette, SimilarQuiz },
   setup() {
     return {};
   },

@@ -6,22 +6,22 @@
       <h3>{{ id + 1 + "." }} <span v-html="questionText"> </span></h3>
     </div>
 
-    <question-list-item-choice
+    <multiple-choice-choice-item
       v-for="(item, index) in choices"
       :key="index"
       :id="index"
       :text="item"
       :selectedOption="selectedOption"
       @selectOption="selectOption"
-    ></question-list-item-choice>
+    ></multiple-choice-choice-item>
   </div>
 </template>
 
 <script>
-import QuestionListItemChoice from "./QuestionListItemChoice";
+import MultipleChoiceChoiceItem from "./MultipleChoiceChoiceItem";
 
 export default {
-  components: { QuestionListItemChoice },
+  components: { MultipleChoiceChoiceItem },
   watch: {
     selectedOption(state) {
       if (state !== null) {

@@ -7,6 +7,7 @@ import App from "./App.vue";
 import NotFound from "./components/nav/NotFound.vue";
 import Home from "./components/Home";
 import LoginPage from "./components/auth/LoginPage";
+import ForgotPassword from "./components/auth/ForgotPassword";
 import LogoutPage from "./components/auth/LogoutPage";
 import RegisterPage from "./components/auth/RegisterPage";
 import QuestionList from "./components/quiz/QuestionList";
@@ -21,6 +22,7 @@ const router = createRouter({
     { path: "/", redirect: "/home" },
     { path: "/home", name: "home", component: Home },
     { path: "/login", name: "login", component: LoginPage },
+    { path: "/forgotPassword", name: "forgotPassword", component: ForgotPassword },
     { path: "/logout", name: "logout", component: LogoutPage },
     {
       path: "/register",
