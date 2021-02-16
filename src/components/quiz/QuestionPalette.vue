@@ -1,0 +1,123 @@
+<template>
+  <div class="bg-light border-right" id="sidebar-wrapper">
+    <div class="sidebar-heading">
+      <span>
+        <font-awesome-icon :icon="faClock"></font-awesome-icon>
+      </span>
+      Time Left: 45 Minutes
+    </div>
+
+    <div class="sidebar-heading">
+      <span> <font-awesome-icon :icon="faBars"></font-awesome-icon> </span>
+      Question Palette
+    </div>
+
+    <div class="list-group">
+      <span v-for="(q,index) in questions" :key="index" :class="letterClass"><p>{{ index + 1 }}</p></span>
+    </div>
+    <div>
+      <button class="btn btn-primary">Submit</button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faClock } from "@fortawesome/free-solid-svg-icons";
+
+export default {
+  props: ["questions"],
+  components: { FontAwesomeIcon },
+  computed: {
+    faBars() {
+      return faBars;
+    },
+    faClock() {
+      return faClock;
+    },
+    letterClass() {
+      return {
+        letter: true,
+        "letter-selected": this.id === this.selectedOption,
+      };
+    },
+  },
+  setup() {
+    return {};
+  },
+};
+</script>
+
+<style scoped>
+/*!
+ * Start Bootstrap - Simple Sidebar (https://startbootstrap.com/template/simple-sidebar)
+ * Copyright 2013-2020 Start Bootstrap
+ * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-simple-sidebar/blob/master/LICENSE)
+ */
+
+#wrapper {
+  overflow-x: hidden;
+}
+
+#sidebar-wrapper {
+  width: 20rem;
+  min-height: 100vh;
+  margin-left: -15rem;
+  -webkit-transition: margin 0.25s ease-out;
+  -moz-transition: margin 0.25s ease-out;
+  -o-transition: margin 0.25s ease-out;
+  transition: margin 0.25s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#page-content-wrapper {
+  min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+  margin-left: 0;
+}
+
+#sidebar-wrapper .list-group {
+  width: 15rem;
+  
+}
+
+@media (min-width: 768px) {
+  #sidebar-wrapper {
+    margin-left: 0;
+  }
+
+  #page-content-wrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: -15rem;
+  }
+}
+
+.letter {
+  width: 40px;
+  height: 40px;
+  background-color: #3498db;
+  text-align: center;
+  margin: 5px 10px;
+  border-radius: 50%;
+  padding-bottom: 5px;
+}
+.letter p {
+  color: white;
+  font-family: arial;
+  font-size: 16pt;
+  line-height: 0;
+  font-weight: 600;
+  margin-top: 20px;
+}
+</style>

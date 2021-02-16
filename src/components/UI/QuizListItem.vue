@@ -1,0 +1,153 @@
+<template>
+  <div class="courses-container">
+    <div class="course">
+      <div class="course-preview">
+        <h6>Course</h6>
+        <h2>IELTS</h2>
+        <a href="#">View all chapters <i class="fas fa-chevron-right"></i></a>
+      </div>
+      <div class="course-info">
+        <div class="progress-container">
+          <div class="progress">
+            <div class="progress--after" :style="progressBar"></div>
+          </div>
+          <span class="progress-text">
+            {{ completedChallenges + "/" + totalChallenges }} Challenges
+          </span>
+        </div>
+        <h6>Chapter 1</h6>
+        <h2>{{title}}</h2>
+        <a href="" class="discussion-title">Discussion</a>
+        <button v-if="completedChallenges > 0" class="btn">Continue</button>
+        <button v-else class="btn">Start</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ["totalChallenges", "completedChallenges", "title"],
+  computed: {
+    progressBar() {
+      return {
+        width: (this.completedChallenges / this.totalChallenges) * 100 + "%",
+      };
+    },
+  },
+  setup() {
+    return {};
+  },
+};
+</script>
+
+<style scoped>
+.courses-container {
+}
+
+.course {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  max-width: 100%;
+  margin: 20px;
+  overflow: hidden;
+  width: 700px;
+
+  -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.45);
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.45);
+}
+
+.course h6 {
+  opacity: 0.6;
+  margin: 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.course h2 {
+  letter-spacing: 1px;
+  margin: 10px 0;
+}
+
+.course-preview {
+  background-color: #2a265f;
+  color: #fff;
+  padding: 30px;
+  max-width: 250px;
+}
+
+.course-preview a {
+  color: #fff;
+  display: inline-block;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 30px;
+  text-decoration: none;
+}
+
+.course-info {
+  padding: 30px;
+  position: relative;
+  width: 100%;
+}
+
+.progress-container {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  text-align: right;
+  width: 150px;
+}
+
+.progress {
+  background-color: #ddd;
+  border-radius: 3px;
+  height: 5px;
+  width: 100%;
+}
+
+.progress--after {
+  border-radius: 3px;
+  background-color: #2a265f;
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 5px;
+}
+
+.progress-text {
+  font-size: 10px;
+  opacity: 0.6;
+  letter-spacing: 1px;
+}
+
+.btn {
+  background-color: #2a265f;
+  border: 0;
+  border-radius: 50px;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  font-size: 16px;
+  padding: 12px 25px;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.discussion-title {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 12px 25px;
+  position: absolute;
+  bottom: 15px;
+  left: 5px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+</style>
