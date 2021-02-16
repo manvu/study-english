@@ -5,6 +5,7 @@
         <div class="modal-container">
           <div class="modal-header">
             <h2>Question Editor</h2>
+            <h2 class="closeButton" @click="closeQuestionEditorModal()">X</h2>
           </div>
 
           <div class="modal-body">
@@ -36,6 +37,7 @@ import MatchingEditor from './question_editor/MatchingEditor.vue';
 import MultipleChoiceEditor from "./question_editor/MultipleChoiceEditor";
 
 export default {
+  inject: ["closeQuestionEditorModal"],
   components: { MultipleChoiceEditor, GapFillingEditor, MatchingEditor },
   data() {
     return {
@@ -168,5 +170,9 @@ export default {
   .modal-container {
     width: 55%;
   }
+}
+
+.closeButton {
+  cursor: pointer;
 }
 </style>

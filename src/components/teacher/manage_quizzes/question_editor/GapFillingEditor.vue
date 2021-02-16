@@ -47,12 +47,14 @@
   </div>
   <div class="form-group">
     <label class="control-label" for="active">Key Answer</label>
-    <span v-for="(gap, id) in items" :key="id">
+    <div v-if="items.length > 0">
       <gap-filling-choice-item
+      v-for="(gap, id) in items" :key="id"
         :id="id"
         @updateKeyAnswer="updateAnswer"
       ></gap-filling-choice-item>
-    </span>
+    </div>
+    <div v-else>There is no gap created for this question</div>
   </div>
   <div class="form-group">
     <button

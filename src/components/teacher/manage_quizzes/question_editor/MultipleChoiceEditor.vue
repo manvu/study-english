@@ -31,12 +31,15 @@
   </div>
   <div class="form-group">
     <label class="control-label" for="active">Choices</label>
+    <div v-if="items.length > 0">
     <multiple-choice-item
       v-for="item in items"
       :key="item.id"
       :id="item.id"
       :item="item.item"
     ></multiple-choice-item>
+        </div>
+    <div v-else>There is no choice created for this question</div>
   </div>
   <button @click="addChoice" class="mb-3 btn btn-primary">Add Choice</button>
   <div class="form-group">

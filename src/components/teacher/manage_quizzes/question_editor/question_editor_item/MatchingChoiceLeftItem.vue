@@ -4,7 +4,7 @@
       <label class="col-form-label" for="leftColumn">{{ id }}</label>
     </div>
     <div class="col-7">
-      <input type="text" class="form-control" placeholder="Left Column" v-model="leftColumnText"/>
+      <input type="text" class="form-control" placeholder="Starting Column" v-model="leftColumnText"/>
     </div>
     <div class="col-1"></div>
     <div class="col-3">
