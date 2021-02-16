@@ -6,6 +6,7 @@
       class="form-control col-4"
       name="active"
       v-model="answer"
+      @keyup="updateResponse"
     />
   </div>
 </template>
@@ -17,6 +18,11 @@ export default {
         return {
             answer: this.response
         }
+    },
+    methods: {
+      updateResponse() {
+        this.$emit("updateResponse", this.id, this.answer)
+      }
     }
 };
 </script>

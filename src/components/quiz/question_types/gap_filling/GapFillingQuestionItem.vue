@@ -14,6 +14,7 @@
         :key="item.id"
         :id="item.id"
         :response="item.response"
+        @updateResponse="updateResponse"
       ></gap-filling-question-gap-item>
     </div>
   </div>
@@ -55,9 +56,14 @@ export default {
         });
       }
     }
-
   },
-  
+  methods: {
+      updateResponse(index, response) {
+          debugger
+          let gapItem = this.gapItems.find(g => g.id === index)
+          gapItem.response = response
+      }
+  }
 };
 </script>
 
