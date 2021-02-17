@@ -1,7 +1,7 @@
 <template>
   <div>
     <font-awesome-icon
-      class="star"
+      class="favorite"
       :icon="star"
       @click="toggleFavorite()"
     ></font-awesome-icon>
@@ -30,15 +30,15 @@ export default {
     };
   },
   methods: {
-    toggleFavorite: function () {},
-  },
-  created() {
-    if (this.favorite === true) {
-      this.star = faStarSolid;
-    }
+    toggleFavorite: function () {
+      
+    },
   },
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+.favorite {
+  cursor: pointer;
+}
 </style>

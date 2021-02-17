@@ -128,7 +128,7 @@ const quizManager = {
 
   },
   actions: {
-
+    
   },
   getters: {
     getQuizList(state) {

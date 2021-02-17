@@ -11,20 +11,22 @@
         ></quiz-list-item-rating>
       </div>
       <div class="course-info" :class="favoriteQuiz">
-        <quiz-list-item-favorite :favorite="favorite"></quiz-list-item-favorite>
-        <div class="progress-container">
-          <div class="progress">
-            <div class="progress--after" :style="progressBar"></div>
+        <quiz-list-item-favorite class="favorite-icon" :favorite="favorite"></quiz-list-item-favorite>
+        <div class="course-info-content">
+          <div class="progress-container">
+            <div class="progress">
+              <div class="progress--after" :style="progressBar"></div>
+            </div>
+            <span class="progress-text">
+              {{ completedChallenges + "/" + totalChallenges }} Challenges
+            </span>
           </div>
-          <span class="progress-text">
-            {{ completedChallenges + "/" + totalChallenges }} Challenges
-          </span>
+          <h6>Chapter 1</h6>
+          <h2>{{ title }}</h2>
+          <a href="" class="discussion-title">Discussion</a>
+          <button v-if="completedChallenges > 0" class="btn">Continue</button>
+          <button v-else class="btn">Start</button>
         </div>
-        <h6>Chapter 1</h6>
-        <h2>{{ title }}</h2>
-        <a href="" class="discussion-title">Discussion</a>
-        <button v-if="completedChallenges > 0" class="btn">Continue</button>
-        <button v-else class="btn">Start</button>
       </div>
     </div>
   </div>
@@ -42,7 +44,7 @@ export default {
     "rating",
     "id",
     "favorite",
-    "ratingCount"
+    "ratingCount",
   ],
   components: { QuizListItemRating, QuizListItemFavorite },
   computed: {
@@ -64,9 +66,6 @@ export default {
 </script>
 
 <style scoped>
-.course-container {
-}
-
 .course {
   background-color: #fff;
   border-radius: 10px;
@@ -97,6 +96,9 @@ export default {
   background-color: #2a265f;
   color: #fff;
   padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   max-width: 290px;
   width: 290px;
 }
@@ -176,5 +178,11 @@ export default {
   left: 5px;
   letter-spacing: 1px;
   cursor: pointer;
+}
+
+.favorite-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 </style>
