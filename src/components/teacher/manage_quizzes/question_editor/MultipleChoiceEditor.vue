@@ -77,7 +77,6 @@ export default {
     },
     addChoice() {
       let index = this.nextChar();
-      debugger;
       this.items.push({
         id: index,
         item: "",

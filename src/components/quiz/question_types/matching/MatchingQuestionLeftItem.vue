@@ -1,0 +1,38 @@
+<template>
+  <div class="form-group row">
+    <div class="col-8">
+      <label class="col-form-label" for="leftColumn"
+        >{{ id }} . {{ item }}</label
+      >
+    </div>
+    <div class="col-4">
+      <select class="form-control" name="matching-options" v-model="selected" @change="updateResponse">
+        <option v-for="option in availableOptions" :key="option.id">
+          {{ option.id }}
+        </option>
+      </select>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ["id", "item", "selectedOption", "availableOptions"],
+  data() {
+    return {
+        selected: ''
+    };
+  },
+  methods: {
+    updateResponse() {
+      this.$emit("updateResponse", this.id, this.selected)
+    }
+  }
+};
+</script>
+
+<style scoped>
+label {
+  font-size: 14pt;
+}
+</style>

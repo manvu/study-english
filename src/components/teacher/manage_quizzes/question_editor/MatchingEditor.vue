@@ -2,7 +2,7 @@
   <div class="form-group">
     <label class="control-label" for="instruction">Instruction</label>
     <div class="">
-      <textarea name="instruction" id="instruction" rows="3"></textarea>
+      <textarea name="instruction" id="instruction" placeholder="Choose from the list for each question" rows="3"></textarea>
     </div>
   </div>
   <div class="form-group">
@@ -104,8 +104,6 @@ export default {
         item: "",
         matchingItem: null,
       });
-
-      debugger;
     },
     addRightItem() {
       let index = this.nextChar();

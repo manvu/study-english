@@ -1,22 +1,21 @@
 <template>
   <div class="bg-light border-right" id="sidebar-wrapper">
     <div class="sidebar-heading">
-      <span>
+      <h4><span>
         <font-awesome-icon :icon="faClock"></font-awesome-icon>
-      </span>
-      Time Left: 45 Minutes
+      </span> 45 minutes</h4>
     </div>
 
-    <div class="sidebar-heading">
-      <span> <font-awesome-icon :icon="faBars"></font-awesome-icon> </span>
-      Question Palette
+    <div class="sidebar-heading mt-3">
+      <h4><span><font-awesome-icon :icon="faBars"></font-awesome-icon> </span>
+      Question Palette</h4>
     </div>
 
-    <div class="list-group">
-      <span v-for="(q,index) in questions" :key="index" :class="letterClass"><p>{{ index + 1 }}</p></span>
+    <div class="row mt-3 mb-3">
+      <div v-for="(q,index) in questions" :key="index" :class="letterClass">{{ index + 1 }}</div>
     </div>
     <div>
-      <button class="btn btn-primary">Submit</button>
+      <button class="btn btn-primary"><font-awesome-icon :icon="faPaperPlane"></font-awesome-icon> Submit </button>
     </div>
   </div>
 </template>
@@ -25,6 +24,7 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 
 export default {
   props: ["questions"],
@@ -36,10 +36,13 @@ export default {
     faClock() {
       return faClock;
     },
+    faPaperPlane() {
+      return faPaperPlane;
+    },
     letterClass() {
       return {
         letter: true,
-        "letter-selected": this.id === this.selectedOption,
+        // "letter-selected": this.id === this.selectedOption,
       };
     },
   },
@@ -85,7 +88,8 @@ export default {
 
 #sidebar-wrapper .list-group {
   width: 15rem;
-  
+  display: flex;
+  justify-content: space-between;
 }
 
 @media (min-width: 768px) {
@@ -111,13 +115,19 @@ export default {
   margin: 5px 10px;
   border-radius: 50%;
   padding-bottom: 5px;
-}
-.letter p {
+  line-height: 40px;
   color: white;
   font-family: arial;
   font-size: 16pt;
-  line-height: 0;
   font-weight: 600;
-  margin-top: 20px;
+}
+
+.question-list {
+  display: flex;
+}
+
+button {
+  font-weight: 600;
+  width: 50%;
 }
 </style>

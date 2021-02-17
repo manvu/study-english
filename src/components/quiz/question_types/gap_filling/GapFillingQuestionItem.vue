@@ -59,7 +59,6 @@ export default {
   },
   methods: {
       updateResponse(index, response) {
-          debugger
           let gapItem = this.gapItems.find(g => g.id === index)
           gapItem.response = response
       }
