@@ -3,9 +3,13 @@
     <quiz-list-item 
     v-for="quiz in quizzes" 
     :key="quiz.id"
+    :id="quiz.id"
     :totalChallenges="quiz.totalChallenges"
     :completedChallenges="quiz.completedChallenges"
     :title="quiz.title"
+    :rating="quiz.rating"
+    :ratingCount="quiz.ratingCount"
+    :favorite="quiz.favorite"
     ></quiz-list-item>
   </div>
 </template>
@@ -14,11 +18,9 @@
 import QuizListItem from "./UI/QuizListItem.vue";
 export default {
   components: { QuizListItem },
-  setup() {
-    return {};
-  },
   computed: {
     quizzes() {
+      console.log(this.$store.getters.getQuizList)
       return this.$store.getters.getQuizList;
     },
   },

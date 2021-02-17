@@ -128,6 +128,6 @@ export default {
 
 button {
   font-weight: 600;
-  width: 50%;
+  width: 100%;
 }
 </style>

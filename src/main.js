@@ -5,13 +5,14 @@ import { createRouter, createWebHistory } from "vue-router";
 import store from "./store";
 import App from "./App.vue";
 import NotFound from "./components/nav/NotFound.vue";
-import Home from "./components/Home";
+import Home from "./components/home/Home";
 import LoginPage from "./components/auth/LoginPage";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import LogoutPage from "./components/auth/LogoutPage";
 import RegisterPage from "./components/auth/RegisterPage";
 import QuestionList from "./components/quiz/QuestionList";
 import DiscussionForum from "./components/discussion/DiscussionForum";
+import PostView from "./components/discussion/PostView";
 import CreateTopic from "./components/discussion/CreateTopic";
 import TeacherPage from "./components/teacher/TeacherPage";
 import StudentStatistics from "./components/statistics/StudentStatistics";
@@ -24,6 +25,7 @@ const router = createRouter({
     { path: "/login", name: "login", component: LoginPage },
     { path: "/forgotPassword", name: "forgotPassword", component: ForgotPassword },
     { path: "/logout", name: "logout", component: LogoutPage },
+    { path: "/postview", name: "postview", component: PostView},
     {
       path: "/register",
       name: "register",

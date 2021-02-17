@@ -1,12 +1,17 @@
 <template>
-  <div class="courses-container">
+  <div class="course-container">
     <div class="course">
       <div class="course-preview">
         <h6>Course</h6>
         <h2>IELTS</h2>
-        <a href="#">View all chapters <i class="fas fa-chevron-right"></i></a>
+        <quiz-list-item-rating
+          :id="id"
+          :rating="rating"
+          :ratingCount="ratingCount"
+        ></quiz-list-item-rating>
       </div>
-      <div class="course-info">
+      <div class="course-info" :class="favoriteQuiz">
+        <quiz-list-item-favorite :favorite="favorite"></quiz-list-item-favorite>
         <div class="progress-container">
           <div class="progress">
             <div class="progress--after" :style="progressBar"></div>
@@ -16,7 +21,7 @@
           </span>
         </div>
         <h6>Chapter 1</h6>
-        <h2>{{title}}</h2>
+        <h2>{{ title }}</h2>
         <a href="" class="discussion-title">Discussion</a>
         <button v-if="completedChallenges > 0" class="btn">Continue</button>
         <button v-else class="btn">Start</button>
@@ -26,12 +31,29 @@
 </template>
 
 <script>
+import QuizListItemRating from "./QuizListItemRating";
+import QuizListItemFavorite from "./QuizListItemFavorite";
+
 export default {
-  props: ["totalChallenges", "completedChallenges", "title"],
+  props: [
+    "totalChallenges",
+    "completedChallenges",
+    "title",
+    "rating",
+    "id",
+    "favorite",
+    "ratingCount"
+  ],
+  components: { QuizListItemRating, QuizListItemFavorite },
   computed: {
     progressBar() {
       return {
         width: (this.completedChallenges / this.totalChallenges) * 100 + "%",
+      };
+    },
+    favoriteQuiz() {
+      return {
+        "course-info--yellow": this.favorite ? true : false,
       };
     },
   },
@@ -42,7 +64,7 @@ export default {
 </script>
 
 <style scoped>
-.courses-container {
+.course-container {
 }
 
 .course {
@@ -75,7 +97,8 @@ export default {
   background-color: #2a265f;
   color: #fff;
   padding: 30px;
-  max-width: 250px;
+  max-width: 290px;
+  width: 290px;
 }
 
 .course-preview a {
@@ -91,6 +114,10 @@ export default {
   padding: 30px;
   position: relative;
   width: 100%;
+}
+
+.course-info--yellow {
+  background-color: yellow;
 }
 
 .progress-container {
