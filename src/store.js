@@ -125,10 +125,16 @@ const quizManager = {
     };
   },
   mutations: {
-
+    toggleFavorite(state, payload) {
+      let quizId = payload.id
+      let quiz = state.quizzes.find(q => q.id === quizId)
+      quiz.favorite = !quiz.favorite
+    },
   },
   actions: {
-    
+    toggleFavorite(context, payload) {
+      context.commit("toggleFavorite", payload)
+    },
   },
   getters: {
     getQuizList(state) {

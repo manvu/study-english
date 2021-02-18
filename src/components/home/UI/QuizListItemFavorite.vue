@@ -15,7 +15,7 @@ import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 
 export default {
   components: { FontAwesomeIcon },
-  props: ["favorite"],
+  props: ["favorite", "id"],
   computed: {
     faStarSolid() {
       return faStarSolid;
@@ -26,12 +26,16 @@ export default {
   },
   data() {
     return {
-      star: faStarRegular,
+      star: this.favorite ? faStarSolid : faStarRegular,
     };
   },
   methods: {
     toggleFavorite: function () {
-      
+      this.$store.dispatch("toggleFavorite", {
+        id: this.id,
+      });
+
+      this.star =  faStarSolid 
     },
   },
 };

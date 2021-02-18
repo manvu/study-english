@@ -39,7 +39,16 @@
             <router-link to="/login">Login</router-link>
           </li>
           <li v-if="isAuthenticated">
-            <router-link @click="signOut" to="/logout">Sign out</router-link>
+            <img
+            class="profile-image"
+              :src="`${publicPath}assets/images/default-profile-picture.png`"
+              alt=""
+            />
+            Hi, Man
+            <div class="list-group">
+            <router-link class="list-group-item" to="/settings">Account Settings</router-link>
+            <router-link class="list-group-item" @click="signOut" to="/logout">Sign out</router-link>
+            </div>
           </li>
         </ul>
       </div>
@@ -49,6 +58,14 @@
 
 <script>
 export default {
+  data() {
+    return {
+      publicPath: process.env.BASE_URL,
+    };
+  },
+  created() {
+    console.log(this.publicPath);
+  },
   computed: {
     isAuthenticated() {
       return this.$store.getters.isAuthenticated;
@@ -106,5 +123,11 @@ a.active {
   color: #f1a80a;
   border-color: #f1a80a;
   background-color: #1a037e;
+}
+
+.profile-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
 }
 </style>

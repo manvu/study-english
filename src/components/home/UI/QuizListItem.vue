@@ -11,7 +11,7 @@
         ></quiz-list-item-rating>
       </div>
       <div class="course-info" :class="favoriteQuiz">
-        <quiz-list-item-favorite class="favorite-icon" :favorite="favorite"></quiz-list-item-favorite>
+        <quiz-list-item-favorite class="favorite-icon" :id="id" :favorite="favorite"></quiz-list-item-favorite>
         <div class="course-info-content">
           <div class="progress-container">
             <div class="progress">

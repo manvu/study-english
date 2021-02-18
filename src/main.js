@@ -10,12 +10,14 @@ import LoginPage from "./components/auth/LoginPage";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import LogoutPage from "./components/auth/LogoutPage";
 import RegisterPage from "./components/auth/RegisterPage";
-import QuestionList from "./components/quiz/QuestionList";
+import QuizPage from "./components/quiz/QuizPage";
+import QuizResult from "./components/quiz/QuizResult";
 import DiscussionForum from "./components/discussion/DiscussionForum";
 import PostView from "./components/discussion/PostView";
 import CreateTopic from "./components/discussion/CreateTopic";
 import TeacherPage from "./components/teacher/TeacherPage";
 import StudentStatistics from "./components/statistics/StudentStatistics";
+import AccountSettings from "./components/settings/AccountSettings";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -23,9 +25,13 @@ const router = createRouter({
     { path: "/", redirect: "/home" },
     { path: "/home", name: "home", component: Home },
     { path: "/login", name: "login", component: LoginPage },
-    { path: "/forgotPassword", name: "forgotPassword", component: ForgotPassword },
+    {
+      path: "/forgotPassword",
+      name: "forgotPassword",
+      component: ForgotPassword,
+    },
     { path: "/logout", name: "logout", component: LogoutPage },
-    { path: "/postview", name: "postview", component: PostView},
+    { path: "/postview", name: "postview", component: PostView },
     {
       path: "/register",
       name: "register",
@@ -43,7 +49,21 @@ const router = createRouter({
     {
       path: "/quiz",
       name: "quiz",
-      component: QuestionList,
+      component: QuizPage,
+      beforeEnter(to, from, next) {
+        const isAuthenticated = store.getters.isAuthenticated;
+
+        if (isAuthenticated) {
+          next();
+        } else {
+          next({ name: "home", query: { redirectFrom: to.fullPath } });
+        }
+      },
+    },
+    {
+      path: "/quiz-result",
+      name: "quiz-result",
+      component: QuizResult,
       beforeEnter(to, from, next) {
         const isAuthenticated = store.getters.isAuthenticated;
 
@@ -104,6 +124,20 @@ const router = createRouter({
         const isTeacher = store.getters.isTeacher;
 
         if (isTeacher) {
+          next();
+        } else {
+          next({ name: "home", query: { redirectFrom: to.fullPath } });
+        }
+      },
+    },
+    {
+      path: "/settings",
+      name: "settings",
+      component: AccountSettings,
+      beforeEnter(to, from, next) {
+        const isAuthenticated = store.getters.isAuthenticated;
+
+        if (isAuthenticated) {
           next();
         } else {
           next({ name: "home", query: { redirectFrom: to.fullPath } });
