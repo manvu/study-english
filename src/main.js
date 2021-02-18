@@ -37,7 +37,7 @@ const router = createRouter({
       name: "register",
       component: RegisterPage,
       beforeEnter(to, from, next) {
-        const isAuthenticated = store.getters.isAuthenticated;
+        const isAuthenticated = store.getters['authStore/isAuthenticated'];;
 
         if (!isAuthenticated) {
           next();
@@ -51,7 +51,7 @@ const router = createRouter({
       name: "quiz",
       component: QuizPage,
       beforeEnter(to, from, next) {
-        const isAuthenticated = store.getters.isAuthenticated;
+        const isAuthenticated = store.getters['authStore/isAuthenticated'];;
 
         if (isAuthenticated) {
           next();
@@ -65,7 +65,7 @@ const router = createRouter({
       name: "quiz-result",
       component: QuizResult,
       beforeEnter(to, from, next) {
-        const isAuthenticated = store.getters.isAuthenticated;
+        const isAuthenticated = store.getters['authStore/isAuthenticated'];;
 
         if (isAuthenticated) {
           next();
@@ -79,7 +79,7 @@ const router = createRouter({
       name: "discussion",
       component: DiscussionForum,
       beforeEnter(to, from, next) {
-        const isAuthenticated = store.getters.isAuthenticated;
+        const isAuthenticated = store.getters['authStore/isAuthenticated'];;
 
         if (isAuthenticated) {
           next();
@@ -93,7 +93,7 @@ const router = createRouter({
       name: "create-topic",
       component: CreateTopic,
       beforeEnter(to, from, next) {
-        const isAuthenticated = store.getters.isAuthenticated;
+        const isAuthenticated = store.getters['authStore/isAuthenticated'];;
 
         if (isAuthenticated) {
           next();
@@ -107,7 +107,7 @@ const router = createRouter({
       name: "statistics",
       component: StudentStatistics,
       beforeEnter(to, from, next) {
-        const isAuthenticated = store.getters.isAuthenticated;
+        const isAuthenticated = store.getters['authStore/isAuthenticated'];;
 
         if (isAuthenticated) {
           next();
@@ -121,7 +121,7 @@ const router = createRouter({
       name: "teacher",
       component: TeacherPage,
       beforeEnter(to, from, next) {
-        const isTeacher = store.getters.isTeacher;
+        const isTeacher = store.getters['authStore/isTeacher'];;
 
         if (isTeacher) {
           next();
@@ -135,7 +135,7 @@ const router = createRouter({
       name: "settings",
       component: AccountSettings,
       beforeEnter(to, from, next) {
-        const isAuthenticated = store.getters.isAuthenticated;
+        const isAuthenticated = store.getters['authStore/isAuthenticated'];;
 
         if (isAuthenticated) {
           next();

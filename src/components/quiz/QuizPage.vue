@@ -57,7 +57,7 @@ export default {
     };
   },
   created() {
-    this.questions = this.$store.getters.getQuestionList;
+    this.questions = this.$store.getters['questionStore/getQuestionList']
   },
 };
 </script>

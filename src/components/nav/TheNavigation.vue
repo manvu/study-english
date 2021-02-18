@@ -85,10 +85,10 @@ export default {
   },
   computed: {
     isAuthenticated() {
-      return this.$store.getters.isAuthenticated;
+      return this.$store.getters['authStore/isAuthenticated'];
     },
     isTeacher() {
-      return this.$store.getters.isTeacher;
+      return this.$store.getters['authStore/isTeacher'];;
     },
   },
   methods: {

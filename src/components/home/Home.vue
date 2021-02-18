@@ -20,8 +20,8 @@ export default {
   components: { QuizListItem },
   computed: {
     quizzes() {
-      console.log(this.$store.getters.getQuizList)
-      return this.$store.getters.getQuizList;
+      console.log(this.$store.getters['quizStore/getQuizList'])
+      return this.$store.getters['quizStore/getQuizList']
     },
   },
 };
