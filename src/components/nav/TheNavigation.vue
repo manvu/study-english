@@ -15,19 +15,19 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li>
+          <li class="nav-item">
             <router-link to="/home">Home</router-link>
           </li>
-          <li v-if="isAuthenticated">
+          <li class="nav-item" v-if="isAuthenticated">
             <router-link to="/quiz">Quiz</router-link>
           </li>
-          <li v-if="isAuthenticated">
+          <li class="nav-item" v-if="isAuthenticated">
             <router-link to="/discussion">Discussion</router-link>
           </li>
-          <li v-if="isAuthenticated">
+          <li class="nav-item" v-if="isAuthenticated">
             <router-link to="/statistics">Statistics</router-link>
           </li>
-          <li v-if="isTeacher">
+          <li class="nav-item" v-if="isTeacher">
             <router-link to="/teacher">Teacher Area</router-link>
           </li>
         </ul>
@@ -38,16 +38,33 @@
           <li v-if="!isAuthenticated">
             <router-link to="/login">Login</router-link>
           </li>
+
           <li v-if="isAuthenticated">
             <img
-            class="profile-image"
+              class="profile-image"
               :src="`${publicPath}assets/images/default-profile-picture.png`"
               alt=""
             />
             Hi, Man
-            <div class="list-group">
-            <router-link class="list-group-item" to="/settings">Account Settings</router-link>
-            <router-link class="list-group-item" @click="signOut" to="/logout">Sign out</router-link>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="navbarDropdownMenuLink"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Dropdown link
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <router-link class="dropdown-item" to="/settings"
+                >Account Settings</router-link
+              >
+              <router-link class="dropdown-item" @click="signOut" to="/logout"
+                >Sign out</router-link
+              >
             </div>
           </li>
         </ul>
@@ -115,6 +132,10 @@ a {
   color: white;
   padding: 0.5rem 1.5rem;
   display: inline-block;
+}
+
+.dropdown-menu a {
+  color: #222;
 }
 
 a:hover,

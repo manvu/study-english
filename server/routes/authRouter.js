@@ -5,7 +5,7 @@ const STRINGS = require("../strings");
 var authRouter = express.Router();
 
 
-authRouter.get("/register", async (req, res) => {
+authRouter.post("/register", async (req, res) => {
   const email = req.query.email;
   const password = req.query.password;
   const gender = req.query.gender;
@@ -43,7 +43,7 @@ authRouter.get("/register", async (req, res) => {
   }
 });
 
-authRouter.get("/login", async (req, res) => {
+authRouter.post("/login", async (req, res) => {
   const email = req.query.email;
   const password = req.query.password;
 
