@@ -45,7 +45,7 @@
               :src="`${publicPath}assets/images/default-profile-picture.png`"
               alt=""
             />
-            Hi, Man
+            Hi, {{ firstName }}
           </li>
           <li class="nav-item dropdown">
             <a
@@ -88,8 +88,11 @@ export default {
       return this.$store.getters['authStore/isAuthenticated'];
     },
     isTeacher() {
-      return this.$store.getters['authStore/isTeacher'];;
+      return this.$store.getters['authStore/isTeacher'];
     },
+    firstName() {
+      return this.$store.getters['authStore/firstName'];
+    }
   },
   methods: {
     signOut() {

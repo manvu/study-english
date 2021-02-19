@@ -50,7 +50,7 @@ export default {
     authenticate() {
       console.log(`Email is ${this.email} and password is ${this.password}`);
 
-      this.$store.dispatch("login", {
+      this.$store.dispatch("authStore/login", {
         email: this.email,
         password: this.password,
       });

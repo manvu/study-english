@@ -22,7 +22,7 @@ class Database {
     };
 
     this.validateUserAsync = async function(email) {
-      let query = `SELECT user_id, password_hash FROM user WHERE email='${email}'`;
+      let query = `SELECT user_id, role_id, password_hash, first_name, last_name FROM user WHERE email='${email}'`;
 
       return this.executeQuery(query)
     };

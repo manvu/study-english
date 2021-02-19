@@ -10,8 +10,9 @@ export default {
     return {};
   },
   mounted() {
-      this.$router.push({ name: 'home' })
-  }
+    this.$store.dispatch("authStore/signOut");
+    this.$router.push({ name: "home" });
+  },
 };
 </script>
 

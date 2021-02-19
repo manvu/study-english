@@ -3,13 +3,25 @@ const database = new (require("../database"))();
 const { checkPassword, hashPasswordAsync } = require("../helper");
 const STRINGS = require("../strings");
 var authRouter = express.Router();
+const cors = require("cors");
+const bodyParser = require("body-parser");
 
+var corsOptions = {
+  origin: "*",
+};
+
+authRouter.use(cors(corsOptions));
+
+
+authRouter.use(bodyParser.json());
+
+authRouter.use(bodyParser.urlencoded({ extended: true }));
 
 authRouter.post("/register", async (req, res) => {
-  const email = req.query.email;
-  const password = req.query.password;
-  const gender = req.query.gender;
-  const profilePictureId = req.query.profilePictureId;
+  const email = req.body.email;
+  const password = req.body.password;
+  const gender = req.body.gender || 'U';
+  const profilePictureId = req.body.profilePictureId || 1;
   const roleId = "2";
 
   // Generate hash and salt out of password
@@ -24,7 +36,7 @@ authRouter.post("/register", async (req, res) => {
     roleId,
     profilePictureId
   );
-
+    debugger
   if (!response.error) {
     if (response.response.affectedRows === 1) {
       res.json({
@@ -44,11 +56,13 @@ authRouter.post("/register", async (req, res) => {
 });
 
 authRouter.post("/login", async (req, res) => {
-  const email = req.query.email;
-  const password = req.query.password;
-
+  const email = req.body.email;
+  const password = req.body.password;
+  
   // Get user_id and password
   const response = await database.validateUserAsync(email);
+
+  debugger
 
   if (!response.error) {
     if (response.response.length === 0) {
@@ -58,12 +72,20 @@ authRouter.post("/login", async (req, res) => {
       });
     } else {
       const passwordHash = response.response[0].password_hash;
+      const firstName = response.response[0].first_name;
+      const lastName = response.response[0].last_name;
+      const isTeacher = response.response[0].role_id === 1 ? true : false
       const success = await checkPassword(password, passwordHash);
-
+      
       if (success) {
         res.json({
           error: null,
           message: STRINGS.AUTHENTICATION_SUCCEEDED,
+          userInfo: {
+            firstName,
+            lastName,
+            isTeacher
+          }
         });
       } else {
         res.json({

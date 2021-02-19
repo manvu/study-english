@@ -57,16 +57,16 @@ export default {
   },
   methods: {
     register() {
-      console.log(
-        `Email is ${this.email} and password is ${this.password} and confirmPassword is ${this.confirmPassword}`
-      );
+      this.$store.dispatch("authStore/register", {
+        email: this.email,
+        password: this.password,
+      });
 
-    console.log(process.env.VUE_APP_SERVER_ENDPOINT)
+      const isAuthenticated = this.$store.getters['authStore/isAuthenticated']
 
-      fetch(process.env.VUE_APP_SERVER_ENDPOINT)
-        .then((response) => response.json())
-        .then(response => console.log(response))
-        .catch((error) => console.log(error));
+      if (isAuthenticated) {
+        this.$router.push({ name: "settings" });
+      }
     },
   },
 };

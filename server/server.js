@@ -12,8 +12,8 @@ const securityRouter = require("./routes/securityRouter")
 
 app.use('/auth', authRouter)
 app.use('/', appRouter)
-app.use('/', userRouter)
-app.use('/', securityRouter)
+app.use('/user', userRouter)
+app.use('/security', securityRouter)
 
 var corsOptions = {
   origin: "*",

@@ -3,6 +3,13 @@ const database = new (require("../database"))();
 var securityRouter = express.Router();
 const PERMISSIONS = require("../permissions");
 const STRINGS = require("../strings");
+const cors = require("cors");
+
+var corsOptions = {
+  origin: "*",
+};
+
+securityRouter.use(cors(corsOptions));
 
 securityRouter.get("/permission", async ({ res }, { req }) => {
   const email = req.query.email;
