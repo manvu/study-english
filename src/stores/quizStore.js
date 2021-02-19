@@ -1,42 +1,11 @@
+import axios from "axios";
+import API_LIST from "./API_LIST";
+
 const quizStore = {
   namespaced: true,
   state() {
     return {
-      quizzes: [
-        {
-          id: "a04eb213-984b-4ec5-91fa-b6eaf2223886",
-          title: "Quiz 1: Listening and Reading",
-          description:
-            "Nostrud labore excepteur minim in id ullamco ex sit veniam ad fugiat minim ullamco.",
-          totalChallenges: 53,
-          completedChallenges: 0,
-          rating: 4.6,
-          ratingCount: 23,
-          favorite: false,
-        },
-        {
-          id: "947a86ef-e910-42bd-a9ff-afd17b5890f6",
-          title: "Quiz 2: Academic Writing Task 2",
-          description:
-            "Sint exercitation nisi ex sint cillum magna labore veniam incididunt qui minim irure ipsum..",
-          totalChallenges: 53,
-          completedChallenges: 25,
-          rating: 3.1,
-          ratingCount: 65,
-          favorite: true,
-        },
-        {
-          id: "5469a1d7-2992-4a57-ada1-a2f5de8ac23c",
-          title: "Quiz 3: Speaking - Accommodation",
-          description:
-            "Nulla sint minim aute sint.Sit nostrud labore do commodo nisi exercitation consectetur.Non nostrud ullamco qui ea officia..",
-          totalChallenges: 53,
-          completedChallenges: 0,
-          rating: 5,
-          ratingCount: 99,
-          favorite: false,
-        },
-      ],
+      quizzes: [],
     };
   },
   mutations: {
@@ -45,10 +14,40 @@ const quizStore = {
       let quiz = state.quizzes.find((q) => q.id === quizId);
       quiz.favorite = !quiz.favorite;
     },
+    getDataForHome(state, payload) {
+      state.quizzes = payload.quizzes;
+    },
   },
   actions: {
     toggleFavorite(context, payload) {
       context.commit("toggleFavorite", payload);
+    },
+    getDataForHome(context, payload) {
+      const isAuthenticated = context.rootGetters["authStore/isAuthenticated"];
+      const email = localStorage.getItem("email") || ""
+      debugger
+      axios
+        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.home, {
+          params: {
+            email,
+          },
+        })
+        .then((response) => {
+          if (!response.data.error) {
+            context.commit("getDataForHome", {
+              quizzes: response.data.quizzes,
+            });
+          }
+
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
   },
   getters: {

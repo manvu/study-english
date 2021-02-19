@@ -5,13 +5,13 @@ const STRINGS = require("../strings");
 var authRouter = express.Router();
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const session = require("express-session");
 
 var corsOptions = {
   origin: "*",
 };
 
 authRouter.use(cors(corsOptions));
-
 
 authRouter.use(bodyParser.json());
 
@@ -20,7 +20,7 @@ authRouter.use(bodyParser.urlencoded({ extended: true }));
 authRouter.post("/register", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const gender = req.body.gender || 'U';
+  const gender = req.body.gender || "U";
   const profilePictureId = req.body.profilePictureId || 1;
   const roleId = "2";
 
@@ -36,12 +36,22 @@ authRouter.post("/register", async (req, res) => {
     roleId,
     profilePictureId
   );
-    debugger
+  debugger;
   if (!response.error) {
     if (response.response.affectedRows === 1) {
+      const userIdResponse = await database.getUserIdByEmailAsync(email);
+
+      authRouter.use(
+        session({
+          email,
+          isTeacher: roleId === 1 ? true : false,
+          userId: userIdResponse.response.user_id,
+        })
+      );
+
       res.json({
         error: null,
-        message: STRINGS.REGISTERING_USER_SUCCEEDED
+        message: STRINGS.REGISTERING_USER_SUCCEEDED,
       });
     } else {
       res.json({
@@ -58,11 +68,11 @@ authRouter.post("/register", async (req, res) => {
 authRouter.post("/login", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  
+
   // Get user_id and password
   const response = await database.validateUserAsync(email);
 
-  debugger
+  debugger;
 
   if (!response.error) {
     if (response.response.length === 0) {
@@ -71,21 +81,30 @@ authRouter.post("/login", async (req, res) => {
         message: STRINGS.PLEASE_CHECK_YOUR_EMAIL,
       });
     } else {
+      const userId = response.response[0].user_id;
       const passwordHash = response.response[0].password_hash;
       const firstName = response.response[0].first_name;
       const lastName = response.response[0].last_name;
-      const isTeacher = response.response[0].role_id === 1 ? true : false
+      const isTeacher = response.response[0].role_id === 1 ? true : false;
       const success = await checkPassword(password, passwordHash);
-      
+
       if (success) {
+        authRouter.use(
+          session({
+            email,
+            isTeacher,
+            userId,
+          })
+        );
+
         res.json({
           error: null,
           message: STRINGS.AUTHENTICATION_SUCCEEDED,
           userInfo: {
             firstName,
             lastName,
-            isTeacher
-          }
+            isTeacher,
+          },
         });
       } else {
         res.json({

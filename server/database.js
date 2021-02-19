@@ -41,6 +41,12 @@ class Database {
       return this.executeQuery(query);
     };
 
+    this.getUserIdByEmailAsync = async function(email) {
+      let query = `SELECT user_id FROM user WHERE {email}`;
+
+      return this.executeQuery(query);
+    };
+
     this.getAllUsersAsync = async function() {
       let query = "SELECT * FROM user";
 
@@ -55,6 +61,26 @@ class Database {
 
       return this.executeQuery(query);
     };
+
+    this.getQuizRatings = async function() {
+      let query = `SELECT quiz_id, AVG(user_rating.rating_given) as average_rating, COUNT(user_rating.rating_given) as rating_count FROM user_rating GROUP BY quiz_id`
+
+      return this.executeQuery(query)
+    }
+
+    this.getNumberOfQuestions = async function() {
+      let query = `SELECT quiz.quiz_id,
+      (SELECT COUNT(*) FROM quiz_question WHERE quiz.quiz_id = quiz_question.quiz_id) AS 'number_of_questions'
+      FROM quiz`
+
+      return this.executeQuery(query)
+    }
+
+    this.getQuizInfo = async function() {
+      let query = `SELECT quiz.*, quiz_skill.skill_description FROM quiz JOIN quiz_skill ON quiz.skill_id = quiz_skill.skill_id`
+
+      return this.executeQuery(query)
+    }
   }
 }
 

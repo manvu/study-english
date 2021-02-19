@@ -3,26 +3,30 @@
     <div class="course">
       <div class="course-preview">
         <h6>Course</h6>
-        <h2>IELTS</h2>
+        <h2>{{ course_name }}</h2>
         <quiz-list-item-rating
-          :id="id"
-          :rating="rating"
+          :id="quiz_id"
+          :rating="averageRating"
           :ratingCount="ratingCount"
         ></quiz-list-item-rating>
       </div>
       <div class="course-info" :class="favoriteQuiz">
-        <quiz-list-item-favorite class="favorite-icon" :id="id" :favorite="favorite"></quiz-list-item-favorite>
+        <quiz-list-item-favorite
+          class="favorite-icon"
+          :id="quiz_id"
+          :favorite="favorite"
+        ></quiz-list-item-favorite>
         <div class="course-info-content">
           <div class="progress-container">
             <div class="progress">
               <div class="progress--after" :style="progressBar"></div>
             </div>
             <span class="progress-text">
-              {{ completedChallenges + "/" + totalChallenges }} Challenges
+              {{ completedChallenges + "/" + numberOfQuestions }} Challenges
             </span>
           </div>
-          <h6>Chapter 1</h6>
-          <h2>{{ title }}</h2>
+          <h6>{{ skill_description }}</h6>
+          <h2>{{ description }}</h2>
           <a href="" class="discussion-title">Discussion</a>
           <button v-if="completedChallenges > 0" class="btn">Continue</button>
           <button v-else class="btn">Start</button>
@@ -38,19 +42,26 @@ import QuizListItemFavorite from "./QuizListItemFavorite";
 
 export default {
   props: [
-    "totalChallenges",
-    "completedChallenges",
-    "title",
-    "rating",
-    "id",
-    "favorite",
+    "quiz_id",
+    "course_name",
+    "skill_id",
+    "description",
+    "is_active",
+    "time_allowed",
+    "created_by",
+    "created_at",
+    "skill_description",
+    "numberOfQuestions",
+    "averageRating",
     "ratingCount",
+    "completedChallenges",
+    "favorite"
   ],
   components: { QuizListItemRating, QuizListItemFavorite },
   computed: {
     progressBar() {
       return {
-        width: (this.completedChallenges / this.totalChallenges) * 100 + "%",
+        width: (this.completedChallenges / this.numberOfQuestions) * 100 + "%",
       };
     },
     favoriteQuiz() {
