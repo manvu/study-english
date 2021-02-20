@@ -112,6 +112,7 @@ export default {
   },
   computed: {
     editQuestion() {
+      debugger
       return this.$store.getters["questionStore/getEditQuestion"];
     },
   },

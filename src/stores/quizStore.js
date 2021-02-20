@@ -36,7 +36,7 @@ const quizStore = {
       const email = localStorage.getItem("email") || "";
 
       return axios
-        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.home, {
+        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getDataForHome, {
           params: {
             email,
           },
@@ -60,7 +60,7 @@ const quizStore = {
     },
     getDataForTeacher(context, payload) {
       return axios
-        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.teacher)
+        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getDataForTeacher)
         .then((response) => {
           if (!response.data.error) {
             context.commit("getDataForHome", {
@@ -82,7 +82,7 @@ const quizStore = {
       const quizId = payload.quizId
 
       return axios
-      .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.quizPage(quizId))
+      .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getQuizById(quizId))
       .then((response) => {
         if (!response.data.error) {
           let questions = response.data.questions

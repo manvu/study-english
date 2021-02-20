@@ -14,6 +14,7 @@ const questionStore = {
       state.questions = payload.questions;
     },
     getQuestionForEdit(state, payload) {
+      debugger
       state.editQuestion = state.questions.find(
         (q) => q.question_id === payload.questionId
       );
@@ -24,7 +25,7 @@ const questionStore = {
       const quizId = payload.quizId;
 
       return axios
-        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.quizPage(quizId))
+        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getQuizById(quizId))
         .then((response) => {
           if (!response.data.error) {
             let questions = response.data.questions;
@@ -43,14 +44,17 @@ const questionStore = {
         });
     },
     getQuestionForEdit(context, payload) {
+      
       context.commit("getQuestionForEdit", payload);
     },
   },
   getters: {
     getQuestionList(state) {
+      debugger
       return state.questions;
     },
     getEditQuestion(state) {
+      
       return state.editQuestion;
     },
   },

@@ -42,9 +42,12 @@ export default {
   components: { MultipleChoiceEditor, GapFillingEditor, MatchingEditor },
   data() {
     return {
-      selectedQuestionType: "multiple",
+      selectedQuestionType: this.mode === "create" ? "Multiple Choice" : this.question.type_name,
     };
   },
+  created() {
+    console.log(this.question)
+  }
 };
 </script>
 
