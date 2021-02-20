@@ -1,45 +1,24 @@
 <template>
-  <div>
-    <div class="header d-flex">
-      <h2>Quiz List</h2>
-      <button type="button" @click="createQuiz" class="mb-2 btn btn-primary">
-        Create Quiz
-      </button>
+  <div class="row">
+    <div class="cell" data-title="ID">{{ quiz.question_id }}</div>
+    <div class="cell" data-title="Type">{{ quiz.type_name }}</div>
+    <div class="cell" data-title="Instruction">{{ quiz.instruction }}</div>
+    <div class="cell" data-title="Paragraph Title">
+      {{ quiz.paragraph_title }}
     </div>
-    <div class="table">
-      <div class="row header">
-        <div class="cell">ID</div>
-        <div class="cell">Course Name</div>
-        <div class="cell">Active</div>
-        <div class="cell">Questions</div>
-        <div class="cell">Attempts</div>
-        <div class="cell">Time Allowed</div>
-        <div class="cell">Action</div>
-      </div>
-
-      <div class="row" v-for="quiz in quizzes" :key="quiz.quiz_id">
-        <div class="cell" data-title="ID">{{ quiz.quiz_id }}</div>
-        <div class="cell" data-title="Course Name">{{ quiz.course_name }}</div>
-        <div class="cell" data-title="Active">{{ quiz.is_active }}</div>
-        <div class="cell" data-title="Questions">
-          {{ quiz.number_of_questions }}
-        </div>
-        <div class="cell" data-title="Attempts">{{ quiz.attempts }}</div>
-        <div class="cell" data-title="Time Allowed">{{ quiz.time_allowed }}</div>
-        <div class="cell" data-title="Action">
-          
-          <font-awesome-icon
-            class="button-item"
-            :icon="faEdit"
-            @click="editQuiz(quiz.quiz_id)"
-          ></font-awesome-icon>
-          <font-awesome-icon
-            class="button-item ml-2"
-            :icon="faTrashAlt"
-            @click="removeQuiz(quiz.quiz_id)"
-          ></font-awesome-icon>
-        </div>
-      </div>
+    <div class="cell" data-title="Question" v-html="formattedQuestion"></div>
+    <div class="cell" data-title="Active">{{ formattedActive }}</div>
+    <div class="cell" data-title="Action">
+      <font-awesome-icon
+        class="button-item"
+        :icon="faEdit"
+        @click="editQuestion(quiz.question_id)"
+      ></font-awesome-icon>
+      <font-awesome-icon
+        class="button-item ml-2"
+        :icon="faTrashAlt"
+        @click="removeQuestion(quiz.question_id)"
+      ></font-awesome-icon>
     </div>
   </div>
 </template>
@@ -50,32 +29,30 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 export default {
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
+  props: ["quiz"],
   components: { FontAwesomeIcon },
   computed: {
-    quizzes() {
-      return this.$store.getters["quizStore/getQuizList"];
-    },
     faEdit() {
       return faEdit;
     },
     faTrashAlt() {
       return faTrashAlt;
     },
-  },
-  created() {
-    this.$store.dispatch("quizStore/getDataForTeacher").then((response) => {
-      this.quizzes;
-    });
+
+    formattedQuestion() {
+      return this.truncate(this.quiz.question, 100);
+    },
+    formattedActive() {
+      return this.quiz.is_active ? "Yes" : "No";
+    },
   },
   methods: {
-    createQuiz() {
-      this.$emit("toggleShowQuizEditor", {mode: "create"});
+    truncate: function (str, n) {
+      return str.length > n ? str.substr(0, n - 1) + "&hellip;" : str;
     },
-    editQuiz(quizId) {
-      this.$emit("toggleShowQuizEditor", {mode: "edit", quizId});
-    },
-    removeQuiz(quizId) {
-
+    editQuestion: function (questionId) {
+      this.openQuestionEditorModal(questionId, "edit");
     },
   },
 };
@@ -192,16 +169,6 @@ tbody td:hover:before {
     padding: 2px 16px;
     display: block;
   }
-}
-
-.header {
-  justify-content: space-between;
-}
-
-.header button {
-  color: #fff;
-  font-weight: 600;
-  width: 20%;
 }
 
 .button-item {

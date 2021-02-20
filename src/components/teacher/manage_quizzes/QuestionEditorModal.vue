@@ -14,15 +14,15 @@
                 <label class="control-label" for="type">Type</label>
                 <div>
                   <select name="type" class="col-4 form-control" id="question-type" v-model="selectedQuestionType" >
-                    <option class="dropdown-item" href="#" value="multiple"> Multiple Choice </option>
-                    <option class="dropdown-item" href="#" value="gap-filling"> Gap-filling </option>
-                    <option class="dropdown-item" href="#" value="matching"> Matching </option>
+                    <option class="dropdown-item" href="#" value="Multiple Choice"> Multiple Choice </option>
+                    <option class="dropdown-item" href="#" value="Gap Filling"> Gap-filling </option>
+                    <option class="dropdown-item" href="#" value="Matching"> Matching </option>
                   </select>
                 </div>
               </div>
-              <multiple-choice-editor v-if="selectedQuestionType === 'multiple'"></multiple-choice-editor>
-              <gap-filling-editor v-else-if="selectedQuestionType === 'gap-filling'"></gap-filling-editor>
-              <matching-editor v-else-if="selectedQuestionType === 'matching'"></matching-editor>
+              <multiple-choice-editor v-if="selectedQuestionType === 'Multiple Choice'"></multiple-choice-editor>
+              <gap-filling-editor v-else-if="selectedQuestionType === 'Gap Filling'"></gap-filling-editor>
+              <matching-editor v-else-if="selectedQuestionType === 'Matching'"></matching-editor>
             </div>
           </div>
         </div>
@@ -37,12 +37,12 @@ import MatchingEditor from './question_editor/MatchingEditor.vue';
 import MultipleChoiceEditor from "./question_editor/MultipleChoiceEditor";
 
 export default {
-  inject: ["closeQuestionEditorModal"],
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
+  props: ["question", "mode"],
   components: { MultipleChoiceEditor, GapFillingEditor, MatchingEditor },
   data() {
     return {
       selectedQuestionType: "multiple",
-      choices: [],
     };
   },
 };

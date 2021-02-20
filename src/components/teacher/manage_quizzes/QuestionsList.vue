@@ -6,35 +6,37 @@
         <div class="cell">ID</div>
         <div class="cell">Type</div>
         <div class="cell">Instruction</div>
+        <div class="cell">Paragraph Title</div>
         <div class="cell">Question</div>
         <div class="cell">Active</div>
         <div class="cell">Action</div>
       </div>
 
-      <div class="row">
-        <div class="cell" data-title="Name">Luke Peters</div>
-        <div class="cell" data-title="Age">25</div>
-        <div class="cell" data-title="Occupation">Freelance Web Developer</div>
-        <div class="cell" data-title="Location">Brookline, MA</div>
-      </div>
+      <question-list-item v-for="q in questions" :key="q.question_id" :quiz="q"></question-list-item>
     </div>
   </div>
 </template>
 
 <script>
+import QuestionListItem from './QuestionListItem'
+
 export default {
-  setup() {
-    return {};
+  components: { QuestionListItem },
+  props: ["questions"],
+  methods() {
+    function truncate(str, n) {
+      return str.length > n ? str.substr(0, n - 1) + "&hellip;" : str;
+    }
   },
 };
 </script>
 
 <style scoped>
 body {
-	margin: 0;
-	background: linear-gradient(45deg, #49a09d, #5f2c82);
-	font-family: sans-serif;
-	font-weight: 100;
+  margin: 0;
+  background: linear-gradient(45deg, #49a09d, #5f2c82);
+  font-family: sans-serif;
+  font-weight: 100;
 
   font-weight: 400;
   color: #3b3b3b;
@@ -140,5 +142,9 @@ tbody td:hover:before {
     padding: 2px 16px;
     display: block;
   }
+}
+
+.button-item {
+  cursor: pointer;
 }
 </style>

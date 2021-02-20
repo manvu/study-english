@@ -4,5 +4,6 @@ export default {
     quizPage: (quizId) => `quiz/${quizId}`,
     users: "users",
     home: "home",
-    teacher: "teacher"
+    teacher: "teacher",
+    quizForEdit: (quizId) => `quiz/edit/${quizId}`,
 }

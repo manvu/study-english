@@ -78,7 +78,7 @@ export default {
     MatchingChoiceLeftItem,
     MatchingChoiceRightItem,
   },
-  inject: ["closeQuestionEditorModal"],
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
   props: ["choices"],
   data() {
     return {

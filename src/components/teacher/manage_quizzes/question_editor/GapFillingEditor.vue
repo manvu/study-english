@@ -74,7 +74,7 @@
 import GapFillingChoiceItem from "./question_editor_item/GapFillingChoiceItem";
 
 export default {
-    inject: ["closeQuestionEditorModal"],
+    inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
   components: {
     GapFillingChoiceItem,
   },

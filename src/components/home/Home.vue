@@ -31,7 +31,9 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("quizStore/getDataForHome");
+    this.$store.dispatch("quizStore/getDataForHome").then(response => {
+      this.quizzes
+    })
   },
 };
 </script>

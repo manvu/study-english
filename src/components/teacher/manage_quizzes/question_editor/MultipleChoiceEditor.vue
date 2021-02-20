@@ -60,7 +60,7 @@
 import MultipleChoiceItem from "./question_editor_item/MultipleChoiceItem";
 export default {
   components: { MultipleChoiceItem },
-  inject: ["closeQuestionEditorModal"],
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
   props: ["choices"],
   data() {
     return {

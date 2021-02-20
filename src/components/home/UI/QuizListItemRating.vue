@@ -2,7 +2,7 @@
   <div>
     <div>
       <span>
-        <span class="rating-number mr-1">{{ rating.toFixed(1) }}</span>
+        <span class="rating-number mr-1">{{ formattedRating }}</span>
         <font-awesome-icon
           class="star"
           v-for="(star, index) in stars"
@@ -47,6 +47,9 @@ export default {
     },
     faStarHalfAlt() {
       return faStarHalfAlt;
+    },
+    formattedRating() {
+      return !!this.rating ? this.rating.toFixed(1) : this.rating;
     },
   },
   created() {

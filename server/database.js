@@ -86,10 +86,11 @@ class Database {
     }
 
     this.getQuestionsByQuizId = async function(quizId) {
-      let query = `SELECT q.question_id, q.type_id, q.is_active, q.paragraph_title, q.question, qi.instruction
+      let query = `SELECT q.question_id, q.type_id, qt.type_name, q.is_active, q.paragraph_title, q.question, qi.instruction
       FROM question q 
       JOIN quiz_question qq ON qq.question_id = q.question_id 
       JOIN question_instruction qi ON q.instruction_id = qi.instruction_id
+      JOIN question_type qt ON q.type_id = qt.type_id 
       WHERE qq.quiz_id = ${quizId} AND q.is_active = 1
       ORDER BY q.question_id` 
 
