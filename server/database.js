@@ -106,6 +106,46 @@ class Database {
 
       return this.executeQuery(query)
     }
+
+    this.getDiscussionThreadsAsync = async function() {
+      let query = `SELECT dt.subject, dt.quiz_id, dt.user_id as thread_starter, 
+      (SELECT COUNT(*) FROM discussion_post dp WHERE dp.thread_id = dt.thread_id) as replies
+      FROM discussion_thread dt`
+
+      return this.executeQuery(query)
+    }
+
+    this.getDiscussionThreadsByIdAsync = async function(threadId) {
+      let query = `SELECT * FROM discussion_thread dt WHERE dt.thread_id = ${threadId}`
+      return this.executeQuery(query)
+    }
+
+    this.getDiscussionPostsByThreadIdAsync = async function(threadId) {
+      let query = `SELECT (SELECT CONCAT(u.first_name, ' ', u.last_name)) as full_name, dp.created_at as posted_at, u.created_at as member_since, dp.content, 
+      (SELECT COUNT(*) FROM discussion_thread dt1 WHERE dt1.user_id = u.user_id) as thread_count,
+      (SELECT COUNT(*) FROM discussion_post dp1 WHERE dp1.user_id = u.user_id) as post_count
+      FROM discussion_post dp JOIN user u ON dp.user_id = u.user_id
+      WHERE dp.thread_id = ${threadId}`
+      return this.executeQuery(query)
+    }
+
+    this.getQuizStatisticsByUserId = async function(userId) {
+      let query = `SELECT (SELECT COUNT(*) FROM quiz) as number_of_quizzes, 
+      (SELECT COUNT(*) FROM user_attempt ua WHERE ua.user_id = ${userId} AND ua.end_time IS NULL) as incomplete,
+      (SELECT COUNT(*) FROM user_attempt ua WHERE ua.user_id = ${userId} AND ua.end_time IS NOT NULL) as completed`
+  
+      return this.executeQuery(query)
+    }
+
+    this.getAnswerStatisticsByUserId = async function(userId) {
+      let query = `SELECT  
+      (SELECT COUNT(*) FROM user_answer_question uaq WHERE uaq.user_id = ${userId} AND uaq.is_correct = 1) as correct,
+      (SELECT COUNT(*) FROM user_answer_question uaq WHERE uaq.user_id = ${userId} AND uaq.is_correct = 2) as partially_correct,
+      (SELECT COUNT(*) FROM user_answer_question uaq WHERE uaq.user_id = ${userId} AND uaq.is_correct = 3) as incorrect,
+      (SELECT COUNT(*) FROM user_answer_question uaq WHERE uaq.user_id = ${userId} AND uaq.is_correct = 4) as unanswered`
+  
+      return this.executeQuery(query)
+    }
   }
 }
 

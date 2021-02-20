@@ -64,13 +64,13 @@ export default {
           },
         ],
       },
-      accuracyData: [40, 50, 10],
+      accuracyData: [40, 30, 10, 20],
       accuracyDataOptions: {
         chart: {
           width: 380,
           type: "pie",
         },
-        labels: ["Correct", "Incorrect", "Unanswered"],
+        labels: ["Correct", "Partially Correct", "Incorrect", "Unanswered"],
 
         title: {
           text: "How well do you perform?",

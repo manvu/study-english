@@ -4,7 +4,7 @@ const STRINGS = require("../strings");
 var appRouter = express.Router();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const helper = require("../helper")
+const helper = require("../helper");
 
 var corsOptions = {
   origin: "*",
@@ -18,8 +18,6 @@ appRouter.use(bodyParser.urlencoded({ extended: true }));
 
 appRouter.get("/home", async (req, res) => {
   let sess = req.session;
-
-  
 
   let email = req.query.email;
   email = !email ? "" : email.trim();
@@ -72,29 +70,57 @@ appRouter.get("/quiz/:id", async (req, res) => {
   ) {
     let response = questionsByQuizIdResponse.response;
 
-    let questionsContentByQuizIdObject = {}
+    let questionsContentByQuizIdObject = {};
 
     for (let i = 0; i < questionsContentByQuizIdResponse.response.length; i++) {
-      let currentItem = questionsContentByQuizIdResponse.response[i]
+      let currentItem = questionsContentByQuizIdResponse.response[i];
       if (questionsContentByQuizIdObject[currentItem.question_id]) {
-        questionsContentByQuizIdObject[currentItem.question_id].push(currentItem)
+        questionsContentByQuizIdObject[currentItem.question_id].push(
+          currentItem
+        );
       } else {
-        questionsContentByQuizIdObject[currentItem.question_id] = [currentItem]
+        questionsContentByQuizIdObject[currentItem.question_id] = [currentItem];
       }
     }
 
     for (let i = 0; i < response.length; i++) {
-      let obj = helper.cleanObject(questionsContentByQuizIdObject[i + 1])
-      response[i].content = obj
+      let obj = helper.cleanObject(questionsContentByQuizIdObject[i + 1]);
+      response[i].content = obj;
     }
 
     res.json({
       error: null,
-      questions: response
+      questions: response,
     });
   }
 });
 
-appRouter.get("/discussion", async (req, res) => {});
+appRouter.get("/discussion", async (req, res) => {
+  let discussionThreadsResponse = await database.getDiscussionThreadsAsync();
+
+  if (!discussionThreadsResponse.error) {
+    res.json({
+      error: null,
+      threads: discussionThreadsResponse.response
+    })
+  }
+});
+
+appRouter.post("/statistics", async (req, res) => {
+  const userId = req.query.userId
+
+  debugger
+
+  let getQuizStatisticsByUserIdResponse = await database.getQuizStatisticsByUserId(userId);
+  let getAnswerStatisticsByUserIdResponse = await database.getAnswerStatisticsByUserId(userId)
+
+  if (!getQuizStatisticsByUserIdResponse.error) {
+    res.json({
+      error: null,
+      quizStatistics: getQuizStatisticsByUserIdResponse.response,
+      answerStatistics: getAnswerStatisticsByUserIdResponse.response
+    })
+  }
+});
 
 module.exports = appRouter;
