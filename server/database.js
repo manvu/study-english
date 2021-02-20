@@ -77,7 +77,10 @@ class Database {
     }
 
     this.getQuizInfo = async function() {
-      let query = `SELECT quiz.*, quiz_skill.skill_description FROM quiz JOIN quiz_skill ON quiz.skill_id = quiz_skill.skill_id`
+      let query = `SELECT quiz.*, quiz_skill.skill_description, 
+      (SELECT COUNT(*) FROM user_attempt WHERE user_attempt.quiz_id = quiz.quiz_id) as attempts,
+      (SELECT COUNT(*) FROM quiz_question WHERE quiz.quiz_id = quiz_question.quiz_id) AS 'number_of_questions'
+      FROM quiz JOIN quiz_skill ON quiz.skill_id = quiz_skill.skill_id`
 
       return this.executeQuery(query)
     }

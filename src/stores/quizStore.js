@@ -17,6 +17,9 @@ const quizStore = {
     getDataForHome(state, payload) {
       state.quizzes = payload.quizzes;
     },
+    getDataForTeacher(state, payload) {
+      state.quizzes = payload.quizzes;
+    }
   },
   actions: {
     toggleFavorite(context, payload) {
@@ -49,6 +52,26 @@ const quizStore = {
           this.loading = false;
         });
     },
+    getDataForTeacher(context, payload) {
+      return axios
+      .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.teacher)
+      .then((response) => {
+        if (!response.data.error) {
+          context.commit("getDataForHome", {
+            quizzes: response.data.quizzes,
+          });
+        }
+
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.errored = true;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+    }
   },
   getters: {
     getQuizList(state) {

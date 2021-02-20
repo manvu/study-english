@@ -13,7 +13,7 @@
       :created_at="quiz.created_at"
       :skill_description="quiz.skill_description"
       :completedChallenges="0"
-      :numberOfQuestions="quiz.numberOfQuestions"
+      :numberOfQuestions="quiz.number_of_questions"
       :averageRating="quiz.averageRating"
       :ratingCount="quiz.ratingCount"
     ></quiz-list-item>

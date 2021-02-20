@@ -15,32 +15,15 @@
         <div class="cell">Action</div>
       </div>
 
-      <div class="row">
-        <div class="cell" data-title="Name">Luke Peters</div>
-        <div class="cell" data-title="Age">25</div>
-        <div class="cell" data-title="Occupation">Freelance Web Developer</div>
-        <div class="cell" data-title="Location">Brookline, MA</div>
-      </div>
-
-      <div class="row">
-        <div class="cell" data-title="Name">Joseph Smith</div>
-        <div class="cell" data-title="Age">27</div>
-        <div class="cell" data-title="Occupation">Project Manager</div>
-        <div class="cell" data-title="Location">Somerville, MA</div>
-      </div>
-
-      <div class="row">
-        <div class="cell" data-title="Name">Maxwell Johnson</div>
-        <div class="cell" data-title="Age">26</div>
-        <div class="cell" data-title="Occupation">UX Architect & Designer</div>
-        <div class="cell" data-title="Location">Arlington, MA</div>
-      </div>
-
-      <div class="row">
-        <div class="cell" data-title="Name">Harry Harrison</div>
-        <div class="cell" data-title="Age">25</div>
-        <div class="cell" data-title="Occupation">Front-End Developer</div>
-        <div class="cell" data-title="Location">Boston, MA</div>
+      <div class="row" v-for="quiz in quizzes" :key="quiz.quiz_id">
+        <div class="cell">{{ quiz.quiz_id }}</div>
+        <div class="cell">{{ quiz.course_name }}</div>
+        <div class="cell">{{ quiz.is_active }}</div>
+        <div class="cell">
+          {{ quiz.number_of_questions }}
+        </div>
+        <div class="cell">{{ quiz.attempts }}</div>
+        <div class="cell">{{ quiz.time_allowed }}</div>
       </div>
     </div>
   </div>
@@ -48,8 +31,15 @@
 
 <script>
 export default {
-  setup() {
-    return {};
+  computed: {
+    quizzes() {
+      return this.$store.getters["quizStore/getQuizList"];
+    },
+  },
+  created() {
+    this.$store.dispatch("quizStore/getDataForTeacher").then((response) => {
+      this.quizzes;
+    });
   },
 };
 </script>

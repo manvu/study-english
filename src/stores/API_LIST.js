@@ -3,5 +3,6 @@ export default {
     register: "auth/register",
     quizPage: (quizId) => `quiz/${quizId}`,
     users: "users",
-    home: "home"
+    home: "home",
+    teacher: "teacher"
 }

@@ -26,21 +26,14 @@ appRouter.get("/home", async (req, res) => {
   }
 
   let allQuizzesResponse = await database.getQuizRatings();
-  let questionsPerQuizResponse = await database.getNumberOfQuestions();
+  // let questionsPerQuizResponse = await database.getNumberOfQuestions();
   let quizzesInfoResponse = await database.getQuizInfo();
 
   if (
     !allQuizzesResponse.error &&
-    !questionsPerQuizResponse.error &&
     !quizzesInfoResponse.error
   ) {
     let response = quizzesInfoResponse.response;
-
-    for (let i = 0; i < questionsPerQuizResponse.response.length; i++) {
-      let item = questionsPerQuizResponse.response[i];
-      let quiz = response.find((q) => q.quiz_id === item.quiz_id);
-      quiz.numberOfQuestions = item.number_of_questions;
-    }
 
     for (let i = 0; i < allQuizzesResponse.response.length; i++) {
       let item = allQuizzesResponse.response[i];
@@ -109,8 +102,6 @@ appRouter.get("/discussion", async (req, res) => {
 appRouter.post("/statistics", async (req, res) => {
   const userId = req.query.userId
 
-  debugger
-
   let getQuizStatisticsByUserIdResponse = await database.getQuizStatisticsByUserId(userId);
   let getAnswerStatisticsByUserIdResponse = await database.getAnswerStatisticsByUserId(userId)
 
@@ -119,6 +110,17 @@ appRouter.post("/statistics", async (req, res) => {
       error: null,
       quizStatistics: getQuizStatisticsByUserIdResponse.response,
       answerStatistics: getAnswerStatisticsByUserIdResponse.response
+    })
+  }
+});
+
+appRouter.get("/teacher", async (req, res) => {
+  let getQuizInfoResponse = await database.getQuizInfo();
+
+  if (!getQuizInfoResponse.error) {
+    res.json({
+      error: null,
+      quizzes: getQuizInfoResponse.response,
     })
   }
 });
