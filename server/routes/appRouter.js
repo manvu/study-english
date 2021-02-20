@@ -4,6 +4,7 @@ const STRINGS = require("../strings");
 var appRouter = express.Router();
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const helper = require("../helper")
 
 var corsOptions = {
   origin: "*",
@@ -18,53 +19,82 @@ appRouter.use(bodyParser.urlencoded({ extended: true }));
 appRouter.get("/home", async (req, res) => {
   let sess = req.session;
 
-  debugger
+  
 
   let email = req.query.email;
-  email = !email ?  "" : email.trim()
+  email = !email ? "" : email.trim();
 
   if (email === "") {
-
   }
 
   let allQuizzesResponse = await database.getQuizRatings();
   let questionsPerQuizResponse = await database.getNumberOfQuestions();
   let quizzesInfoResponse = await database.getQuizInfo();
 
-
   if (
     !allQuizzesResponse.error &&
     !questionsPerQuizResponse.error &&
     !quizzesInfoResponse.error
   ) {
-    let response = quizzesInfoResponse.response
-    
+    let response = quizzesInfoResponse.response;
+
     for (let i = 0; i < questionsPerQuizResponse.response.length; i++) {
-      let item = questionsPerQuizResponse.response[i]
-      let quiz = response.find(q => q.quiz_id === item.quiz_id)
-      quiz.numberOfQuestions = item.number_of_questions
+      let item = questionsPerQuizResponse.response[i];
+      let quiz = response.find((q) => q.quiz_id === item.quiz_id);
+      quiz.numberOfQuestions = item.number_of_questions;
     }
 
     for (let i = 0; i < allQuizzesResponse.response.length; i++) {
-      let item = allQuizzesResponse.response[i]
-      let quiz = response.find(q => q.quiz_id === item.quiz_id)
-      quiz.averageRating = item.average_rating
-      quiz.ratingCount = item.rating_count
+      let item = allQuizzesResponse.response[i];
+      let quiz = response.find((q) => q.quiz_id === item.quiz_id);
+      quiz.averageRating = item.average_rating;
+      quiz.ratingCount = item.rating_count;
     }
 
     res.json({
       error: null,
-      quizzes: response
+      quizzes: response,
     });
   }
 });
 
-appRouter.get("/quiz", async (req, res) => {
+appRouter.get("/quiz/:id", async (req, res) => {
+  let quizId = req.params.id;
 
-})
+  let questionsByQuizIdResponse = await database.getQuestionsByQuizId(quizId);
+  let questionsContentByQuizIdResponse = await database.getQuestionsContentByQuizId(
+    quizId
+  );
 
-appRouter.get("/discussion", async (req, res) => {
+  if (
+    !questionsByQuizIdResponse.error &&
+    !questionsContentByQuizIdResponse.error
+  ) {
+    let response = questionsByQuizIdResponse.response;
 
-})
+    let questionsContentByQuizIdObject = {}
+
+    for (let i = 0; i < questionsContentByQuizIdResponse.response.length; i++) {
+      let currentItem = questionsContentByQuizIdResponse.response[i]
+      if (questionsContentByQuizIdObject[currentItem.question_id]) {
+        questionsContentByQuizIdObject[currentItem.question_id].push(currentItem)
+      } else {
+        questionsContentByQuizIdObject[currentItem.question_id] = [currentItem]
+      }
+    }
+
+    for (let i = 0; i < response.length; i++) {
+      let obj = helper.cleanObject(questionsContentByQuizIdObject[i + 1])
+      response[i].content = obj
+    }
+
+    res.json({
+      error: null,
+      questions: response
+    });
+  }
+});
+
+appRouter.get("/discussion", async (req, res) => {});
 
 module.exports = appRouter;

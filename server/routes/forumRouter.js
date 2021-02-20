@@ -16,7 +16,7 @@ forumRouter.use(bodyParser.json());
 forumRouter.use(bodyParser.urlencoded({ extended: true }));
 
 forumRouter.get("/thread/:id", async (req, res) => {
-    debugger;
+    
     let threadId = req.params.threadId;
   
     console.log(threadId);

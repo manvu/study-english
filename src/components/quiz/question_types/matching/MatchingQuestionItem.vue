@@ -65,6 +65,8 @@ export default {
         item: this.rightItems[i],
       });
     }
+
+    
   },
   methods: {
     nextChar: function () {
@@ -76,7 +78,7 @@ export default {
     updateResponse(leftIndex, response) {
       let leftItem = this.leftMatchingItems.find((g) => g.id === leftIndex);
       leftItem.selectedOption = response;
-      debugger
+      
     },
   },
 };

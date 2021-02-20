@@ -1,10 +1,13 @@
 <template>
-  <p>{{id}} . {{ item.item }}</p>
+  <p>{{id}} . {{ item.item.text }}</p>
 </template>
 
 <script>
 export default {
   props: ["id","item"],
+  created() {
+    console.log(this.item)
+  }
 };
 </script>
 

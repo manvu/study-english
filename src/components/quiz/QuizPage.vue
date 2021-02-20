@@ -1,36 +1,44 @@
 <template>
   <div class="quiz-container">
     <div class="row">
-      <similar-quiz id="similar-quiz" class="col-12 col-sm-12 col-md-3	col-lg-2 col-xl-2"></similar-quiz>
-      <div class="question-wrapper col-12 col-sm-12 col-md-6	col-lg-8 col-xl-8">
+      <similar-quiz
+        id="similar-quiz"
+        class="col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2"
+      ></similar-quiz>
+      <div class="question-wrapper col-12 col-sm-12 col-md-6 col-lg-8 col-xl-8">
         <div v-for="(question, index) in questions" :key="question.id">
           <multiple-choice-question-item
-            v-if="question.type === 'multiple'"
+            v-if="question.type_id === 1"
             :id="index"
-            :text="question.text"
-            :choices="question.choices"
+            :text="question.question"
+            :choices="question.content"
             :instruction="question.instruction"
             :selectedOption="question.selectedOption"
           ></multiple-choice-question-item>
           <gap-filling-question-item
-            v-else-if="question.type === 'gap-filling'"
+            v-else-if="question.type_id === 2"
             :id="index"
-            :text="question.text"
+            :text="question.question"
             :instruction="question.instruction"
+            :paragraph_title="question.paragraph_title"
           ></gap-filling-question-item>
           <matching-question-item
-            v-else
+            v-else-if="question.type_id === 3"
             :id="index"
-            :text="question.text"
+            :text="question.question"
             :instruction="question.instruction"
-            :leftItems="question.leftItems"
-            :rightItems="question.rightItems"
+            :leftItems="
+              question.content.filter((item) => item.column_assigned === 1)
+            "
+            :rightItems="
+              question.content.filter((item) => item.column_assigned === 2)
+            "
           ></matching-question-item>
         </div>
       </div>
       <question-palette
         id="question-palette"
-        class="col-12 col-sm-12 col-md-3	col-lg-2 col-xl-2"
+        class="col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2"
         :questions="questions"
       ></question-palette>
     </div>
@@ -56,8 +64,19 @@ export default {
       questions: [],
     };
   },
+  computed: {
+    getQuestions() {
+      return this.$store.getters["questionStore/getQuestionList"];
+    },
+  },
   created() {
-    this.questions = this.$store.getters['questionStore/getQuestionList']
+    const quizId = this.$route.params.id
+
+    this.$store
+      .dispatch("questionStore/getQuestionList", { quizId })
+      .then(() => {
+        this.questions = this.getQuestions;
+      });
   },
 };
 </script>

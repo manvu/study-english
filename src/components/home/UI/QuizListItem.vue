@@ -28,8 +28,8 @@
           <h6>{{ skill_description }}</h6>
           <h2>{{ description }}</h2>
           <a href="" class="discussion-title">Discussion</a>
-          <button v-if="completedChallenges > 0" class="btn">Continue</button>
-          <button v-else class="btn">Start</button>
+          <button @click="navigateToQuiz" v-if="completedChallenges > 0" class="btn">Continue</button>
+          <button @click="navigateToQuiz" v-else class="btn">Start</button>
         </div>
       </div>
     </div>
@@ -70,9 +70,11 @@ export default {
       };
     },
   },
-  setup() {
-    return {};
-  },
+  methods: {
+    navigateToQuiz() {
+      this.$router.push({name: 'quizzes.index', params: { id: this.quiz_id }})
+    }
+  }
 };
 </script>
 

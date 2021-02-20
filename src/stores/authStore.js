@@ -31,7 +31,7 @@ const authStore = {
           password: payload.password,
         })
         .then((response) => {
-          debugger
+          
           if (!response.data.error) {
             localStorage.setItem("email", payload.email);
             localStorage.setItem("firstName", response.data.userInfo.firstName);
@@ -57,7 +57,7 @@ const authStore = {
         password: payload.password,
       })
       .then((response) => {
-        debugger
+        
         if (!response.data.error) {
           localStorage.setItem("email", payload.email);
         }

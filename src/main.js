@@ -47,8 +47,8 @@ const router = createRouter({
       },
     },
     {
-      path: "/quiz",
-      name: "quiz",
+      path: "/quiz/:id",
+      name: "quizzes.index",
       component: QuizPage,
       beforeEnter(to, from, next) {
         const isAuthenticated = store.getters['authStore/isAuthenticated'];;

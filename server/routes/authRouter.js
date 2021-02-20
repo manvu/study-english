@@ -36,7 +36,7 @@ authRouter.post("/register", async (req, res) => {
     roleId,
     profilePictureId
   );
-  debugger;
+  
   if (!response.error) {
     if (response.response.affectedRows === 1) {
       const userIdResponse = await database.getUserIdByEmailAsync(email);
@@ -72,7 +72,7 @@ authRouter.post("/login", async (req, res) => {
   // Get user_id and password
   const response = await database.validateUserAsync(email);
 
-  debugger;
+  
 
   if (!response.error) {
     if (response.response.length === 0) {

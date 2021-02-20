@@ -11,7 +11,7 @@
       v-for="(item, index) in choices"
       :key="index"
       :id="index"
-      :text="item"
+      :text="item.choice_text"
       :selectedOption="selectedOption"
       @selectOption="selectOption"
     ></multiple-choice-choice-item>

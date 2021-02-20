@@ -6,6 +6,7 @@
       <h3 class="instruction">{{ id + 1 + "." }} {{ instruction }}</h3>
     </div>
     <div>
+      <h4 class="text-center mt-3">{{ paragraph_title }}</h4>
       <p><span v-html="questionText"> </span></p>
     </div>
     <div class="response">
@@ -25,7 +26,7 @@ import GapFillingQuestionGapItem from "./GapFillingQuestionGapItem";
 
 const regex = /{(\d*)}/g;
 export default {
-  props: ["id", "text", "instruction"],
+  props: ["id", "text", "instruction", "paragraph_title"],
   components: {GapFillingQuestionGapItem},
   computed: {
     questionText() {
@@ -56,6 +57,8 @@ export default {
         });
       }
     }
+
+    console.log(this.paragraph_title)
   },
   methods: {
       updateResponse(index, response) {

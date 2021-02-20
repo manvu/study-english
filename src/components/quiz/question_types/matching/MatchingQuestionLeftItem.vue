@@ -2,11 +2,16 @@
   <div class="form-group row">
     <div class="col-8">
       <label class="col-form-label" for="leftColumn"
-        >{{ id }} . {{ item }}</label
+        >{{ id }} . {{ item.text }}</label
       >
     </div>
     <div class="col-4">
-      <select class="form-control" name="matching-options" v-model="selected" @change="updateResponse">
+      <select
+        class="form-control"
+        name="matching-options"
+        v-model="selected"
+        @change="updateResponse"
+      >
         <option v-for="option in availableOptions" :key="option.id">
           {{ option.id }}
         </option>
@@ -20,14 +25,17 @@ export default {
   props: ["id", "item", "selectedOption", "availableOptions"],
   data() {
     return {
-        selected: ''
+      selected: "",
     };
   },
   methods: {
     updateResponse() {
-      this.$emit("updateResponse", this.id, this.selected)
-    }
-  }
+      this.$emit("updateResponse", this.id, this.selected);
+    },
+  },
+  created() {
+    console.log(this.item);
+  },
 };
 </script>
 

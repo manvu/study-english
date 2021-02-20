@@ -25,7 +25,7 @@ const quizStore = {
     getDataForHome(context, payload) {
       const isAuthenticated = context.rootGetters["authStore/isAuthenticated"];
       const email = localStorage.getItem("email") || ""
-      debugger
+      
       axios
         .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.home, {
           params: {
