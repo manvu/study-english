@@ -14,10 +14,8 @@ const questionStore = {
       state.questions = payload.questions;
     },
     getQuestionForEdit(state, payload) {
-      debugger
-      state.editQuestion = state.questions.find(
-        (q) => q.question_id === payload.questionId
-      );
+      
+      state.editQuestion = payload.question
     },
   },
   actions: {
@@ -44,17 +42,34 @@ const questionStore = {
         });
     },
     getQuestionForEdit(context, payload) {
-      
-      context.commit("getQuestionForEdit", payload);
+      const questionId = payload.questionId;
+
+      return axios
+        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getQuestionById(questionId))
+        .then((response) => {
+          if (!response.data.error) {
+            let question = response.data.question;
+            payload.question = question;
+            context.commit("getQuestionForEdit", payload);
+          }
+
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
   },
   getters: {
     getQuestionList(state) {
-      debugger
+      ;
       return state.questions;
     },
     getEditQuestion(state) {
-      
       return state.editQuestion;
     },
   },

@@ -13,16 +13,44 @@
               <div class="form-group">
                 <label class="control-label" for="type">Type</label>
                 <div>
-                  <select name="type" class="col-4 form-control" id="question-type" v-model="selectedQuestionType" >
-                    <option class="dropdown-item" href="#" value="Multiple Choice"> Multiple Choice </option>
-                    <option class="dropdown-item" href="#" value="Gap Filling"> Gap-filling </option>
-                    <option class="dropdown-item" href="#" value="Matching"> Matching </option>
+                  <select
+                    name="type"
+                    class="col-4 form-control"
+                    id="question-type"
+                    v-model="selectedQuestionType"
+                    :disabled="mode === 'edit'"
+                  >
+                    <option
+                      class="dropdown-item"
+                      href="#"
+                      value="Multiple Choice"
+                    >
+                      Multiple Choice
+                    </option>
+                    <option class="dropdown-item" href="#" value="Gap Filling">
+                      Gap-filling
+                    </option>
+                    <option class="dropdown-item" href="#" value="Matching">
+                      Matching
+                    </option>
                   </select>
                 </div>
               </div>
-              <multiple-choice-editor v-if="selectedQuestionType === 'Multiple Choice'"></multiple-choice-editor>
-              <gap-filling-editor v-else-if="selectedQuestionType === 'Gap Filling'"></gap-filling-editor>
-              <matching-editor v-else-if="selectedQuestionType === 'Matching'"></matching-editor>
+              <multiple-choice-editor
+                v-if="selectedQuestionType === 'Multiple Choice'"
+                :item="question"
+                :mode="mode"
+              ></multiple-choice-editor>
+              <gap-filling-editor
+                v-else-if="selectedQuestionType === 'Gap Filling'"
+                :item="question"
+                :mode="mode"
+              ></gap-filling-editor>
+              <matching-editor
+                v-else-if="selectedQuestionType === 'Matching'"
+                :item="question"
+                :mode="mode"
+              ></matching-editor>
             </div>
           </div>
         </div>
@@ -32,8 +60,8 @@
 </template>
 
 <script>
-import GapFillingEditor from './question_editor/GapFillingEditor.vue';
-import MatchingEditor from './question_editor/MatchingEditor.vue';
+import GapFillingEditor from "./question_editor/GapFillingEditor.vue";
+import MatchingEditor from "./question_editor/MatchingEditor.vue";
 import MultipleChoiceEditor from "./question_editor/MultipleChoiceEditor";
 
 export default {
@@ -42,12 +70,13 @@ export default {
   components: { MultipleChoiceEditor, GapFillingEditor, MatchingEditor },
   data() {
     return {
-      selectedQuestionType: this.mode === "create" ? "Multiple Choice" : this.question.type_name,
+      selectedQuestionType:
+        this.mode === "create" ? "Multiple Choice" : this.question.type_name,
     };
   },
   created() {
-    console.log(this.question)
-  }
+    console.log(this.question);
+  },
 };
 </script>
 

@@ -2,13 +2,19 @@
   <div class="form-group">
     <label class="control-label" for="instruction">Instruction</label>
     <div class="">
-      <textarea name="instruction" id="instruction" placeholder="Choose from the list for each question" rows="3"></textarea>
+      <textarea
+        name="instruction"
+        id="instruction"
+        placeholder="Choose from the list for each question"
+        rows="3"
+        v-model="instruction"
+      ></textarea>
     </div>
   </div>
   <div class="form-group">
     <label class="control-label" for="question">Question</label>
     <div class="">
-      <textarea name="question" id="question" rows="3"></textarea>
+      <textarea name="question" id="question" rows="3" v-model="question"></textarea>
     </div>
   </div>
   <div class="form-group">
@@ -20,12 +26,12 @@
           type="radio"
           name="active"
           value="yes"
-          checked
+          v-model="isActive"
         />
         <label class="form-check-label" for="active">Yes</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="active" value="no" />
+        <input class="form-check-input" type="radio" name="active" value="no" v-model="isActive" />
         <label class="form-check-label" for="active">No</label>
       </div>
     </div>
@@ -33,14 +39,14 @@
   <div class="form-group">
     <label class="control-label" for="active">Left Column</label>
     <div v-if="leftItems.length > 0">
-    <matching-choice-left-item
-      v-for="item in leftItems"
-      :key="item.id"
-      :id="item.id"
-      :item="item.item"
-      :matchingItem="item.matchingItem"
-      :availableOptions="rightItems"
-    ></matching-choice-left-item>
+      <matching-choice-left-item
+        v-for="item in leftItems"
+        :key="item.id"
+        :id="item.id"
+        :item="item.item"
+        :matchingItem="item.matchingItem"
+        :availableOptions="rightItems"
+      ></matching-choice-left-item>
     </div>
     <div v-else>There is no item created for left column</div>
   </div>
@@ -49,8 +55,12 @@
   <div class="form-group">
     <label class="control-label" for="active">Right Column</label>
     <div v-if="rightItems.length > 0">
-    <matching-choice-right-item v-for="item in rightItems" :key="item.id" :id="item.id" :item="item.item"
-    ></matching-choice-right-item>
+      <matching-choice-right-item
+        v-for="item in rightItems"
+        :key="item.id"
+        :id="item.id"
+        :item="item.item"
+      ></matching-choice-right-item>
     </div>
     <div v-else>There is no item created for right column</div>
   </div>
@@ -79,13 +89,17 @@ export default {
     MatchingChoiceRightItem,
   },
   inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
-  props: ["choices"],
+  props: ["item", "mode"],
   data() {
     return {
       leftItems: [],
       rightItems: [],
       currentAlphabeticCharacter: "@",
       currentNumericCharacter: 0,
+      question: this.mode === "create" ? "" : this.item.question,
+      instruction: this.mode === "create" ? "" : this.item.instruction,
+      isActive:
+        this.mode === "create" ? "" : this.item.is_active === 1 ? "yes" : "no",
     };
   },
   methods: {

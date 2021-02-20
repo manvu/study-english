@@ -12,6 +12,7 @@ const userRouter = require("./routes/userRouter")
 const securityRouter = require("./routes/securityRouter")
 const quizRouter = require("./routes/quizRouter")
 const forumRouter = require("./routes/forumRouter")
+const questionRouter = require("./routes/questionRouter")
 
 app.use('/auth', authRouter)
 app.use('/', appRouter)
@@ -19,6 +20,7 @@ app.use('/user', userRouter)
 app.use('/security', securityRouter)
 app.use('/quiz', quizRouter)
 app.use('/discussion', forumRouter)
+app.use('/question', questionRouter)
 
 var corsOptions = {
   origin: "*",

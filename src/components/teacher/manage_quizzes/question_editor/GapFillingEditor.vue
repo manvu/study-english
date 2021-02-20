@@ -7,8 +7,13 @@
         id="instruction"
         rows="3"
         placeholder="Read the text below and think of the word which best fits each gap"
+        v-model="instruction"
       ></textarea>
     </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label" for="paragraph-title">Paragraph Title</label>
+    <input type="text" class="form-control" v-model="paragraphTitle" />
   </div>
   <div class="form-group">
     <div class="label-button-group">
@@ -36,11 +41,18 @@
           name="active"
           value="yes"
           checked
+          v-model="isActive"
         />
         <label class="form-check-label" for="active">Yes</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="active" value="no" />
+        <input
+          class="form-check-input"
+          type="radio"
+          name="active"
+          value="no"
+          v-model="isActive"
+        />
         <label class="form-check-label" for="active">No</label>
       </div>
     </div>
@@ -49,7 +61,8 @@
     <label class="control-label" for="active">Key Answer</label>
     <div v-if="items.length > 0">
       <gap-filling-choice-item
-      v-for="(gap, id) in items" :key="id"
+        v-for="(gap, id) in items"
+        :key="id"
         :id="id"
         @updateKeyAnswer="updateAnswer"
       ></gap-filling-choice-item>
@@ -74,14 +87,18 @@
 import GapFillingChoiceItem from "./question_editor_item/GapFillingChoiceItem";
 
 export default {
-    inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
+  props: ["item", "mode"],
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
   components: {
     GapFillingChoiceItem,
   },
   watch: {},
   data() {
     return {
-      question: "",
+      question: this.mode === "create" ? "" : this.item.question,
+      instruction: this.mode === "create" ? "" : this.item.instruction,
+      isActive: this.mode === "create" ? "" : (this.item.is_active === 1 ? "yes" : "no"),
+      paragraphTitle: this.mode === "create" ? "" : this.item.paragraph_title,
       currentGapNumber: 1,
       items: [],
     };

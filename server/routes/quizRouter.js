@@ -16,10 +16,8 @@ quizRouter.use(bodyParser.json());
 quizRouter.use(bodyParser.urlencoded({ extended: true }));
 
 quizRouter.get("/:id", async (req, res) => {
-    let quizId = req.params.quizId;
+    let quizId = req.params.id;
   
-  
-
     console.log(quizId);
   
     res.json({

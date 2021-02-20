@@ -68,7 +68,10 @@
       <div class="mt-2 mb-2" v-else>
         There is no question created for this quiz yet
       </div>
-      <button @click="openQuestionEditorModal(null, 'create')" class="mb-3 btn btn-primary">
+      <button
+        @click="openQuestionEditorModal(null, 'create')"
+        class="mb-3 btn btn-primary"
+      >
         Add Question
       </button>
       <div class="form-group">
@@ -107,26 +110,33 @@ export default {
       timeAllowed: this.mode === "create" ? 30 : this.quiz.time_allowed,
       questions: this.mode === "create" ? [] : this.quiz.questions,
       showQuestionEditor: false,
-      questionEditorOpenMode: null
+      questionEditorOpenMode: null,
     };
   },
   computed: {
     editQuestion() {
-      debugger
       return this.$store.getters["questionStore/getEditQuestion"];
     },
   },
   methods: {
     openQuestionEditorModal(questionId, mode) {
-      debugger
-      this.questionEditorOpenMode = mode
-      this.$store.dispatch("questionStore/getQuestionForEdit", { questionId });
-      this.showQuestionEditor = true;
-      this.editQuestion
+      this.questionEditorOpenMode = mode;
+
+      if (mode === "edit") {
+        this.$store
+          .dispatch("questionStore/getQuestionForEdit", { questionId })
+          .then((response) => {
+            this.showQuestionEditor = true;
+            this.editQuestion;
+          });
+      } else {
+        this.showQuestionEditor = true;
+        
+      }
     },
     closeQuestionEditorModal() {
       this.showQuestionEditor = false;
-    }
+    },
   },
 };
 </script>

@@ -150,6 +150,16 @@ class Database {
   
       return this.executeQuery(query)
     }
+
+    this.getQuestionById = async function(userId) {
+      let query = `SELECT *, qt.type_name, qi.instruction
+      FROM question q 
+      JOIN question_type qt ON q.type_id = qt.type_id
+      JOIN question_instruction qi ON q.instruction_id = qi.instruction_id
+      WHERE question_id = ${userId}`
+  
+      return this.executeQuery(query)
+    }
   }
 }
 
