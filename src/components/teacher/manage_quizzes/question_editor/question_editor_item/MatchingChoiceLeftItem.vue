@@ -9,7 +9,7 @@
     <div class="col-1"></div>
     <div class="col-3">
       <select class="form-control" name="matching-options" v-model="selectedOption">
-        <option v-for="option in availableOptions" :key="option.id">{{ option.id }}</option>
+        <option v-for="option in availableOptions" :key="option.letter">{{ option.letter }}</option>
       </select>
     </div>
   </div>
@@ -17,12 +17,15 @@
 
 <script>
 export default {
-  props: ["id", "item", "matchingItem", "availableOptions"],
+  props: ["id", "item", "matchingItem", "availableOptions", "mode"],
   data () {
     return {
-      leftColumnText: this.item,
-      selectedOption: this.matchingItem
+      leftColumnText: this.mode === "create" ? "" : this.item.text,
+      selectedOption: this.mode === "create" ? this.matchingItem : this.item.correct_answer,
     }
+  },
+  created () {
+    debugger
   }
 };
 </script>

@@ -41,9 +41,9 @@
     <div v-if="leftItems.length > 0">
       <matching-choice-left-item
         v-for="item in leftItems"
-        :key="item.id"
-        :id="item.id"
-        :item="item.item"
+        :key="item.letter"
+        :id="item.letter"
+        :item="item"
         :matchingItem="item.matchingItem"
         :availableOptions="rightItems"
       ></matching-choice-left-item>
@@ -57,9 +57,9 @@
     <div v-if="rightItems.length > 0">
       <matching-choice-right-item
         v-for="item in rightItems"
-        :key="item.id"
-        :id="item.id"
-        :item="item.item"
+        :key="item.letter"
+        :id="item.letter"
+        :item="item"
       ></matching-choice-right-item>
     </div>
     <div v-else>There is no item created for right column</div>
@@ -92,8 +92,8 @@ export default {
   props: ["item", "mode"],
   data() {
     return {
-      leftItems: [],
-      rightItems: [],
+      leftItems: this.mode === "create" ? "" : this.item.content.leftItems,
+      rightItems: this.mode === "create" ? "" : this.item.content.rightItems,
       currentAlphabeticCharacter: "@",
       currentNumericCharacter: 0,
       question: this.mode === "create" ? "" : this.item.question,

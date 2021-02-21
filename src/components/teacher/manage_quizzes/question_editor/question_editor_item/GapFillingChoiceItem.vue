@@ -1,6 +1,6 @@
 <template>
   <div class="form-group">
-    <label class="control-label" for="instruction">Gap {{ id + 1 }}</label>
+    <label class="control-label" for="instruction">Gap {{ id }}</label>
     <input type="text" class="form-control col-4" name="active" v-model="keyAnswer" />
   </div>
 
@@ -8,10 +8,10 @@
 
 <script>
 export default {
-  props: ["id"],
+  props: ["id", "item", "mode"],
   data() {
     return {
-      keyAnswer: "",
+      keyAnswer: this.mode === "create" ? "" : this.item.correct_answer,
     };
   },
   methods: {

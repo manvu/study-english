@@ -11,10 +11,10 @@
 
 <script>
 export default {
-    props: ["id", "item"],
+    props: ["id", "item", "mode"],
     data() {
         return {
-            rightColumnText: this.item
+            rightColumnText: this.mode === "create" ? "" : this.item.text,
         }
     }
 };

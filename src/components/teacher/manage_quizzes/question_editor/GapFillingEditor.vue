@@ -61,9 +61,11 @@
     <label class="control-label" for="active">Key Answer</label>
     <div v-if="items.length > 0">
       <gap-filling-choice-item
-        v-for="(gap, id) in items"
-        :key="id"
-        :id="id"
+        v-for="item in items"
+        :key="item.sequence_id"
+        :id="item.sequence_id"
+        :item="item"
+        :mode="mode"
         @updateKeyAnswer="updateAnswer"
       ></gap-filling-choice-item>
     </div>
@@ -100,7 +102,7 @@ export default {
       isActive: this.mode === "create" ? "" : (this.item.is_active === 1 ? "yes" : "no"),
       paragraphTitle: this.mode === "create" ? "" : this.item.paragraph_title,
       currentGapNumber: 1,
-      items: [],
+      items: this.mode === "create" ? "" : this.item.content,
     };
   },
   methods: {

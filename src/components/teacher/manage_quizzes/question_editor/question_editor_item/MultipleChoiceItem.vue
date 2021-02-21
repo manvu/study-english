@@ -21,11 +21,11 @@
 
 <script>
 export default {
-  props: ["id", "item"],
+  props: ["id", "item", "mode"],
   data() {
     return {
-      checked: false,
-      choiceText: "",
+      checked: this.mode === "create" ? "" : (this.item.is_correct_choice === 1 ? true : false),
+      choiceText: this.mode === "create" ? "" : this.item.choice_text,
     };
   },
 };

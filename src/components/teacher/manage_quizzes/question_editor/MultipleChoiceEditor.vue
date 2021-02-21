@@ -41,9 +41,10 @@
     <div v-if="items.length > 0">
       <multiple-choice-item
         v-for="item in items"
-        :key="item.id"
-        :id="item.id"
-        :item="item.item"
+        :key="item.choice_id"
+        :id="item.choice_id"
+        :item="item"
+        :mode="mode"
       ></multiple-choice-item>
     </div>
     <div v-else>There is no choice created for this question</div>
@@ -71,7 +72,7 @@ export default {
   props: ["item", "mode"],
   data() {
     return {
-      items: [],
+      items: this.mode === "create" ? "" : this.item.content,
       currentAlphabeticCharacter: "@",
       question: this.mode === "create" ? "" : this.item.question,
       instruction: this.mode === "create" ? "" : this.item.instruction,

@@ -1,6 +1,6 @@
 <template>
   <div class="col-md-10">
-    <h2>Selected Quiz: Quiz {{ quizId }}</h2>
+    <h2>Selected Quiz: {{ quizId }}</h2>
     <div class="contact-form">
       <div class="form-group">
         <label class="control-label col-sm-6" for="courseName"
