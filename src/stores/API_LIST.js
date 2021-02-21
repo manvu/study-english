@@ -5,9 +5,11 @@ export default {
     getUsers: "users",
     getDataForHome: "home",
     getDataForTeacher: "teacher",
+    getDataForDiscussion: "discussion",
 
     getQuizById: (quizId) => `quiz/${quizId}`,
     getQuestionById: (questionId) => `question/${questionId}`,
+    getDiscussionThreadById: (threadId) => `discussion/thread/${threadId}`,
 
     saveQuizById: (quizId) => `quiz/edit/${quizId}`,
     saveQuestionById: (questionId) => `question/edit/${questionId}`,

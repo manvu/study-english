@@ -13,8 +13,8 @@ import RegisterPage from "./components/auth/RegisterPage";
 import QuizPage from "./components/quiz/QuizPage";
 import QuizResult from "./components/quiz/QuizResult";
 import DiscussionForum from "./components/discussion/DiscussionForum";
-import PostView from "./components/discussion/PostView";
-import CreateTopic from "./components/discussion/CreateTopic";
+import ThreadView from "./components/discussion/ThreadView";
+import CreateThread from "./components/discussion/CreateThread";
 import TeacherPage from "./components/teacher/TeacherPage";
 import StudentStatistics from "./components/statistics/StudentStatistics";
 import AccountSettings from "./components/settings/AccountSettings";
@@ -31,7 +31,7 @@ const router = createRouter({
       component: ForgotPassword,
     },
     { path: "/logout", name: "logout", component: LogoutPage },
-    { path: "/postview", name: "postview", component: PostView },
+    { path: "/thread/:id", name: "threads.index", component: ThreadView },
     {
       path: "/register",
       name: "register",
@@ -89,9 +89,9 @@ const router = createRouter({
       },
     },
     {
-      path: "/create-topic",
-      name: "create-topic",
-      component: CreateTopic,
+      path: "/thread/create",
+      name: "threads.create",
+      component: CreateThread,
       beforeEnter(to, from, next) {
         const isAuthenticated = store.getters['authStore/isAuthenticated'];;
 

@@ -15,6 +15,7 @@
             class="form-control"
             id="title"
             placeholder="Add here"
+            v-model="threadTitle"
           />
         </div>
         <div class="row">
@@ -23,7 +24,7 @@
               <label class="create__label" for="category"
                 >Select Related Quiz</label
               >
-              <select class="custom-select" id="category">
+              <select class="custom-select" id="category" v-model="selectedRelatedQuiz">
                 <option>Quiz 1</option>
                 <option>Quiz 2</option>
                 <option>Quiz 3</option>
@@ -35,12 +36,12 @@
         </div>
         <div class="create__section create__textarea">
           <label class="create__label" for="description">Description</label>
-          <textarea class="form-control" id="description"></textarea
+          <textarea class="form-control" id="description" v-model="description"></textarea
           >
         </div>
         <div class="create__footer">
-          <a href="#" class="create__btn-cansel btn btn-light">Cancel</a>
-          <a href="#" class="create__btn-create btn btn-primary"
+          <a href="#" @click="cancel" class="create__btn-cansel btn btn-light">Cancel</a>
+          <a href="#" @click="createThread" class="create__btn-create btn btn-primary"
             >Create Thread</a
           >
         </div>
@@ -51,9 +52,21 @@
 
 <script>
 export default {
-  setup() {
-    return {};
+  data () {
+    return {
+      threadTitle: '',
+      selectedRelatedQuiz: '',
+      description: ''
+    }
   },
+  methods: {
+    cancel() {
+      this.$router.push("discussion")
+    },
+    createThread() {
+
+    }
+  }
 };
 </script>
 

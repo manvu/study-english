@@ -4,12 +4,14 @@ import { createStore } from "vuex";
 import authStore from "./stores/authStore";
 import quizStore from "./stores/quizStore";
 import questionStore from "./stores/questionStore";
+import forumStore from "./stores/forumStore";
 
 const store = createStore({
   modules: {
     authStore,
     quizStore,
     questionStore,
+    forumStore
   },
 });
 

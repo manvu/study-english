@@ -112,9 +112,10 @@ class Database {
     };
 
     this.getDiscussionThreadsAsync = async function() {
-      let query = `SELECT dt.subject, dt.quiz_id, dt.user_id as thread_starter, 
-      (SELECT COUNT(*) FROM discussion_post dp WHERE dp.thread_id = dt.thread_id) as replies
-      FROM discussion_thread dt`;
+      let query = `SELECT dt.subject, dt.thread_id, dt.content, dt.quiz_id, dt.user_id as thread_starter, 
+      (SELECT COUNT(*) FROM discussion_post dp WHERE dp.thread_id = dt.thread_id) as replies,
+      (SELECT dp.created_at FROM discussion_post dp WHERE dp.thread_id = dt.thread_id ORDER BY dp.created_at DESC LIMIT 1) as last_activity
+FROM discussion_thread dt`;
 
       return this.executeQuery(query);
     };

@@ -16,14 +16,25 @@ forumRouter.use(bodyParser.json());
 forumRouter.use(bodyParser.urlencoded({ extended: true }));
 
 forumRouter.get("/thread/:id", async (req, res) => {
+  let threadId = req.params.id;
+
+  let getDiscussionThreadsByIdAsyncResponse = await database.getDiscussionThreadsByIdAsync(
+    threadId
+  );
+  let getDiscussionPostsByThreadIdAsyncResponse = await database.getDiscussionPostsByThreadIdAsync(
+    threadId
+  );
+
+  console.log(threadId);
+
+  res.json({
+    error: null,
+    thread: {
+      ...getDiscussionThreadsByIdAsyncResponse.response[0],
+      posts: getDiscussionPostsByThreadIdAsyncResponse.response,
+    }
     
-    let threadId = req.params.threadId;
-  
-    console.log(threadId);
-  
-    res.json({
-      error: null,
-    });
+  });
 });
 
 module.exports = forumRouter;
