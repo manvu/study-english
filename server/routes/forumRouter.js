@@ -4,6 +4,7 @@ const STRINGS = require("../strings");
 var forumRouter = express.Router();
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const {getUserIdFromToken} = require("../helper");
 
 var corsOptions = {
   origin: "*",

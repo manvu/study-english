@@ -4,8 +4,9 @@ const STRINGS = require("../strings");
 var appRouter = express.Router();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const helper = require("../helper");
-
+const { getUserIdFromToken } = require("../helper");
+const { AUTHENTICATION_FAILED } = require("../strings");
+const dotenv = require("dotenv").config();
 
 var corsOptions = {
   credentials: true,
@@ -19,30 +20,15 @@ appRouter.use(bodyParser.json());
 appRouter.use(bodyParser.urlencoded({ extended: true }));
 
 appRouter.get("/home", async (req, res) => {
-  let sess = req.session;
+  const userId = getUserIdFromToken(req.headers.authorization);
 
-  let email = req.query.email;
-  email = !email ? "" : email.trim();
-
-  if (email === "") {
+  if (userId) {
   }
 
-  let allQuizzesResponse = await database.getQuizRatings();
-  // let questionsPerQuizResponse = await database.getNumberOfQuestions();
   let quizzesInfoResponse = await database.getQuizInfo();
 
-  if (
-    !allQuizzesResponse.error &&
-    !quizzesInfoResponse.error
-  ) {
+  if (!quizzesInfoResponse.error) {
     let response = quizzesInfoResponse.response;
-
-    for (let i = 0; i < allQuizzesResponse.response.length; i++) {
-      let item = allQuizzesResponse.response[i];
-      let quiz = response.find((q) => q.quiz_id === item.quiz_id);
-      quiz.averageRating = item.average_rating;
-      quiz.ratingCount = item.rating_count;
-    }
 
     res.json({
       error: null,
@@ -50,7 +36,6 @@ appRouter.get("/home", async (req, res) => {
     });
   }
 });
-
 
 appRouter.get("/quiz/:id", async (req, res) => {
   let quizId = req.params.id;
@@ -92,30 +77,40 @@ appRouter.get("/quiz/:id", async (req, res) => {
 });
 
 appRouter.get("/discussion", async (req, res) => {
-  debugger
+  ;
 
   let discussionThreadsResponse = await database.getDiscussionThreadsAsync();
 
   if (!discussionThreadsResponse.error) {
     res.json({
       error: null,
-      threads: discussionThreadsResponse.response
-    })
+      threads: discussionThreadsResponse.response,
+    });
   }
 });
 
-appRouter.post("/statistics", async (req, res) => {
-  const userId = req.query.userId
+appRouter.get("/statistics", async (req, res) => {
+  const userId = getUserIdFromToken(req.headers.authorization);
 
-  let getQuizStatisticsByUserIdResponse = await database.getQuizStatisticsByUserId(userId);
-  let getAnswerStatisticsByUserIdResponse = await database.getAnswerStatisticsByUserId(userId)
-
-  if (!getQuizStatisticsByUserIdResponse.error) {
-    res.json({
-      error: null,
-      quizStatistics: getQuizStatisticsByUserIdResponse.response,
-      answerStatistics: getAnswerStatisticsByUserIdResponse.response
-    })
+  if (userId) {
+    let getQuizStatisticsByUserIdResponse = await database.getQuizStatisticsByUserId(
+      userId
+    );
+    let getAnswerStatisticsByUserIdResponse = await database.getAnswerStatisticsByUserId(
+      userId
+    );
+  
+    if (!getQuizStatisticsByUserIdResponse.error) {
+      res.status(200).json({
+        error: null,
+        quizStatistics: getQuizStatisticsByUserIdResponse.response[0],
+        answerStatistics: getAnswerStatisticsByUserIdResponse.response[0],
+      });
+    }
+  } else {
+    res.status(400).json({
+      error: AUTHENTICATION_FAILED,
+    });
   }
 });
 
@@ -126,7 +121,7 @@ appRouter.get("/teacher", async (req, res) => {
     res.json({
       error: null,
       quizzes: getQuizInfoResponse.response,
-    })
+    });
   }
 });
 

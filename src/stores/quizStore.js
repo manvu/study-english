@@ -6,7 +6,7 @@ const quizStore = {
   state() {
     return {
       quizzes: [],
-      editQuiz: {}
+      editQuiz: {},
     };
   },
   mutations: {
@@ -34,11 +34,17 @@ const quizStore = {
       const isAuthenticated = context.rootGetters["authStore/isAuthenticated"];
       const email = localStorage.getItem("email") || "";
 
+      
+
       return axios
-        .get(
-          process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getDataForHome,
-          { withCredentials: true }
-        )
+        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getDataForHome, {
+          withCredentials: true,
+          headers: {
+            Authorization: !!localStorage.getItem("token")
+              ? `Bearer ${localStorage.getItem("token")}`
+              : "",
+          },
+        })
         .then((response) => {
           if (!response.data.error) {
             context.commit("getDataForHome", {

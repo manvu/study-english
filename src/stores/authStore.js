@@ -5,16 +5,16 @@ const authStore = {
   namespaced: true,
   state() {
     return {
-      isAuthenticated: !!localStorage.getItem("email"),
+      isAuthenticated: !!localStorage.getItem("token"),
       isTeacher: !!localStorage.getItem("isTeacher"),
       authenticatedUser: localStorage.getItem("firstName") || localStorage.getItem("email"),
     };
   },
   mutations: {
     login(state, payload) {
-      state.isAuthenticated = !!localStorage.getItem("email");
+      state.isAuthenticated = !!localStorage.getItem("token");
       state.isTeacher = !!localStorage.getItem("isTeacher");
-      state.authenticatedUser = localStorage.getItem("firstName");
+      state.authenticatedUser = localStorage.getItem("firstName") || localStorage.getItem("email");
     },
     register(state, payload) {},
     signOut(state, payload) {
@@ -33,7 +33,8 @@ const authStore = {
         .then((response) => {
           
           if (!response.data.error) {
-            localStorage.setItem("email", payload.email);
+            localStorage.setItem("email", response.data.email);
+            localStorage.setItem("token", response.data.token);
             localStorage.setItem("firstName", response.data.userInfo.firstName);
             localStorage.setItem("lastName", response.data.userInfo.lastName);
             localStorage.setItem("isTeacher", response.data.userInfo.isTeacher);

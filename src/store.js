@@ -5,13 +5,15 @@ import authStore from "./stores/authStore";
 import quizStore from "./stores/quizStore";
 import questionStore from "./stores/questionStore";
 import forumStore from "./stores/forumStore";
+import statisticsStore from "./stores/statisticsStore";
 
 const store = createStore({
   modules: {
     authStore,
     quizStore,
     questionStore,
-    forumStore
+    forumStore,
+    statisticsStore
   },
 });
 

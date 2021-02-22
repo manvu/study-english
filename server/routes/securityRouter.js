@@ -4,6 +4,7 @@ var securityRouter = express.Router();
 const PERMISSIONS = require("../permissions");
 const STRINGS = require("../strings");
 const cors = require("cors");
+const {getUserIdFromToken} = require("../helper");
 
 var corsOptions = {
   origin: "*",

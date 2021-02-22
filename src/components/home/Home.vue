@@ -14,8 +14,8 @@
       :skill_description="quiz.skill_description"
       :completedChallenges="0"
       :numberOfQuestions="quiz.number_of_questions"
-      :averageRating="quiz.averageRating"
-      :ratingCount="quiz.ratingCount"
+      :averageRating="quiz.average_rating"
+      :ratingCount="quiz.rating_count"
     ></quiz-list-item>
   </div>
 </template>

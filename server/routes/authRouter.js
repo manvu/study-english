@@ -38,7 +38,7 @@ authRouter.post("/register", async (req, res) => {
     roleId,
     profilePictureId
   );
-  debugger;
+  ;
   if (!response.error) {
     if (response.response.affectedRows === 1) {
       res.json({
@@ -64,7 +64,7 @@ authRouter.post("/login", async (req, res) => {
   // Get user_id and password
   const response = await database.validateUserAsync(email);
 
-  debugger;
+  ;
 
   if (!response.error) {
     if (response.response.length === 0) {
@@ -84,6 +84,8 @@ authRouter.post("/login", async (req, res) => {
         let token = jwt.sign({ id: userId }, process.env.JWT_SECRET_KEY, {
           expiresIn: 86400,
         });
+
+        
 
         res.status(200).json({
           error: null,

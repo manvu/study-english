@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const checkPassword = function(raw, hash) {
   return new Promise(function(resolve, reject) {
@@ -36,8 +37,23 @@ function cleanObject(obj) {
 
   return obj;
 }
+
+function getUserIdFromToken(authorization) {
+  if (authorization) {
+    const authorizationString = authorization
+    const tokens = authorizationString.split(" ");
+    const jwtToken = tokens[1]
+    const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
+    var userId = decoded.id;
+    return userId
+  } else {
+    return null
+  }
+}
+
 module.exports = {
   checkPassword,
   hashPasswordAsync,
-  cleanObject
+  cleanObject,
+  getUserIdFromToken
 };

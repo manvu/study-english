@@ -6,6 +6,7 @@ export default {
     getDataForHome: "home",
     getDataForTeacher: "teacher",
     getDataForDiscussion: "discussion",
+    getStatistics: "statistics",
 
     getQuizById: (quizId) => `quiz/${quizId}`,
     getQuestionById: (questionId) => `question/${questionId}`,
