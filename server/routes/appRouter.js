@@ -6,8 +6,10 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const helper = require("../helper");
 
+
 var corsOptions = {
-  origin: "*",
+  credentials: true,
+  origin: true,
 };
 
 appRouter.use(cors(corsOptions));
@@ -49,6 +51,7 @@ appRouter.get("/home", async (req, res) => {
   }
 });
 
+
 appRouter.get("/quiz/:id", async (req, res) => {
   let quizId = req.params.id;
 
@@ -89,6 +92,8 @@ appRouter.get("/quiz/:id", async (req, res) => {
 });
 
 appRouter.get("/discussion", async (req, res) => {
+  debugger
+
   let discussionThreadsResponse = await database.getDiscussionThreadsAsync();
 
   if (!discussionThreadsResponse.error) {

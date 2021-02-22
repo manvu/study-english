@@ -22,10 +22,9 @@ const quizStore = {
       state.quizzes = payload.quizzes;
     },
     getQuizForEdit(state, payload) {
-      state.editQuiz = state.quizzes.find(q => q.quiz_id === payload.quizId)
-      state.editQuiz.questions = payload.questions
-      
-    }
+      state.editQuiz = state.quizzes.find((q) => q.quiz_id === payload.quizId);
+      state.editQuiz.questions = payload.questions;
+    },
   },
   actions: {
     toggleFavorite(context, payload) {
@@ -36,11 +35,10 @@ const quizStore = {
       const email = localStorage.getItem("email") || "";
 
       return axios
-        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getDataForHome, {
-          params: {
-            email,
-          },
-        })
+        .get(
+          process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getDataForHome,
+          { withCredentials: true }
+        )
         .then((response) => {
           if (!response.data.error) {
             context.commit("getDataForHome", {
@@ -79,38 +77,35 @@ const quizStore = {
         });
     },
     getQuizForEdit(context, payload) {
-      const quizId = payload.quizId
+      const quizId = payload.quizId;
 
       return axios
-      .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getQuizById(quizId))
-      .then((response) => {
-        if (!response.data.error) {
-          let questions = response.data.questions
-          payload.questions = questions
-          context.commit("getQuizForEdit", payload)
-        }
+        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getQuizById(quizId))
+        .then((response) => {
+          if (!response.data.error) {
+            let questions = response.data.questions;
+            payload.questions = questions;
+            context.commit("getQuizForEdit", payload);
+          }
 
-        console.log(response);
-        
-      })
-      .catch((error) => {
-        console.log(error);
-        this.errored = true;
-      })
-      .finally(() => {
-        this.loading = false;
-        
-      });
-    }
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
   },
   getters: {
     getQuizList(state) {
       return state.quizzes;
     },
     getEditQuiz(state) {
-      
-      return state.editQuiz
-    }
+      return state.editQuiz;
+    },
   },
 };
 

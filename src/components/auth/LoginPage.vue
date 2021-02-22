@@ -53,9 +53,11 @@ export default {
       this.$store.dispatch("authStore/login", {
         email: this.email,
         password: this.password,
-      });
+      }).then(response => {
+        this.$router.push({ name: "home" });
+      })
 
-      this.$router.push({ name: "home" });
+      
     },
   },
 };

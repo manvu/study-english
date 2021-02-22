@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     cancel() {
-      this.$router.push("discussion")
+      this.$router.push("./discussion")
     },
     createThread() {
 

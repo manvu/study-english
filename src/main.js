@@ -89,7 +89,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/thread/create",
+      path: "/create-thread",
       name: "threads.create",
       component: CreateThread,
       beforeEnter(to, from, next) {

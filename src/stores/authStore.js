@@ -25,11 +25,11 @@ const authStore = {
   },
   actions: {
     login(context, payload) {
-      axios
+      return axios
         .post(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.login, {
           email: payload.email,
           password: payload.password,
-        })
+        }, { withCredentials: true })
         .then((response) => {
           
           if (!response.data.error) {

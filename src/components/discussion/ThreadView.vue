@@ -11,12 +11,12 @@
                 alt=""
               />
               <div class="media-body ml-3">
-                <a href="javascript:void(0)" data-abc="true">Tom Harry</a>
-                <div class="text-muted small">13 days ago</div>
+                <a href="javascript:void(0)" data-abc="true">{{ thread.full_name }}</a>
+                <div class="text-muted small">{{ thread.created_at }}</div>
               </div>
               <div class="text-muted small ml-3">
-                <div>Member since <strong>01/1/2019</strong></div>
-                <div><strong>134</strong> posts</div>
+                <div>Member since <strong>{{ thread.member_since }}</strong></div>
+                <div><strong>{{ thread.post_count }}</strong> posts</div>
               </div>
             </div>
           </div>
@@ -47,12 +47,12 @@
                 alt=""
               />
               <div class="media-body ml-3">
-                <a href="javascript:void(0)" data-abc="true">Tom Harry</a>
-                <div class="text-muted small">13 days ago</div>
+                <a href="javascript:void(0)" data-abc="true">{{ p.full_name}}</a>
+                <div class="text-muted small">{{ p.posted_at }}</div>
               </div>
               <div class="text-muted small ml-3">
-                <div>Member since <strong>01/1/2019</strong></div>
-                <div><strong>134</strong> posts</div>
+                <div>Member since <strong>{{ p.member_since }}</strong></div>
+                <div><strong>{{ p.post_count }}</strong> posts</div>
               </div>
             </div>
           </div>

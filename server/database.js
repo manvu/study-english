@@ -121,7 +121,14 @@ FROM discussion_thread dt`;
     };
 
     this.getDiscussionThreadsByIdAsync = async function(threadId) {
-      let query = `SELECT * FROM discussion_thread dt WHERE dt.thread_id = ${threadId}`;
+      let query = `SELECT dt.thread_id, dt.subject, dt.content, dt.created_at, 
+      (SELECT CONCAT(u.first_name, ' ', u.last_name)) as full_name,
+            (SELECT COUNT(*) FROM discussion_thread dt1 WHERE dt1.user_id = u.user_id) as thread_count,
+            (SELECT COUNT(*) FROM discussion_post dp1 WHERE dp1.user_id = u.user_id) as post_count,
+            dt.is_deleted,
+      u.created_at as member_since
+      FROM discussion_thread dt JOIN user u ON dt.user_id = u.user_id
+      WHERE dt.thread_id = ${threadId}`;
       return this.executeQuery(query);
     };
 
