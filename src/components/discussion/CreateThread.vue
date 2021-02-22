@@ -14,8 +14,9 @@
             type="text"
             class="form-control"
             id="title"
-            placeholder="Add here"
+            placeholder="Please add thread subject"
             v-model="threadTitle"
+            required
           />
         </div>
         <div class="row">
@@ -24,24 +25,39 @@
               <label class="create__label" for="category"
                 >Select Related Quiz</label
               >
-              <select class="custom-select" id="category" v-model="selectedRelatedQuiz">
-                <option>Quiz 1</option>
-                <option>Quiz 2</option>
-                <option>Quiz 3</option>
+              <select
+                class="custom-select"
+                id="category"
+                v-model="selectedRelatedQuiz"
+                required
+              >
+                <option value="none">Please choose a related quiz</option>
+                <option v-for="q in quizzes" :key="q.quiz_id" :value="q.quiz_id">
+                  Quiz {{ q.quiz_id }}
+                </option>
               </select>
             </div>
           </div>
-          <div class="col-md-6">
-          </div>
+          <div class="col-md-6"></div>
         </div>
         <div class="create__section create__textarea">
           <label class="create__label" for="description">Description</label>
-          <textarea class="form-control" id="description" v-model="description"></textarea
-          >
+          <textarea
+            class="form-control"
+            id="description"
+            v-model="description"
+            placeholder="Add your description here"
+            required
+          ></textarea>
         </div>
         <div class="create__footer">
-          <a href="#" @click="cancel" class="create__btn-cansel btn btn-light">Cancel</a>
-          <a href="#" @click="createThread" class="create__btn-create btn btn-primary"
+          <a href="#" @click="cancel" class="create__btn-cansel btn btn-light"
+            >Cancel</a
+          >
+          <a
+            href="#"
+            @click="createThread"
+            class="create__btn-create btn btn-primary"
             >Create Thread</a
           >
         </div>
@@ -52,21 +68,65 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      threadTitle: '',
-      selectedRelatedQuiz: '',
-      description: ''
-    }
+      threadTitle: "",
+      selectedRelatedQuiz: "none",
+      description: "",
+      errorMessage: "",
+      error: false,
+    };
   },
   methods: {
     cancel() {
-      this.$router.push("./discussion")
+      this.$router.push("./discussion");
     },
     createThread() {
+      if (this.selectedRelatedQuiz === "none") {
+        this.error = true;
+        this.errorMessage = "Please select a related quiz";
+        return;
+      }
 
-    }
-  }
+      if (this.threadTitle.length < 10) {
+        this.error = true;
+        this.errorMessage =
+          "Thread subject should be longer than 10 characters";
+        return;
+      }
+
+      if (this.description.length < 10) {
+        this.error = true;
+        this.errorMessage = "Description should be longer than 10 characters";
+        return;
+      }
+
+      this.error = false;
+      this.errorMessage = "";
+
+      this.$store.dispatch("forumStore/createThread", {
+        threadTitle: this.threadTitle,
+        selectedRelatedQuizId: this.selectedRelatedQuiz,
+        description: this.description
+      }).then((response) => {
+        
+        this.$router.push({
+          name: "threads.index",
+          params: { id: response.newThreadId },
+        });
+      });
+    },
+  },
+  computed: {
+    quizzes() {
+      return this.$store.getters["quizStore/getQuizList"];
+    },
+  },
+  created() {
+    this.$store.dispatch("quizStore/getDataForHome").then((response) => {
+      this.quizzes;
+    });
+  },
 };
 </script>
 

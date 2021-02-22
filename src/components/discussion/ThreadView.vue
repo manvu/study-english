@@ -11,12 +11,18 @@
                 alt=""
               />
               <div class="media-body ml-3">
-                <a href="javascript:void(0)" data-abc="true">{{ thread.full_name }}</a>
+                <a href="javascript:void(0)" data-abc="true">{{
+                  thread.full_name
+                }}</a>
                 <div class="text-muted small">{{ thread.created_at }}</div>
               </div>
               <div class="text-muted small ml-3">
-                <div>Member since <strong>{{ thread.member_since }}</strong></div>
-                <div><strong>{{ thread.post_count }}</strong> posts</div>
+                <div>
+                  Member since <strong>{{ thread.member_since }}</strong>
+                </div>
+                <div>
+                  <strong>{{ thread.post_count }}</strong> posts
+                </div>
               </div>
             </div>
           </div>
@@ -47,12 +53,18 @@
                 alt=""
               />
               <div class="media-body ml-3">
-                <a href="javascript:void(0)" data-abc="true">{{ p.full_name}}</a>
+                <a href="javascript:void(0)" data-abc="true">{{
+                  p.full_name
+                }}</a>
                 <div class="text-muted small">{{ p.posted_at }}</div>
               </div>
               <div class="text-muted small ml-3">
-                <div>Member since <strong>{{ p.member_since }}</strong></div>
-                <div><strong>{{ p.post_count }}</strong> posts</div>
+                <div>
+                  Member since <strong>{{ p.member_since }}</strong>
+                </div>
+                <div>
+                  <strong>{{ p.post_count }}</strong> posts
+                </div>
               </div>
             </div>
           </div>
@@ -71,37 +83,14 @@
       </div>
     </div>
   </div>
-
-  <div class="container mt-50 card-body">
-    <div class="row">
-      <div class="col-md-6"></div>
-    </div>
-    <div class="create__section create__textarea">
-      <textarea
-        class="form-control"
-        id="description"
-        rows="5"
-        placeholder="Type your reply here..."
-      ></textarea>
-    </div>
-    <div
-      class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3"
-    >
-      <div class="px-4 pt-3"></div>
-      <div class="px-4 pt-3">
-        <button type="button" class="btn btn-dark">
-          <i class="ion ion-md-create"></i>&nbsp; Cancel
-        </button>
-        <button type="button" class="btn btn-primary">
-          <i class="ion ion-md-create"></i>&nbsp; Submit
-        </button>
-      </div>
-    </div>
-  </div>
+  <post-reply :threadId="thread.thread_id"></post-reply>
 </template>
 
 <script>
+import PostReply from "./PostReply";
+
 export default {
+  components: {PostReply},
   computed: {
     thread() {
       return this.$store.getters["forumStore/getCurrentThread"];

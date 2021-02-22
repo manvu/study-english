@@ -116,7 +116,10 @@ class Database {
     this.getDiscussionThreadsAsync = async function() {
       let query = `SELECT dt.subject, dt.thread_id, dt.content, dt.quiz_id, dt.user_id as thread_starter, 
       (SELECT COUNT(*) FROM discussion_post dp WHERE dp.thread_id = dt.thread_id) as replies,
-      (SELECT dp.created_at FROM discussion_post dp WHERE dp.thread_id = dt.thread_id ORDER BY dp.created_at DESC LIMIT 1) as last_activity
+      COALESCE(
+      (SELECT dp.created_at FROM discussion_post dp WHERE dp.thread_id = dt.thread_id ORDER BY dp.created_at DESC LIMIT 1),
+      (SELECT dt.created_at FROM discussion_thread dt1 WHERE dt1.thread_id = dt.thread_id)
+      ) as last_activity
 FROM discussion_thread dt`;
 
       return this.executeQuery(query);
@@ -198,6 +201,19 @@ FROM discussion_thread dt`;
 
       return this.executeQuery(query);
     };
+
+    this.createNewThread = async function(subject, content, userId, quizId) {
+      let query = `
+      INSERT INTO discussion_thread(subject, content, user_id, quiz_id) 
+      VALUES ('${subject}', '${content}', '${userId}', '${quizId}');
+      `;
+
+      console.log(query)
+
+      return this.executeQuery(query);
+    };
+
+    
   }
 }
 

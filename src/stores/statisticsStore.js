@@ -11,7 +11,7 @@ const quizStore = {
   },
   mutations: {
     loadData(state, payload) {
-      debugger
+      
       state.quizStatistics = payload.quizStatistics
       state.answerStatistics = payload.answerStatistics
     },

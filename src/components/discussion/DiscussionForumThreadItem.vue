@@ -4,7 +4,7 @@
       <div class="posts__topic">
         <div class="posts__content">
           <a @click="navigateToThread(t.thread_id)">
-            <h3>
+            <h3 class="posts__title">
               <i><img src="./fonts/icons/main/Pinned.svg" alt="Pinned" /></i>
               {{ t.subject }}
             </h3>
@@ -122,6 +122,7 @@ export default {
       if (interval > 1) {
         return interval + " minutes";
       }
+
 
       return Math.floor(seconds) + " seconds";
     },
@@ -1276,5 +1277,9 @@ select {
   .posts__tags {
     display: none;
   }
+}
+
+.posts__title {
+  cursor: pointer;
 }
 </style>

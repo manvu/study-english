@@ -11,6 +11,7 @@ const STRINGS = {
     ACCESS_GRANTED: "Access granted.",
     UNKNOWN_PERMISSION: "Unknown permission.",
     ACCESS_DENIED_MESSAGE: "You do not have the privilege to perform this action",
+    ERROR_OCCURRED: "Error occurred",
     CANNOT_REGISTER_USER_WITH_EMAIL: email => `Cannot register user with email ${email}`
 }
 

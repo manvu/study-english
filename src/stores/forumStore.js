@@ -15,6 +15,9 @@ const quizStore = {
     },
     getDataForDiscussionThread(state, payload) {
       state.currentThread = payload.currentThread
+    },
+    createThread(state, payload) {
+      state.currentThread = payload.currentThread
     }
   },
   actions: {
@@ -52,6 +55,38 @@ const quizStore = {
           let currentThread = response.data.thread;
           payload.currentThread = currentThread;
           context.commit("getDataForDiscussionThread", payload);
+        }
+
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.errored = true;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+    },
+    createThread(context, payload) {
+      return axios
+      .post(
+        process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.createThread, {
+          threadTitle: payload.threadTitle,
+          selectedRelatedQuizId: payload.selectedRelatedQuizId,
+          description: payload.description,
+        }, {
+          headers: {
+            Authorization: !!localStorage.getItem("token")
+              ? `Bearer ${localStorage.getItem("token")}`
+              : "",
+          },
+        }
+      )
+      .then((response) => {
+        if (!response.data.error) {
+          let newThreadId = response.data.newThreadId;
+          payload.newThreadId = newThreadId;
+          return {newThreadId}
         }
 
         console.log(response);

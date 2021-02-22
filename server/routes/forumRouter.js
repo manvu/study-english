@@ -4,7 +4,8 @@ const STRINGS = require("../strings");
 var forumRouter = express.Router();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const {getUserIdFromToken} = require("../helper");
+const { getUserIdFromToken } = require("../helper");
+const { AUTHENTICATION_FAILED, ERROR_OCCURRED } = require("../strings");
 
 var corsOptions = {
   origin: "*",
@@ -33,9 +34,42 @@ forumRouter.get("/thread/:id", async (req, res) => {
     thread: {
       ...getDiscussionThreadsByIdAsyncResponse.response[0],
       posts: getDiscussionPostsByThreadIdAsyncResponse.response,
-    }
-    
+    },
   });
+});
+
+forumRouter.post("/threads/create", async (req, res) => {
+  let threadTitle = req.body.threadTitle;
+  let selectedRelatedQuizId = req.body.selectedRelatedQuizId;
+  let description = req.body.description;
+  const userId = getUserIdFromToken(req.headers.authorization);
+
+  
+  if (userId) {
+    let createNewThreadResponse = await database.createNewThread(
+      threadTitle,
+      description,
+      userId,
+      selectedRelatedQuizId
+    );
+
+    if (!createNewThreadResponse.error && createNewThreadResponse.response.affectedRows === 1) {
+      const newThreadId = createNewThreadResponse.response.insertId
+
+      res.status(200).json({
+        error: null,
+        newThreadId
+      });
+    } else {
+      res.status(400).json({
+        error: ERROR_OCCURRED
+      })
+    }
+  } else {
+    res.status(400).json({
+      error: AUTHENTICATION_FAILED
+    })
+  }
 });
 
 module.exports = forumRouter;

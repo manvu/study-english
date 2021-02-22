@@ -31,11 +31,6 @@ const quizStore = {
       context.commit("toggleFavorite", payload);
     },
     getDataForHome(context, payload) {
-      const isAuthenticated = context.rootGetters["authStore/isAuthenticated"];
-      const email = localStorage.getItem("email") || "";
-
-      
-
       return axios
         .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getDataForHome, {
           withCredentials: true,

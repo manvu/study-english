@@ -27,10 +27,9 @@ export default {
   components: {
     apexchart: VueApexCharts,
   },
-  data: function () {},
   computed: {
     statistics() {
-      debugger
+      
       const statistics = this.$store.getters["statisticsStore/getStatistics"];
 
       if (statistics.quizStatistics === null || statistics.answerStatistics === null) {
@@ -124,9 +123,9 @@ export default {
     },
   },
   created() {
-    debugger
+    
     this.$store.dispatch("statisticsStore/loadData").then((response) => {
-      debugger
+      
       this.statistics;
     });
   },

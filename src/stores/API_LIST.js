@@ -8,6 +8,8 @@ export default {
     getDataForDiscussion: "discussion",
     getStatistics: "statistics",
 
+    createThread: "discussion/threads/create",
+
     getQuizById: (quizId) => `quiz/${quizId}`,
     getQuestionById: (questionId) => `question/${questionId}`,
     getDiscussionThreadById: (threadId) => `discussion/thread/${threadId}`,

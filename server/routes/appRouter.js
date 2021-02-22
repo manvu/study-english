@@ -77,8 +77,6 @@ appRouter.get("/quiz/:id", async (req, res) => {
 });
 
 appRouter.get("/discussion", async (req, res) => {
-  ;
-
   let discussionThreadsResponse = await database.getDiscussionThreadsAsync();
 
   if (!discussionThreadsResponse.error) {
