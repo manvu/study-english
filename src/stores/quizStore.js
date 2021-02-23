@@ -6,6 +6,8 @@ const quizStore = {
   state() {
     return {
       quizzes: [],
+      allSkills: [],
+      allQuestionTypes: [],
       editQuiz: {},
     };
   },
@@ -19,7 +21,10 @@ const quizStore = {
       state.quizzes = payload.quizzes;
     },
     getDataForTeacher(state, payload) {
+      
       state.quizzes = payload.quizzes;
+      state.allSkills = payload.allSkills;
+      state.allQuestionTypes = payload.allQuestionTypes;
     },
     getQuizForEdit(state, payload) {
       state.editQuiz = state.quizzes.find((q) => q.quiz_id === payload.quizId);
@@ -58,12 +63,16 @@ const quizStore = {
         });
     },
     getDataForTeacher(context, payload) {
+      
       return axios
         .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getDataForTeacher)
         .then((response) => {
           if (!response.data.error) {
-            context.commit("getDataForHome", {
+            
+            context.commit("getDataForTeacher", {
               quizzes: response.data.quizzes,
+              allSkills: response.data.allSkills,
+              allQuestionTypes: response.data.allQuestionTypes
             });
           }
 
@@ -106,6 +115,12 @@ const quizStore = {
     },
     getEditQuiz(state) {
       return state.editQuiz;
+    },
+    getAllQuestionTypes(state) {
+      return state.allQuestionTypes;
+    },
+    getAllSkills(state) {
+      return state.allSkills;
     },
   },
 };

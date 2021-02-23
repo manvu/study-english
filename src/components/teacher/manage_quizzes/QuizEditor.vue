@@ -68,17 +68,10 @@
             name="type"
             class="col-4 form-control"
             id="question-type"
-            v-model="selectedQuestionType"
-            :disabled="mode === 'edit'"
+            v-model="selectedSkillId"
           >
-            <option class="dropdown-item" href="#" value="Multiple Choice">
-              Multiple Choice
-            </option>
-            <option class="dropdown-item" href="#" value="Gap Filling">
-              Gap-filling
-            </option>
-            <option class="dropdown-item" href="#" value="Matching">
-              Matching
+            <option v-for="s in allSkills" :key="s.skill_id" class="dropdown-item" href="#" :value="s.skill_id">
+              {{s.skill_description}}
             </option>
           </select>
         </div>
@@ -131,6 +124,7 @@ export default {
         this.mode === "create" ? "yes" : this.quiz.is_active ? "yes" : no,
       timeAllowed: this.mode === "create" ? 30 : this.quiz.time_allowed,
       questions: this.mode === "create" ? [] : this.quiz.questions,
+      selectedSkillId: this.mode === "create" ? 1 : this.quiz.skill_id,
       showQuestionEditor: false,
       questionEditorOpenMode: null,
     };
@@ -158,6 +152,10 @@ export default {
     closeQuestionEditorModal() {
       this.showQuestionEditor = false;
     },
+  },
+  created() {
+    console.log(this.question);
+    this.allSkills = this.$store.getters["quizStore/getAllSkills"];
   },
 };
 </script>

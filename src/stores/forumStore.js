@@ -20,7 +20,7 @@ const quizStore = {
       state.currentThread = payload.currentThread
     },
     createPost(state, payload) {
-      debugger
+      
       state.currentThread.posts.push(payload.post)
     },
   },

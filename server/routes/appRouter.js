@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const { getUserIdFromToken } = require("../helper");
 const { AUTHENTICATION_FAILED } = require("../strings");
 const dotenv = require("dotenv").config();
+const helper = require("../helper")
 
 var corsOptions = {
   credentials: true,
@@ -114,11 +115,15 @@ appRouter.get("/statistics", async (req, res) => {
 
 appRouter.get("/teacher", async (req, res) => {
   let getQuizInfoResponse = await database.getQuizInfo();
+  let getAllSkillsResponse = await database.getAllSkills()
+  let getAllQuestionTypesResponse = await database.getAllQuestionTypes()
 
-  if (!getQuizInfoResponse.error) {
-    res.json({
+  if (!getQuizInfoResponse.error && !getAllSkillsResponse.error && !getAllQuestionTypesResponse.error) {
+    res.status(200).json({
       error: null,
       quizzes: getQuizInfoResponse.response,
+      allSkills: getAllSkillsResponse.response,
+      allQuestionTypes: getAllQuestionTypesResponse.response
     });
   }
 });

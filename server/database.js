@@ -228,6 +228,18 @@ FROM discussion_thread dt`;
 
       return this.executeQuery(query);
     }
+
+    this.getAllSkills = async function() {
+      let query = `SELECT * FROM quiz_skill`;
+
+      return this.executeQuery(query);
+    }
+
+    this.getAllQuestionTypes = async function() {
+      let query = `SELECT * FROM question_type`;
+
+      return this.executeQuery(query);
+    }
   }
 }
 
