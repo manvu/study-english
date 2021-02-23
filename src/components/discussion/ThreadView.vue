@@ -41,56 +41,20 @@
         </div>
       </div>
     </div>
+  
+    <discussion-forum-post-item v-for="p in thread.posts" :key="p.post_id" :p="p">
 
-    <div class="row" v-for="p in thread.posts" :key="p.post_id">
-      <div class="col-md-12">
-        <div class="card mb-4">
-          <div class="card-header">
-            <div class="media flex-wrap w-100 align-items-center">
-              <img
-                src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1574583246/AAA/2.jpg"
-                class="d-block ui-w-40 rounded-circle"
-                alt=""
-              />
-              <div class="media-body ml-3">
-                <a href="javascript:void(0)" data-abc="true">{{
-                  p.full_name
-                }}</a>
-                <div class="text-muted small">{{ p.posted_at }}</div>
-              </div>
-              <div class="text-muted small ml-3">
-                <div>
-                  Member since <strong>{{ p.member_since }}</strong>
-                </div>
-                <div>
-                  <strong>{{ p.post_count }}</strong> posts
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card-body" v-html="p.content"></div>
-          <div
-            class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3"
-          >
-            <div class="px-4 pt-3"></div>
-            <div class="px-4 pt-3">
-              <button type="button" class="btn btn-primary">
-                <i class="ion ion-md-create"></i>&nbsp; Reply
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </discussion-forum-post-item>
   </div>
   <post-reply :threadId="thread.thread_id"></post-reply>
 </template>
 
 <script>
 import PostReply from "./PostReply";
+import DiscussionForumPostItem from "./DiscussionForumPostItem";
 
 export default {
-  components: {PostReply},
+  components: {PostReply, DiscussionForumPostItem},
   computed: {
     thread() {
       return this.$store.getters["forumStore/getCurrentThread"];

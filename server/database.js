@@ -146,6 +146,15 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
+    this.getDiscussionPostsByPostIdAsync = async function(postId) {
+      let query = `SELECT (SELECT CONCAT(u.first_name, ' ', u.last_name)) as full_name, dp.created_at as posted_at, u.created_at as member_since, dp.content, 
+      (SELECT COUNT(*) FROM discussion_thread dt1 WHERE dt1.user_id = u.user_id) as thread_count,
+      (SELECT COUNT(*) FROM discussion_post dp1 WHERE dp1.user_id = u.user_id) as post_count
+      FROM discussion_post dp JOIN user u ON dp.user_id = u.user_id
+      WHERE dp.post_id = ${postId}`;
+      return this.executeQuery(query);
+    };
+
     this.getQuizStatisticsByUserId = async function(userId) {
       let query = `SELECT (SELECT COUNT(*) FROM quiz) as number_of_quizzes, 
       (SELECT COUNT(*) FROM user_attempt ua WHERE ua.user_id = ${userId} AND ua.end_time IS NULL) as incomplete,
@@ -208,12 +217,17 @@ FROM discussion_thread dt`;
       VALUES ('${subject}', '${content}', '${userId}', '${quizId}');
       `;
 
-      console.log(query)
-
       return this.executeQuery(query);
     };
 
-    
+    this.createNewPost = async function(threadId, content, userId) {
+      let query = `
+      INSERT INTO discussion_post(thread_id, content, user_id) 
+      VALUES ('${threadId}', '${content}', '${userId}');
+      `;
+
+      return this.executeQuery(query);
+    }
   }
 }
 

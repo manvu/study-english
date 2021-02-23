@@ -18,7 +18,11 @@ const quizStore = {
     },
     createThread(state, payload) {
       state.currentThread = payload.currentThread
-    }
+    },
+    createPost(state, payload) {
+      debugger
+      state.currentThread.posts.push(payload.post)
+    },
   },
   actions: {
     getDataForDiscussion(context, payload) {
@@ -99,6 +103,36 @@ const quizStore = {
         this.loading = false;
       });
     },
+    createPost(context, payload) {
+      return axios
+      .post(
+        process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.createPost, {
+          threadId: payload.threadId,
+          content: payload.content,
+        }, {
+          headers: {
+            Authorization: !!localStorage.getItem("token")
+              ? `Bearer ${localStorage.getItem("token")}`
+              : "",
+          },
+        }
+      )
+      .then((response) => {
+        if (!response.data.error) {
+          payload.post = response.data.post
+          context.commit("createPost", payload)
+        }
+
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.errored = true;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+    }
   },
   getters: {
     getThreads(state) {

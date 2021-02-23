@@ -95,7 +95,6 @@ export default {
   },
   computed: {
     threads() {
-      
       return this.$store.getters["forumStore/getThreads"];
     },
   },

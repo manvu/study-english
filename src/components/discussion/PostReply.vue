@@ -30,16 +30,19 @@
 
 <script>
 export default {
-  props: ["thread"],
+  props: ["threadId"],
   data() {
-    content: "";
+    return {
+      content: "",
+    };
   },
   methods: {
     cancel() {},
     submit() {
-      const threadId = this.thread.thread_id;
+      const threadId = this.threadId
+      const content = this.content;
 
-      
+      this.$store.dispatch('forumStore/createPost', {threadId, content})
     },
   },
 };

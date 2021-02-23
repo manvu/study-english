@@ -44,7 +44,6 @@ forumRouter.post("/threads/create", async (req, res) => {
   let description = req.body.description;
   const userId = getUserIdFromToken(req.headers.authorization);
 
-  
   if (userId) {
     let createNewThreadResponse = await database.createNewThread(
       threadTitle,
@@ -53,22 +52,69 @@ forumRouter.post("/threads/create", async (req, res) => {
       selectedRelatedQuizId
     );
 
-    if (!createNewThreadResponse.error && createNewThreadResponse.response.affectedRows === 1) {
-      const newThreadId = createNewThreadResponse.response.insertId
+    if (
+      !createNewThreadResponse.error &&
+      createNewThreadResponse.response.affectedRows === 1
+    ) {
+      const newThreadId = createNewThreadResponse.response.insertId;
 
       res.status(200).json({
         error: null,
-        newThreadId
+        newThreadId,
       });
     } else {
       res.status(400).json({
-        error: ERROR_OCCURRED
-      })
+        error: ERROR_OCCURRED,
+      });
     }
   } else {
     res.status(400).json({
-      error: AUTHENTICATION_FAILED
-    })
+      error: AUTHENTICATION_FAILED,
+    });
+  }
+});
+
+forumRouter.post("/posts/create", async (req, res) => {
+  let threadId = req.body.threadId;
+  let content = req.body.content;
+  const userId = getUserIdFromToken(req.headers.authorization);
+
+  if (userId) {
+    let createNewPostResponse = await database.createNewPost(
+      threadId,
+      content,
+      userId
+    );
+
+    if (
+      !createNewPostResponse.error &&
+      createNewPostResponse.response.affectedRows === 1
+    ) {
+      const newPostId = createNewPostResponse.response.insertId;
+
+      let newPostResponse = await database.getDiscussionPostsByPostIdAsync(
+        newPostId
+      );
+
+      if (!newPostResponse.error) {
+        res.status(200).json({
+          error: null,
+          post: newPostResponse.response[0],
+        });
+      } else {
+        res.status(400).json({
+          error: ERROR_OCCURRED,
+        });
+      }
+    } else {
+      res.status(400).json({
+        error: ERROR_OCCURRED,
+      });
+    }
+  } else {
+    res.status(400).json({
+      error: AUTHENTICATION_FAILED,
+    });
   }
 });
 
