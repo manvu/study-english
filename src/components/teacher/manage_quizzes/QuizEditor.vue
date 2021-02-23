@@ -61,6 +61,28 @@
           </div>
         </div>
       </div>
+      <div class="form-group">
+        <label class="control-label col-sm-6" for="type">Skill</label>
+        <div class="form-row col-sm-10">
+          <select
+            name="type"
+            class="col-4 form-control"
+            id="question-type"
+            v-model="selectedQuestionType"
+            :disabled="mode === 'edit'"
+          >
+            <option class="dropdown-item" href="#" value="Multiple Choice">
+              Multiple Choice
+            </option>
+            <option class="dropdown-item" href="#" value="Gap Filling">
+              Gap-filling
+            </option>
+            <option class="dropdown-item" href="#" value="Matching">
+              Matching
+            </option>
+          </select>
+        </div>
+      </div>
       <questions-list
         v-if="questions.length > 0"
         :questions="questions"
@@ -131,7 +153,6 @@ export default {
           });
       } else {
         this.showQuestionEditor = true;
-        
       }
     },
     closeQuestionEditorModal() {

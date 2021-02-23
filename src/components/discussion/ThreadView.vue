@@ -14,14 +14,19 @@
                 <a href="javascript:void(0)" data-abc="true">{{
                   thread.full_name
                 }}</a>
-                <div class="text-muted small">{{ thread.created_at }}</div>
+                <div class="text-muted small">
+                  {{ displayedThreadCreatedAt }} ago
+                </div>
               </div>
               <div class="text-muted small ml-3">
                 <div>
-                  Member since <strong>{{ thread.member_since }}</strong>
+                  Member since <strong>{{ displayedMemberSince }}</strong>
                 </div>
                 <div>
-                  <strong>{{ thread.post_count }}</strong> posts
+                  <strong>{{ thread.thread_count }}</strong>
+                  {{ thread.thread_count === 1 ? "thread" : "threads" }}
+                  <strong>{{ thread.post_count }}</strong>
+                  {{ thread.post_count === 1 ? "post" : "posts" }}
                 </div>
               </div>
             </div>
@@ -41,9 +46,12 @@
         </div>
       </div>
     </div>
-  
-    <discussion-forum-post-item v-for="p in thread.posts" :key="p.post_id" :p="p">
 
+    <discussion-forum-post-item
+      v-for="p in thread.posts"
+      :key="p.post_id"
+      :p="p"
+    >
     </discussion-forum-post-item>
   </div>
   <post-reply :threadId="thread.thread_id"></post-reply>
@@ -52,15 +60,35 @@
 <script>
 import PostReply from "./PostReply";
 import DiscussionForumPostItem from "./DiscussionForumPostItem";
+import {
+  truncate,
+  timeSince,
+  convertISOToReadableFormat,
+} from "../shared/helper";
 
 export default {
-  components: {PostReply, DiscussionForumPostItem},
+  components: { PostReply, DiscussionForumPostItem },
   computed: {
     thread() {
       return this.$store.getters["forumStore/getCurrentThread"];
     },
+    displayedMemberSince() {
+      if (this.thread.member_since) {
+        return this.convertISOToReadableFormat(
+          new Date(this.thread.member_since)
+        );
+      }
+      return null;
+    },
+    displayedThreadCreatedAt() {
+      return this.timeSince(new Date(this.thread.created_at));
+    },
   },
   created() {
+    this.truncate = truncate;
+    this.timeSince = timeSince;
+    this.convertISOToReadableFormat = convertISOToReadableFormat;
+
     let threadId = this.$route.params.id;
 
     this.$store

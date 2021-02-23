@@ -1,47 +1,74 @@
 <template>
-<div class="row">
-  <div class="col-md-12">
-    <div class="card mb-4">
-      <div class="card-header">
-        <div class="media flex-wrap w-100 align-items-center">
-          <img
-            src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1574583246/AAA/2.jpg"
-            class="d-block ui-w-40 rounded-circle"
-            alt=""
-          />
-          <div class="media-body ml-3">
-            <a href="javascript:void(0)" data-abc="true">{{ p.full_name }}</a>
-            <div class="text-muted small">{{ p.posted_at }}</div>
-          </div>
-          <div class="text-muted small ml-3">
-            <div>
-              Member since <strong>{{ p.member_since }}</strong>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mb-4">
+        <div class="card-header">
+          <div class="media flex-wrap w-100 align-items-center">
+            <img
+              src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1574583246/AAA/2.jpg"
+              class="d-block ui-w-40 rounded-circle"
+              alt=""
+            />
+            <div class="media-body ml-3">
+              <a href="javascript:void(0)" data-abc="true">{{ p.full_name }}</a>
+              <div class="text-muted small">
+                {{ displayedPostPostedAt }} ago
+              </div>
             </div>
-            <div>
-              <strong>{{ p.post_count }}</strong> posts
+            <div class="text-muted small ml-3">
+              <div>
+                Member since <strong>{{ displayedMemberSince }}</strong>
+              </div>
+              <div>
+                <strong>{{ p.thread_count }}</strong>
+                {{ p.thread_count === 1 ? "thread" : "threads" }}
+                <strong>{{ p.post_count }}</strong>
+                {{ p.post_count === 1 ? "post" : "posts" }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="card-body" v-html="p.content"></div>
-      <div
-        class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3"
-      >
-        <div class="px-4 pt-3"></div>
-        <div class="px-4 pt-3">
-          <button type="button" class="btn btn-primary">
-            <i class="ion ion-md-create"></i>&nbsp; Reply
-          </button>
+        <div class="card-body" v-html="p.content"></div>
+        <div
+          class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3"
+        >
+          <div class="px-4 pt-3"></div>
+          <div class="px-4 pt-3">
+            <button type="button" class="btn btn-primary">
+              <i class="ion ion-md-create"></i>&nbsp; Reply
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
+import {
+  truncate,
+  timeSince,
+  convertISOToReadableFormat,
+} from "../shared/helper";
+
 export default {
-    props: ["p"]
+  props: ["p"],
+  computed: {
+    displayedMemberSince() {
+      if (this.p.member_since) {
+        return this.convertISOToReadableFormat(new Date(this.p.member_since));
+      }
+      return null;
+    },
+    displayedPostPostedAt() {
+      return this.timeSince(new Date(this.p.posted_at));
+    },
+  },
+  created() {
+    this.truncate = truncate;
+    this.timeSince = timeSince;
+    this.convertISOToReadableFormat = convertISOToReadableFormat;
+  },
 };
 </script>
 
