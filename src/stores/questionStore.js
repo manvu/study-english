@@ -14,9 +14,9 @@ const questionStore = {
       state.questions = payload.questions;
     },
     getQuestionForEdit(state, payload) {
-      
-      state.editQuestion = payload.question
+      state.editQuestion = payload.question;
     },
+    createQuestion(context, payload) {},
   },
   actions: {
     getQuestionList(context, payload) {
@@ -45,7 +45,10 @@ const questionStore = {
       const questionId = payload.questionId;
 
       return axios
-        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getQuestionById(questionId))
+        .get(
+          process.env.VUE_APP_SERVER_ENDPOINT +
+            API_LIST.getQuestionById(questionId)
+        )
         .then((response) => {
           if (!response.data.error) {
             let question = response.data.question;
@@ -63,10 +66,44 @@ const questionStore = {
           this.loading = false;
         });
     },
+    createQuestion(context, payload) {
+      return axios
+        .post(
+          process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.createQuestion,
+          {
+            typeId: payload.typeId,
+            items: payload.items,
+            question: payload.question,
+            instruction: payload.instruction,
+            isActive: payload.isActive
+          },
+          {
+            headers: {
+              Authorization: !!localStorage.getItem("token")
+                ? `Bearer ${localStorage.getItem("token")}`
+                : "",
+            },
+          }
+        )
+        .then((response) => {
+          if (!response.data.error) {
+            payload.question = response.data.question;
+            context.commit("createQuestion", payload);
+          }
+
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
   },
   getters: {
     getQuestionList(state) {
-      ;
       return state.questions;
     },
     getEditQuestion(state) {

@@ -124,6 +124,7 @@
     @close="openQuestionEditorModal"
     :question="editQuestion"
     :mode="questionEditorOpenMode"
+    :quizId=quiz.quid_id
   ></question-editor-modal>
 </template>
 

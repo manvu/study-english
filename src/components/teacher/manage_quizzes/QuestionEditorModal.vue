@@ -13,41 +13,25 @@
               <div class="form-group">
                 <label class="control-label" for="type">Type</label>
                 <div>
-                  <select
-                    name="type"
-                    class="col-4 form-control"
-                    id="question-type"
-                    v-model="selectedQuestionType"
-                    :disabled="mode === 'edit'"
-                  >
-                    <option
-                      class="dropdown-item"
-                      href="#"
-                      value="Multiple Choice"
-                    >
-                      Multiple Choice
-                    </option>
-                    <option class="dropdown-item" href="#" value="Gap Filling">
-                      Gap-filling
-                    </option>
-                    <option class="dropdown-item" href="#" value="Matching">
-                      Matching
+                  <select name="type" class="col-4 form-control" id="question-type" v-model="selectedQuestionType" :disabled="mode === 'edit'" >
+                    <option class="dropdown-item" :value="type.type_id" v-for="type in allQuestionTypes" :key="type.type_id" >
+                      {{ type.type_name }}
                     </option>
                   </select>
                 </div>
               </div>
               <multiple-choice-editor
-                v-if="selectedQuestionType === 'Multiple Choice'"
+                v-if="selectedQuestionType === 1"
                 :item="question"
                 :mode="mode"
               ></multiple-choice-editor>
               <gap-filling-editor
-                v-else-if="selectedQuestionType === 'Gap Filling'"
+                v-else-if="selectedQuestionType === 2"
                 :item="question"
                 :mode="mode"
               ></gap-filling-editor>
               <matching-editor
-                v-else-if="selectedQuestionType === 'Matching'"
+                v-else-if="selectedQuestionType === 3"
                 :item="question"
                 :mode="mode"
               ></matching-editor>
@@ -66,16 +50,18 @@ import MultipleChoiceEditor from "./question_editor/MultipleChoiceEditor";
 
 export default {
   inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
-  props: ["question", "mode"],
+  props: ["question", "mode", "quizId"],
   components: { MultipleChoiceEditor, GapFillingEditor, MatchingEditor },
   data() {
     return {
       selectedQuestionType:
-        this.mode === "create" ? "Multiple Choice" : this.question.type_name,
+        this.mode === "create" ? 1 : this.question.type_id,
     };
   },
   created() {
     console.log(this.question);
+    
+    this.allQuestionTypes = this.$store.getters["quizStore/getAllQuestionTypes"]
   },
 };
 </script>

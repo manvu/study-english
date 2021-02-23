@@ -288,6 +288,16 @@ FROM discussion_thread dt`;
 
       return this.executeQuery(query);
     };
+
+    this.createInstructionIfNotExists = async function(instruction) {
+      let query = `INSERT IGNORE INTO question_instruction(instruction) VALUES ('${instruction}')`
+    }
+
+    this.createQuestion = async function() {
+      let query = ``
+
+      return this.executeQuery(query); 
+    }
   }
 }
 

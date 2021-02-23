@@ -14,7 +14,12 @@
   <div class="form-group">
     <label class="control-label" for="question">Question</label>
     <div class="">
-      <textarea name="question" id="question" rows="3" v-model="question"></textarea>
+      <textarea
+        name="question"
+        id="question"
+        rows="3"
+        v-model="question"
+      ></textarea>
     </div>
   </div>
   <div class="form-group">
@@ -31,7 +36,13 @@
         <label class="form-check-label" for="active">Yes</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="active" value="no" v-model="isActive" />
+        <input
+          class="form-check-input"
+          type="radio"
+          name="active"
+          value="no"
+          v-model="isActive"
+        />
         <label class="form-check-label" for="active">No</label>
       </div>
     </div>
@@ -58,7 +69,7 @@
     >
       Cancel
     </button>
-    <button type="button" @click="$emit('close')" class="ml-3 btn btn-primary">
+    <button type="button" @click="save" class="ml-3 btn btn-primary">
       Save
     </button>
   </div>
@@ -72,11 +83,12 @@ export default {
   props: ["item", "mode"],
   data() {
     return {
-      items: this.mode === "create" ? "" : this.item.content,
+      items: this.mode === "create" ? [] : this.item.content,
       currentAlphabeticCharacter: "@",
       question: this.mode === "create" ? "" : this.item.question,
       instruction: this.mode === "create" ? "" : this.item.instruction,
-      isActive: this.mode === "create" ? "" : (this.item.is_active === 1 ? "yes" : "no"),
+      isActive:
+        this.mode === "create" ? "" : this.item.is_active === 1 ? "yes" : "no",
     };
   },
   methods: {
@@ -93,10 +105,29 @@ export default {
         item: "",
       });
     },
+    save() {
+      if (this.mode === "create") {
+        this.$store.dispatch("questionStore/createMultipleChoiceQuestion", {
+          typeId: 1,
+          items: this.items,
+          question: this.question,
+          instruction: this.instruction,
+          isActive: this.isActive === "yes" ? 1 : 0,
+        });
+      } else if (this.mode === "edit") {
+        this.$store.dispatch("questionStore/updateMultipleChoiceQuestion", {
+          items: this.items,
+          question: this.question,
+          instruction: this.instruction,
+          isActive: this.isActive === "yes" ? 1 : 0,
+        });
+      }
+      this.$emit("close");
+    },
   },
   created() {
-    console.log(this.item)
-  }
+    console.log(this.item);
+  },
 };
 </script>
 
