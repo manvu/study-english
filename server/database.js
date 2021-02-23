@@ -87,6 +87,18 @@ class Database {
       return this.executeQuery(query);
     };
 
+    this.getQuizInfoByQuizId = async function(quizId) {
+      let query = `SELECT quiz.*, quiz_skill.skill_description, 
+      (SELECT COUNT(*) FROM user_attempt WHERE user_attempt.quiz_id = quiz.quiz_id) as attempts,
+      (SELECT COUNT(*) FROM quiz_question WHERE quiz.quiz_id = quiz_question.quiz_id) AS 'number_of_questions',
+      (SELECT AVG(user_rating.rating_given) FROM user_rating WHERE user_rating.quiz_id = quiz.quiz_id GROUP BY quiz_id) as average_rating,
+      (SELECT COUNT(user_rating.rating_given) FROM user_rating WHERE user_rating.quiz_id = quiz.quiz_id GROUP BY quiz_id) as rating_count
+      FROM quiz JOIN quiz_skill ON quiz.skill_id = quiz_skill.skill_id
+      WHERE quiz.quiz_id = ${quizId}`;
+
+      return this.executeQuery(query);
+    };
+
     this.getQuestionsByQuizId = async function(quizId) {
       let query = `SELECT q.question_id, q.type_id, qt.type_name, q.is_active, q.paragraph_title, q.question, qi.instruction
       FROM question q 
@@ -227,19 +239,55 @@ FROM discussion_thread dt`;
       `;
 
       return this.executeQuery(query);
-    }
+    };
 
     this.getAllSkills = async function() {
       let query = `SELECT * FROM quiz_skill`;
 
       return this.executeQuery(query);
-    }
+    };
 
     this.getAllQuestionTypes = async function() {
       let query = `SELECT * FROM question_type`;
 
       return this.executeQuery(query);
-    }
+    };
+
+    this.createQuiz = async function(
+      courseName,
+      description,
+      isActive,
+      timeAllowed,
+      selectedSkillId,
+      userId
+    ) {
+      let query = `INSERT INTO quiz (course_name, description, is_active, time_allowed, skill_id, created_by) 
+      VALUES ('${courseName}', '${description}', '${isActive}', '${timeAllowed}', '${selectedSkillId}', '${userId}')`;
+
+      return this.executeQuery(query);
+    };
+
+    this.updateQuiz = async function(
+      quizId,
+      courseName,
+      description,
+      isActive,
+      timeAllowed,
+      selectedSkillId,
+      userId
+    ) {
+      let query = `UPDATE quiz 
+                  SET course_name = '${courseName}', 
+                      description = '${description}', 
+                      is_active = '${isActive}', 
+                      time_allowed = '${timeAllowed}', 
+                      skill_id = '${selectedSkillId}', 
+                      created_by = '${userId}'
+                  WHERE quiz_id = '${quizId}'
+`;
+
+      return this.executeQuery(query);
+    };
   }
 }
 

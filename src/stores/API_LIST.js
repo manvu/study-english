@@ -10,6 +10,8 @@ export default {
 
     createThread: "discussion/threads/create",
     createPost: "discussion/posts/create",
+    createQuiz: "quiz/create",
+    createQuestion: "question/create",
 
     getQuizById: (quizId) => `quiz/${quizId}`,
     getQuestionById: (questionId) => `question/${questionId}`,

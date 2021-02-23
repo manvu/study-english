@@ -17,6 +17,20 @@
           />
         </div>
       </div>
+            <div class="form-group">
+        <label class="control-label col-sm-6" for="type">Description</label>
+        <div class="form-row col-sm-10">
+          <textarea
+            name="description"
+            class="form-control"
+            id="description"
+            placeholder="Add description for the quiz"
+            rows="3"
+            cols="80"
+            v-model="description"
+          ></textarea>
+        </div>
+      </div>
       <div class="form-group">
         <label class="control-label col-sm-2" for="active">Active:</label>
         <div class="col-sm-10">
@@ -70,8 +84,14 @@
             id="question-type"
             v-model="selectedSkillId"
           >
-            <option v-for="s in allSkills" :key="s.skill_id" class="dropdown-item" href="#" :value="s.skill_id">
-              {{s.skill_description}}
+            <option
+              v-for="s in allSkills"
+              :key="s.skill_id"
+              class="dropdown-item"
+              href="#"
+              :value="s.skill_id"
+            >
+              {{ s.skill_description }}
             </option>
           </select>
         </div>
@@ -90,8 +110,12 @@
         Add Question
       </button>
       <div class="form-group">
-        <button type="button" class="btn btn-dark">Cancel</button>
-        <button type="button" class="ml-3 btn btn-primary">Save</button>
+        <button @click="cancel" type="button" class="btn btn-dark">
+          Cancel
+        </button>
+        <button @click="handleSave" type="button" class="ml-3 btn btn-primary">
+          Save
+        </button>
       </div>
     </div>
   </div>
@@ -123,6 +147,7 @@ export default {
       isActive:
         this.mode === "create" ? "yes" : this.quiz.is_active ? "yes" : no,
       timeAllowed: this.mode === "create" ? 30 : this.quiz.time_allowed,
+      description: this.mode === "create" ? '' : this.quiz.description,
       questions: this.mode === "create" ? [] : this.quiz.questions,
       selectedSkillId: this.mode === "create" ? 1 : this.quiz.skill_id,
       showQuestionEditor: false,
@@ -151,6 +176,30 @@ export default {
     },
     closeQuestionEditorModal() {
       this.showQuestionEditor = false;
+    },
+    cancel() {
+      this.$emit("toggleShowQuizEditor");
+    },
+    handleSave() {
+      if (this.mode === "create") {
+        this.$store.dispatch("quizStore/createQuiz", {
+          quizId: this.quizId,
+          courseName: this.courseName,
+          description: this.description,
+          isActive: this.isActive === "yes" ? 1 : 0,
+          timeAllowed: this.timeAllowed,
+          selectedSkillId: this.selectedSkillId,
+        });
+      } else if (this.mode === "edit") {
+        this.$store.dispatch("quizStore/updateQuiz", {
+          quizId: this.quizId,
+          courseName: this.courseName,
+          description: this.description,
+          isActive: this.isActive === "yes" ? 1 : 0,
+          timeAllowed: this.timeAllowed,
+          selectedSkillId: this.selectedSkillId,
+        });
+      }
     },
   },
   created() {

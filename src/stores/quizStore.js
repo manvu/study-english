@@ -21,7 +21,6 @@ const quizStore = {
       state.quizzes = payload.quizzes;
     },
     getDataForTeacher(state, payload) {
-      
       state.quizzes = payload.quizzes;
       state.allSkills = payload.allSkills;
       state.allQuestionTypes = payload.allQuestionTypes;
@@ -29,6 +28,17 @@ const quizStore = {
     getQuizForEdit(state, payload) {
       state.editQuiz = state.quizzes.find((q) => q.quiz_id === payload.quizId);
       state.editQuiz.questions = payload.questions;
+    },
+    createQuiz(state, payload) {
+      state.quizzes.push(payload.quiz);
+    },
+    updateQuiz(state, payload) {
+      let quiz = state.quizzes.find((q) => q.quiz_id === payload.quiz.quiz_id);
+      quiz.courseName = payload.courseName;
+      quiz.description = payload.description;
+      quiz.isActive = payload.isActive;
+      quiz.timeAllowed = payload.timeAllowed;
+      quiz.selectedSkillId = payload.selectedSkillId;
     },
   },
   actions: {
@@ -63,16 +73,14 @@ const quizStore = {
         });
     },
     getDataForTeacher(context, payload) {
-      
       return axios
         .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getDataForTeacher)
         .then((response) => {
           if (!response.data.error) {
-            
             context.commit("getDataForTeacher", {
               quizzes: response.data.quizzes,
               allSkills: response.data.allSkills,
-              allQuestionTypes: response.data.allQuestionTypes
+              allQuestionTypes: response.data.allQuestionTypes,
             });
           }
 
@@ -96,6 +104,78 @@ const quizStore = {
             let questions = response.data.questions;
             payload.questions = questions;
             context.commit("getQuizForEdit", payload);
+          }
+
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    createQuiz(context, payload) {
+      return axios
+        .post(
+          process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.createQuiz,
+          {
+            courseName: payload.courseName,
+            description: payload.description,
+            isActive: payload.isActive,
+            timeAllowed: payload.timeAllowed,
+            selectedSkillId: payload.selectedSkillId,
+          },
+          {
+            headers: {
+              Authorization: !!localStorage.getItem("token")
+                ? `Bearer ${localStorage.getItem("token")}`
+                : "",
+            },
+          }
+        )
+        .then((response) => {
+          if (!response.data.error) {
+            payload.quiz = response.data.quiz;
+            context.commit("createQuiz", payload);
+          }
+
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    updateQuiz(context, payload) {
+      return axios
+        .post(
+          process.env.VUE_APP_SERVER_ENDPOINT +
+            API_LIST.saveQuizById(payload.quizId),
+          {
+            courseName: payload.courseName,
+            description: payload.description,
+            isActive: payload.isActive,
+            timeAllowed: payload.timeAllowed,
+            selectedSkillId: payload.selectedSkillId,
+          },
+          {
+            headers: {
+              Authorization: !!localStorage.getItem("token")
+                ? `Bearer ${localStorage.getItem("token")}`
+                : "",
+            },
+          }
+        )
+        .then((response) => {
+          if (!response.data.error) {
+            debugger;
+            payload.quiz = response.data.quiz;
+            context.commit("updateQuiz", payload);
           }
 
           console.log(response);
