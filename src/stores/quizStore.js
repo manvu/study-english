@@ -13,8 +13,9 @@ const quizStore = {
   },
   mutations: {
     toggleFavorite(state, payload) {
+      debugger;
       let quizId = payload.id;
-      let quiz = state.quizzes.find((q) => q.id === quizId);
+      let quiz = state.quizzes.find((q) => q.quiz_id === quizId);
       quiz.favorite = !quiz.favorite;
     },
     getDataForHome(state, payload) {
@@ -43,7 +44,31 @@ const quizStore = {
   },
   actions: {
     toggleFavorite(context, payload) {
-      context.commit("toggleFavorite", payload);
+      return axios
+        .post(
+          process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.toggleFavorite(payload.id), {},
+          {
+            headers: {
+              Authorization: !!localStorage.getItem("token")
+                ? `Bearer ${localStorage.getItem("token")}`
+                : "",
+            },
+          }
+        )
+        .then((response) => {
+          if (!response.data.error) {
+            context.commit("toggleFavorite", payload);
+          }
+
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     getDataForHome(context, payload) {
       return axios

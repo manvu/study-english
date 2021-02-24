@@ -305,78 +305,128 @@ FROM discussion_thread dt`;
     };
 
     this.createInstructionIfNotExists = async function(instruction) {
-      let query = `INSERT IGNORE INTO question_instruction(instruction) VALUES ('${instruction}')`
+      let query = `INSERT IGNORE INTO question_instruction(instruction) VALUES ('${instruction}')`;
       return this.executeQuery(query);
-    }
+    };
 
-    this.findInstructionByInstruction = async function(instruction ) {
-      let query = `SELECT instruction_id FROM question_instruction WHERE instruction = '${instruction}'`
+    this.findInstructionByInstruction = async function(instruction) {
+      let query = `SELECT instruction_id FROM question_instruction WHERE instruction = '${instruction}'`;
       return this.executeQuery(query);
-    }
+    };
 
-    this.createQuestion = async function(typeId, instructionId, isActive, paragraphTitle, question) {
+    this.createQuestion = async function(
+      typeId,
+      instructionId,
+      isActive,
+      paragraphTitle,
+      question
+    ) {
       let query = `INSERT INTO question(type_id, instruction_id, is_active, paragraph_title, question) 
-      VALUES ('${typeId}', '${instructionId}', '${isActive}', ${!paragraphTitle ? 'NULL' : paragraphTitle}, '${question}')`
+      VALUES ('${typeId}', '${instructionId}', '${isActive}', ${
+        !paragraphTitle ? "NULL" : paragraphTitle
+      }, '${question}')`;
 
-      console.log(query)
+      console.log(query);
 
-      return this.executeQuery(query); 
-    }
+      return this.executeQuery(query);
+    };
 
     this.insertMultipleChoiceItems = async function(items, questionId) {
-      let query = `INSERT INTO question_multiple_choice (question_id, choice_id, choice_text, is_correct_choice) VALUES `
+      let query = `INSERT INTO question_multiple_choice (question_id, choice_id, choice_text, is_correct_choice) VALUES `;
 
       for (let i = 0; i < items.length; i++) {
-        query = query.concat(`(${questionId}, ${items[i].choice_id}, '${items[i].choice_text}', '${items[i].is_correct_choice}'), `)
+        query = query.concat(
+          `(${questionId}, ${items[i].choice_id}, '${items[i].choice_text}', '${items[i].is_correct_choice}'), `
+        );
       }
 
-      let formattedQuery = query.substring(0, query.length - 2)
+      let formattedQuery = query.substring(0, query.length - 2);
 
-      console.log(formattedQuery)
+      console.log(formattedQuery);
 
-      return this.executeQuery(formattedQuery); 
-    }
+      return this.executeQuery(formattedQuery);
+    };
 
     this.insertGapFillingItems = async function(items, questionId) {
-      let query = `INSERT INTO question_gap_filling (question_id, sequence_id, correct_answer) VALUES `
+      let query = `INSERT INTO question_gap_filling (question_id, sequence_id, correct_answer) VALUES `;
 
       for (let i = 0; i < items.length; i++) {
-        query = query.concat(`(${questionId}, ${items[i].sequence_id}, '${items[i].correct_answer}'), `)
+        query = query.concat(
+          `(${questionId}, ${items[i].sequence_id}, '${items[i].correct_answer}'), `
+        );
       }
 
-      let formattedQuery = query.substring(0, query.length - 2)
+      let formattedQuery = query.substring(0, query.length - 2);
 
-      console.log(formattedQuery)
+      console.log(formattedQuery);
 
-      return this.executeQuery(formattedQuery); 
-    }
+      return this.executeQuery(formattedQuery);
+    };
 
-    this.insertMatchingItems = async function(leftItems, rightItems, questionId) {
-      let query = `INSERT INTO question_matching_sub (subquestion_id, question_id, text, letter, column_assigned) VALUES `
+    this.insertMatchingItems = async function(
+      leftItems,
+      rightItems,
+      questionId
+    ) {
+      let query = `INSERT INTO question_matching_sub (subquestion_id, question_id, text, letter, column_assigned) VALUES `;
 
       for (let i = 0; i < leftItems.length; i++) {
-        query = query.concat(`('${i + 1}', ${questionId}, '${leftItems[i].item}', '${leftItems[i].letter}', '1'), `)
+        query = query.concat(
+          `('${i + 1}', ${questionId}, '${leftItems[i].item}', '${
+            leftItems[i].letter
+          }', '1'), `
+        );
       }
 
       for (let i = 0; i < rightItems.length; i++) {
-        query = query.concat(`('${i + 1}', ${questionId}, '${rightItems[i].item}', '${rightItems[i].letter}', '2'), `)
+        query = query.concat(
+          `('${i + 1}', ${questionId}, '${rightItems[i].item}', '${
+            rightItems[i].letter
+          }', '2'), `
+        );
       }
 
-      let formattedQuery = query.substring(0, query.length - 2)
+      let formattedQuery = query.substring(0, query.length - 2);
 
-      console.log(formattedQuery)
+      console.log(formattedQuery);
 
-      return this.executeQuery(formattedQuery); 
-    }
+      return this.executeQuery(formattedQuery);
+    };
 
-    this.createMatchingQuestion = async function(questionId, correctAnswers, shuffleAnswers) {
+    this.createMatchingQuestion = async function(
+      questionId,
+      correctAnswers,
+      shuffleAnswers
+    ) {
       let query = `INSERT INTO question_matching (question_id, correct_answers, shuffle_answers) 
-      VALUES ('${correctAnswers}', '${questionId}', '${shuffleAnswers}')`
+      VALUES ('${correctAnswers}', '${questionId}', '${shuffleAnswers}')`;
 
-      console.log(query)
+      console.log(query);
 
-      return this.executeQuery(query); 
-    }
+      return this.executeQuery(query);
+    };
+
+    this.checkFavoriteByQuizIdAndUserId = async function(quizId, userId) {
+      let query = `SELECT COUNT(*) as favorite
+                              FROM user_favorite 
+                              WHERE user_favorite.user_id = ${userId} AND user_favorite.quiz_id = ${quizId} `;
+
+      return this.executeQuery(query);
+    };
+
+    this.toggleOnFavorite = async function(quizId, userId) {
+      let query = `INSERT INTO user_favorite (user_id, quiz_id)
+                              VALUES ('${userId}', '${quizId}') `;
+
+      return this.executeQuery(query);
+    };
+
+    this.toggleOffFavorite = async function(quizId, userId) {
+      let query = `DELETE FROM user_favorite 
+                   WHERE user_favorite.user_id = ${userId} AND user_favorite.quiz_id = ${quizId} `;
+
+      return this.executeQuery(query);
+    };
   }
 }
 

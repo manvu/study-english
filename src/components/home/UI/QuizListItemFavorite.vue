@@ -31,6 +31,7 @@ export default {
   },
   methods: {
     toggleFavorite: function () {
+      debugger
       this.$store.dispatch("quizStore/toggleFavorite", {
         id: this.id,
       });

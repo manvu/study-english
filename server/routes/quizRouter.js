@@ -86,7 +86,7 @@ quizRouter.post("/edit/:id", async (req, res) => {
   let selectedSkillId = req.body.selectedSkillId;
   const userId = getUserIdFromToken(req.headers.authorization);
 
-  debugger
+  debugger;
 
   if (userId) {
     let createQuizResponse = await database.updateQuiz(
@@ -117,6 +117,53 @@ quizRouter.post("/edit/:id", async (req, res) => {
           error: ERROR_OCCURRED,
         });
       }
+    } else {
+      res.status(400).json({
+        error: ERROR_OCCURRED,
+      });
+    }
+  } else {
+    res.status(400).json({
+      error: AUTHENTICATION_FAILED,
+    });
+  }
+});
+
+quizRouter.post("/favorite/:id", async (req, res) => {
+  let quizId = req.params.id;
+  const userId = getUserIdFromToken(req.headers.authorization);
+
+  if (userId) {
+    let checkFavoriteByQuizIdAndUserIdResponse = await database.checkFavoriteByQuizIdAndUserId(
+      quizId,
+      userId
+    );
+
+    debugger;
+
+    if (!checkFavoriteByQuizIdAndUserIdResponse.error) {
+      if (checkFavoriteByQuizIdAndUserIdResponse.response[0].favorite == 1) {
+        let toggleOffFavoriteResponse = await database.toggleOffFavorite(
+          quizId,
+          userId
+        );
+
+        res.status(200).json({
+          error: null,
+        });
+      } else if (
+        checkFavoriteByQuizIdAndUserIdResponse.response[0].favorite == 0
+      ) {
+        let toggleOnFavoriteResponse = await database.toggleOnFavorite(
+          quizId,
+          userId
+        );
+
+        res.status(200).json({
+          error: null,
+        });
+      }
+
     } else {
       res.status(400).json({
         error: ERROR_OCCURRED,
