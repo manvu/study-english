@@ -75,7 +75,9 @@ const questionStore = {
             items: payload.items,
             question: payload.question,
             instruction: payload.instruction,
-            isActive: payload.isActive
+            paragraphTitle: payload.paragraphTitle,
+            isActive: payload.isActive,
+            correctAnswers: payload.correctAnswers
           },
           {
             headers: {

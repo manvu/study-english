@@ -56,6 +56,7 @@
         :id="item.choice_id"
         :item="item"
         :mode="mode"
+        @update="updateItem"
       ></multiple-choice-item>
     </div>
     <div v-else>There is no choice created for this question</div>
@@ -85,6 +86,7 @@ export default {
     return {
       items: this.mode === "create" ? [] : this.item.content,
       currentAlphabeticCharacter: "@",
+      currentChoiceId: 0,
       question: this.mode === "create" ? "" : this.item.question,
       instruction: this.mode === "create" ? "" : this.item.instruction,
       isActive:
@@ -100,14 +102,23 @@ export default {
     },
     addChoice() {
       let index = this.nextChar();
+      let currentId = ++this.currentChoiceId
+      debugger
       this.items.push({
-        id: index,
-        item: "",
+        choice_id: currentId,
+        choice_order: index,
+        choice_text: "",
+        is_correct_choice: 0,
       });
+    },
+    updateItem(item) {
+      let choiceItem = this.items.find((i) => i.choice_id === item.choice_id);
+      choiceItem.choice_text = item.choice_text
+      choiceItem.is_correct_choice = item.is_correct_choice === true ? 1 : 0
     },
     save() {
       if (this.mode === "create") {
-        this.$store.dispatch("questionStore/createMultipleChoiceQuestion", {
+        this.$store.dispatch("questionStore/createQuestion", {
           typeId: 1,
           items: this.items,
           question: this.question,
@@ -115,7 +126,7 @@ export default {
           isActive: this.isActive === "yes" ? 1 : 0,
         });
       } else if (this.mode === "edit") {
-        this.$store.dispatch("questionStore/updateMultipleChoiceQuestion", {
+        this.$store.dispatch("questionStore/updateQuestion", {
           items: this.items,
           question: this.question,
           instruction: this.instruction,

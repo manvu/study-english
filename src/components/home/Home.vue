@@ -16,6 +16,7 @@
       :numberOfQuestions="quiz.number_of_questions"
       :averageRating="quiz.average_rating"
       :ratingCount="quiz.rating_count"
+      :ratingGiven="quiz.rating_given"
     ></quiz-list-item>
   </div>
 </template>

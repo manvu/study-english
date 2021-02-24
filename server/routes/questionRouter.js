@@ -5,6 +5,7 @@ var questionRouter = express.Router();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const { getUserIdFromToken } = require("../helper");
+const { AUTHENTICATION_FAILED, ERROR_OCCURRED } = require("../strings");
 
 var corsOptions = {
   origin: "*",
@@ -82,51 +83,101 @@ questionRouter.post("/create", async (req, res) => {
   let question = req.body.question;
   let instruction = req.body.instruction;
   let isActive = req.body.isActive;
+  let paragraphTitle = !!req.body.paragraphTitle ? null : req.body.paragraphTitle;
+  let correctAnswers = req.body.correctAnswers;
+  let shuffleAnswers = req.body.shuffleAnswers ?  req.body.shuffleAnswers : 1;
   const userId = getUserIdFromToken(req.headers.authorization);
 
   if (userId) {
     // First, check if instruction already exists in the database
-    let createInstructionIfNotExistsResponse = await database.createInstructionIfNotExists(instruction)
-
-    if (!createInstructionIfNotExistsResponse.error) {
-      if (createInstructionIfNotExistsResponse.response.length === 0) {
-
-      }
-    }
-
-    let createQuizResponse = await database.createQuestion(
-      courseName,
-      description,
-      isActive,
-      timeAllowed,
-      selectedSkillId,
-      userId
+    let createInstructionIfNotExistsResponse = await database.createInstructionIfNotExists(
+      instruction
     );
 
-    debugger;
+    if (!createInstructionIfNotExistsResponse.error) {
+      let instructionId =
+        createInstructionIfNotExistsResponse.response.insertId;
 
-    if (
-      !createQuizResponse.error &&
-      createQuizResponse.response.affectedRows === 1
-    ) {
-      const newQuizId = createQuizResponse.response.insertId;
+      if (instructionId === 0) {
+        let findInstructionByInstructionResponse = await database.findInstructionByInstruction(
+          instruction
+        );
 
-      let newQuizResponse = await database.getQuizInfoByQuizId(newQuizId);
-
-      if (!newQuizResponse.error) {
-        res.status(200).json({
-          error: null,
-          quiz: newQuizResponse.response[0],
-        });
+        instructionId =
+          findInstructionByInstructionResponse.response[0].instruction_id;
       } else {
         res.status(400).json({
           error: ERROR_OCCURRED,
         });
       }
-    } else {
-      res.status(400).json({
-        error: ERROR_OCCURRED,
-      });
+
+      if (instructionId > 0) {
+        // Create Question
+        let createQuestionResponse = await database.createQuestion(
+          typeId,
+          instructionId,
+          isActive,
+          paragraphTitle,
+          question
+        );
+;
+        if (!createQuestionResponse.error) {
+          // Add items for different types of question
+          const questionId = createQuestionResponse.response.insertId;
+          if (typeId === 1) {
+            let insertMultipleChoiceItemsResponse = await database.insertMultipleChoiceItems(
+              items,
+              questionId
+            );
+
+            if (!insertMultipleChoiceItemsResponse.error) {
+              res.status(200).json({
+                error: null,
+                questionId: createQuestionResponse.response.insertId,
+              });
+            }
+          } else if (typeId === 2) {
+            let insertGapFillingItemsResponse = await database.insertGapFillingItems(
+              items,
+              questionId
+            );
+
+            if (!insertGapFillingItemsResponse.error) {
+              res.status(200).json({
+                error: null,
+                questionId: createQuestionResponse.response.insertId,
+              });
+            }
+          } else if (typeId === 3) {
+            let createMatchingQuestionResponse = await database.createMatchingQuestion(
+              correctAnswers,
+              questionId,
+              shuffleAnswers
+            );
+
+            if (!createMatchingQuestionResponse.error) {
+              debugger
+              let insertMatchingItemsResponse = await database.insertMatchingItems(items.leftItems, items.rightItems, questionId)
+
+              if (!insertMatchingItemsResponse.error) {
+                res.status(200).json({
+                  error: null,
+                  questionId: createQuestionResponse.response.insertId,
+                });
+              }
+
+            }
+          }
+        } else {
+          res.status(400).json({
+            error: ERROR_OCCURRED,
+          });
+        }
+      } else {
+        res.status(400).json({
+          error: ERROR_OCCURRED,
+        });
+      }
     }
   } else {
     res.status(400).json({

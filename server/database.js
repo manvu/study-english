@@ -76,15 +76,30 @@ class Database {
       return this.executeQuery(query);
     };
 
-    this.getQuizInfo = async function() {
-      let query = `SELECT quiz.*, quiz_skill.skill_description, 
-      (SELECT COUNT(*) FROM user_attempt WHERE user_attempt.quiz_id = quiz.quiz_id) as attempts,
-      (SELECT COUNT(*) FROM quiz_question WHERE quiz.quiz_id = quiz_question.quiz_id) AS 'number_of_questions',
-      (SELECT AVG(user_rating.rating_given) FROM user_rating WHERE user_rating.quiz_id = quiz.quiz_id GROUP BY quiz_id) as average_rating,
-      (SELECT COUNT(user_rating.rating_given) FROM user_rating WHERE user_rating.quiz_id = quiz.quiz_id GROUP BY quiz_id) as rating_count
-      FROM quiz JOIN quiz_skill ON quiz.skill_id = quiz_skill.skill_id`;
+    this.getQuizInfo = async function(userId) {
+      if (userId) {
+        let query = `SELECT quiz.*, quiz_skill.skill_description, 
+        (SELECT COUNT(*) FROM user_attempt WHERE user_attempt.quiz_id = quiz.quiz_id) as attempts,
+        (SELECT COUNT(*) FROM quiz_question WHERE quiz.quiz_id = quiz_question.quiz_id) AS 'number_of_questions',
+        COALESCE((SELECT AVG(user_rating.rating_given) FROM user_rating WHERE user_rating.quiz_id = quiz.quiz_id GROUP BY quiz_id), 0.0) as average_rating,
+        COALESCE((SELECT COUNT(user_rating.rating_given) FROM user_rating WHERE user_rating.quiz_id = quiz.quiz_id GROUP BY quiz_id), 0) as rating_count,
+        COALESCE((SELECT user_rating.rating_given FROM user_rating WHERE user_rating.quiz_id = quiz.quiz_id AND user_rating.user_id = ${userId}), 0) as rating_given,
+        COALESCE((SELECT COUNT(*) FROM user_favorite WHERE user_favorite.quiz_id = quiz.quiz_id AND user_favorite.user_id = ${userId}), 0) as favorite
+        FROM quiz JOIN quiz_skill ON quiz.skill_id = quiz_skill.skill_id
+        WHERE quiz.is_active = 1`;
 
-      return this.executeQuery(query);
+        return this.executeQuery(query);
+      } else {
+        let query = `SELECT quiz.*, quiz_skill.skill_description, 
+        (SELECT COUNT(*) FROM user_attempt WHERE user_attempt.quiz_id = quiz.quiz_id) as attempts,
+        (SELECT COUNT(*) FROM quiz_question WHERE quiz.quiz_id = quiz_question.quiz_id) AS 'number_of_questions',
+        COALESCE((SELECT AVG(user_rating.rating_given) FROM user_rating WHERE user_rating.quiz_id = quiz.quiz_id GROUP BY quiz_id), 0.0) as average_rating,
+        COALESCE((SELECT COUNT(user_rating.rating_given) FROM user_rating WHERE user_rating.quiz_id = quiz.quiz_id GROUP BY quiz_id), 0) as rating_count
+        FROM quiz JOIN quiz_skill ON quiz.skill_id = quiz_skill.skill_id
+        WHERE quiz.is_active = 1`;
+
+        return this.executeQuery(query);
+      }
     };
 
     this.getQuizInfoByQuizId = async function(quizId) {
@@ -291,10 +306,74 @@ FROM discussion_thread dt`;
 
     this.createInstructionIfNotExists = async function(instruction) {
       let query = `INSERT IGNORE INTO question_instruction(instruction) VALUES ('${instruction}')`
+      return this.executeQuery(query);
     }
 
-    this.createQuestion = async function() {
-      let query = ``
+    this.findInstructionByInstruction = async function(instruction ) {
+      let query = `SELECT instruction_id FROM question_instruction WHERE instruction = '${instruction}'`
+      return this.executeQuery(query);
+    }
+
+    this.createQuestion = async function(typeId, instructionId, isActive, paragraphTitle, question) {
+      let query = `INSERT INTO question(type_id, instruction_id, is_active, paragraph_title, question) 
+      VALUES ('${typeId}', '${instructionId}', '${isActive}', ${!paragraphTitle ? 'NULL' : paragraphTitle}, '${question}')`
+
+      console.log(query)
+
+      return this.executeQuery(query); 
+    }
+
+    this.insertMultipleChoiceItems = async function(items, questionId) {
+      let query = `INSERT INTO question_multiple_choice (question_id, choice_id, choice_text, is_correct_choice) VALUES `
+
+      for (let i = 0; i < items.length; i++) {
+        query = query.concat(`(${questionId}, ${items[i].choice_id}, '${items[i].choice_text}', '${items[i].is_correct_choice}'), `)
+      }
+
+      let formattedQuery = query.substring(0, query.length - 2)
+
+      console.log(formattedQuery)
+
+      return this.executeQuery(formattedQuery); 
+    }
+
+    this.insertGapFillingItems = async function(items, questionId) {
+      let query = `INSERT INTO question_gap_filling (question_id, sequence_id, correct_answer) VALUES `
+
+      for (let i = 0; i < items.length; i++) {
+        query = query.concat(`(${questionId}, ${items[i].sequence_id}, '${items[i].correct_answer}'), `)
+      }
+
+      let formattedQuery = query.substring(0, query.length - 2)
+
+      console.log(formattedQuery)
+
+      return this.executeQuery(formattedQuery); 
+    }
+
+    this.insertMatchingItems = async function(leftItems, rightItems, questionId) {
+      let query = `INSERT INTO question_matching_sub (subquestion_id, question_id, text, letter, column_assigned) VALUES `
+
+      for (let i = 0; i < leftItems.length; i++) {
+        query = query.concat(`('${i + 1}', ${questionId}, '${leftItems[i].item}', '${leftItems[i].letter}', '1'), `)
+      }
+
+      for (let i = 0; i < rightItems.length; i++) {
+        query = query.concat(`('${i + 1}', ${questionId}, '${rightItems[i].item}', '${rightItems[i].letter}', '2'), `)
+      }
+
+      let formattedQuery = query.substring(0, query.length - 2)
+
+      console.log(formattedQuery)
+
+      return this.executeQuery(formattedQuery); 
+    }
+
+    this.createMatchingQuestion = async function(questionId, correctAnswers, shuffleAnswers) {
+      let query = `INSERT INTO question_matching (question_id, correct_answers, shuffle_answers) 
+      VALUES ('${correctAnswers}', '${questionId}', '${shuffleAnswers}')`
+
+      console.log(query)
 
       return this.executeQuery(query); 
     }

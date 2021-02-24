@@ -21,12 +21,11 @@ appRouter.use(bodyParser.json());
 appRouter.use(bodyParser.urlencoded({ extended: true }));
 
 appRouter.get("/home", async (req, res) => {
+  
   const userId = getUserIdFromToken(req.headers.authorization);
-
-  if (userId) {
-  }
-
-  let quizzesInfoResponse = await database.getQuizInfo();
+  debugger
+  
+  let quizzesInfoResponse = await database.getQuizInfo(userId);
 
   if (!quizzesInfoResponse.error) {
     let response = quizzesInfoResponse.response;

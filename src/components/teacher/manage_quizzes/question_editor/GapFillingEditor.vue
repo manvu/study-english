@@ -66,7 +66,7 @@
         :id="item.sequence_id"
         :item="item"
         :mode="mode"
-        @updateKeyAnswer="updateAnswer"
+        @updateAnswer="updateAnswer"
       ></gap-filling-choice-item>
     </div>
     <div v-else>There is no gap created for this question</div>
@@ -79,7 +79,7 @@
     >
       Cancel
     </button>
-    <button type="button" @click="$emit('close')" class="ml-3 btn btn-primary">
+    <button type="button" @click="save" class="ml-3 btn btn-primary">
       Save
     </button>
   </div>
@@ -99,20 +99,46 @@ export default {
     return {
       question: this.mode === "create" ? "" : this.item.question,
       instruction: this.mode === "create" ? "" : this.item.instruction,
-      isActive: this.mode === "create" ? "" : (this.item.is_active === 1 ? "yes" : "no"),
+      isActive:
+        this.mode === "create" ? "" : this.item.is_active === 1 ? "yes" : "no",
       paragraphTitle: this.mode === "create" ? "" : this.item.paragraph_title,
-      currentGapNumber: 1,
-      items: this.mode === "create" ? "" : this.item.content,
+      currentGapNumber: 0,
+      items: this.mode === "create" ? [] : this.item.content,
     };
   },
   methods: {
     createGap() {
-      this.question += `{${this.currentGapNumber}}`;
       this.currentGapNumber += 1;
-      this.items.push("");
+      this.question += `{${this.currentGapNumber}}`;
+      this.items.push({
+        sequence_id: this.currentGapNumber,
+        correct_answer: "",
+      });
     },
     updateAnswer(index, keyAnswer) {
-      this.items[index] = keyAnswer;
+      let gapItem = this.items.find((i) => i.sequence_id === index);
+      gapItem.correct_answer = keyAnswer;
+    },
+    save() {
+      if (this.mode === "create") {
+        this.$store.dispatch("questionStore/createQuestion", {
+          typeId: 2,
+          items: this.items,
+          question: this.question,
+          instruction: this.instruction,
+          paragraphTitle: this.paragraphTitle,
+          isActive: this.isActive === "yes" ? 1 : 0,
+        });
+      } else if (this.mode === "edit") {
+        this.$store.dispatch("questionStore/updateQuestion", {
+          items: this.items,
+          question: this.question,
+          instruction: this.instruction,
+          paragraphTitle: this.paragraphTitle,
+          isActive: this.isActive === "yes" ? 1 : 0,
+        });
+      }
+      this.$emit("close");
     },
   },
 };

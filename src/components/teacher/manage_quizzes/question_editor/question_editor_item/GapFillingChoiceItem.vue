@@ -1,7 +1,7 @@
 <template>
   <div class="form-group">
     <label class="control-label" for="instruction">Gap {{ id }}</label>
-    <input type="text" class="form-control col-4" name="active" v-model="keyAnswer" />
+    <input type="text" class="form-control col-4" name="active" v-model="keyAnswer" @keyup="update" />
   </div>
 
 </template>
@@ -15,8 +15,8 @@ export default {
     };
   },
   methods: {
-    onKeyUp: function () {
-      this.$emit("updateAnswer", [this.id, this.keyAnswer]);
+    update: function () {
+      this.$emit("updateAnswer", this.id, this.keyAnswer);
     },
   },
 };

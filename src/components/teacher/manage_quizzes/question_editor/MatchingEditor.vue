@@ -14,7 +14,12 @@
   <div class="form-group">
     <label class="control-label" for="question">Question</label>
     <div class="">
-      <textarea name="question" id="question" rows="3" v-model="question"></textarea>
+      <textarea
+        name="question"
+        id="question"
+        rows="3"
+        v-model="question"
+      ></textarea>
     </div>
   </div>
   <div class="form-group">
@@ -31,7 +36,13 @@
         <label class="form-check-label" for="active">Yes</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="active" value="no" v-model="isActive" />
+        <input
+          class="form-check-input"
+          type="radio"
+          name="active"
+          value="no"
+          v-model="isActive"
+        />
         <label class="form-check-label" for="active">No</label>
       </div>
     </div>
@@ -42,10 +53,9 @@
       <matching-choice-left-item
         v-for="item in leftItems"
         :key="item.letter"
-        :id="item.letter"
         :item="item"
-        :matchingItem="item.matchingItem"
         :availableOptions="rightItems"
+        @update="updateLeftItem"
       ></matching-choice-left-item>
     </div>
     <div v-else>There is no item created for left column</div>
@@ -58,8 +68,8 @@
       <matching-choice-right-item
         v-for="item in rightItems"
         :key="item.letter"
-        :id="item.letter"
         :item="item"
+        @update="updateRightItem"
       ></matching-choice-right-item>
     </div>
     <div v-else>There is no item created for right column</div>
@@ -73,7 +83,7 @@
     >
       Cancel
     </button>
-    <button type="button" @click="$emit('close')" class="ml-3 btn btn-primary">
+    <button type="button" @click="save" class="ml-3 btn btn-primary">
       Save
     </button>
   </div>
@@ -92,8 +102,8 @@ export default {
   props: ["item", "mode"],
   data() {
     return {
-      leftItems: this.mode === "create" ? "" : this.item.content.leftItems,
-      rightItems: this.mode === "create" ? "" : this.item.content.rightItems,
+      leftItems: this.mode === "create" ? [] : this.item.content.leftItems,
+      rightItems: this.mode === "create" ? [] : this.item.content.rightItems,
       currentAlphabeticCharacter: "@",
       currentNumericCharacter: 0,
       question: this.mode === "create" ? "" : this.item.question,
@@ -114,18 +124,51 @@ export default {
       let index = this.currentNumericCharacter;
 
       this.leftItems.push({
-        id: index,
+        letter: index,
         item: "",
-        matchingItem: null,
+        correct_answer: null,
       });
     },
     addRightItem() {
       let index = this.nextChar();
 
       this.rightItems.push({
-        id: index,
+        letter: index,
         item: "",
       });
+    },
+    updateLeftItem(item) {
+      let leftItem = this.leftItems.find((i) => i.letter === item.letter);
+      leftItem.item = item.item;
+      leftItem.correct_answer = item.correct_answer;
+    },
+    updateRightItem(item) {
+      let rightItem = this.rightItems.find((i) => i.letter === item.letter);
+      rightItem.item = item.item;
+    },
+    save() {
+      debugger
+      if (this.mode === "create") {
+        this.$store.dispatch("questionStore/createQuestion", {
+          typeId: 3,
+          items: { leftItems: this.leftItems, rightItems: this.rightItems },
+          question: this.question,
+          instruction: this.instruction,
+          isActive: this.isActive === "yes" ? 1 : 0,
+          correctAnswers: this.leftItems
+            .reduce((string, current) => string + `${current.letter}.${current.correct_answer} `, "" ).trim(),
+        });
+      } else if (this.mode === "edit") {
+        this.$store.dispatch("questionStore/updateQuestion", {
+          items: { leftItems: this.leftItems, rightItems: this.rightItems },
+          question: this.question,
+          instruction: this.instruction,
+          isActive: this.isActive === "yes" ? 1 : 0,
+          correctAnswers: this.leftItems
+            .reduce((string, current) => string + `${current.letter}.${current.correct_answer} `, "" ).trim(),
+        });
+      }
+      this.$emit("close");
     },
   },
 };
