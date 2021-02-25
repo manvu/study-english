@@ -17,15 +17,15 @@ quizRouter.use(bodyParser.json());
 
 quizRouter.use(bodyParser.urlencoded({ extended: true }));
 
-quizRouter.get("/:id", async (req, res) => {
-  let quizId = req.params.id;
+// quizRouter.get("/:id", async (req, res) => {
+//   let quizId = req.params.id;
 
-  console.log(quizId);
+//   console.log(quizId);
 
-  res.json({
-    error: null,
-  });
-});
+//   res.json({
+//     error: null,
+//   });
+// });
 
 quizRouter.post("/create", async (req, res) => {
   let courseName = req.body.courseName;

@@ -36,6 +36,8 @@ appRouter.get("/home", async (req, res) => {
 });
 
 appRouter.get("/quiz/:id", async (req, res) => {
+
+  
   let quizId = req.params.id;
   const userId = getUserIdFromToken(req.headers.authorization);
 
@@ -110,7 +112,7 @@ appRouter.get("/quiz/:id", async (req, res) => {
         response[i].content = obj;
       }
 
-      res.json({
+      res.status(200).json({
         error: null,
         questions: response,
       });

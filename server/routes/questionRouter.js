@@ -21,7 +21,7 @@ questionRouter.get("/:id", async (req, res) => {
   let questionId = req.params.id;
 
   let getQuestionByIdResponse = await database.getQuestionById(questionId);
-
+  
   if (!getQuestionByIdResponse.error) {
     let response = getQuestionByIdResponse.response[0];
 

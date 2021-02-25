@@ -114,6 +114,7 @@ export default {
   font-family: arial;
   font-size: 16pt;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .question-list {

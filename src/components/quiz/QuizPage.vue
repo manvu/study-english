@@ -71,6 +71,7 @@ export default {
       .then(() => {
         this.questions = this.$store.getters["questionStore/getQuestionList"];
         console.log(this.questions)
+        
       });
   },
 };

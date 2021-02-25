@@ -25,7 +25,7 @@ export default {
   props: ["id", "item", "selectedOption", "availableOptions"],
   data() {
     return {
-      selected: "",
+      selected: this.selectedOption ? this.selectedOption : "",
     };
   },
   methods: {

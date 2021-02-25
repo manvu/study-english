@@ -47,25 +47,42 @@ export default {
     };
   },
   created() {
-    let found;
-    while ((found = regex.exec(this.text))) {
-      let id = parseInt(found[1]);
-      if (id > 0) {
+    if (this.question.answer_text) {
+      let items = this.question.answer_text.split(",").map((s) => s.split("."));
+
+      for (let i = 0; i < this.question.content.length; i++) {
+        let gap = this.question.content[i];
         this.gapItems.push({
-          id,
-          response: "",
+          id: gap.sequence_id,
+          response:
+            items[gap.sequence_id][1] === "?" ? "" : items[gap.sequence_id][1],
         });
       }
+      console.log(this.paragraph_title);
+    } else {
+      let found;
+      while ((found = regex.exec(this.text))) {
+        let id = parseInt(found[1]);
+        if (id > 0) {
+          this.gapItems.push({
+            id,
+            response: "",
+          });
+        }
+      }
     }
-
-    console.log(this.paragraph_title);
   },
   methods: {
     updateResponse(index, response) {
       let gapItem = this.gapItems.find((g) => g.id === index);
       gapItem.response = response;
 
-      let answerText = this.gapItems .reduce( (acc, cur) => acc + `${cur.id}.${cur.response ? cur.response : "?"} `, "" ) .trim();
+      let answerText = this.gapItems
+        .reduce(
+          (acc, cur) => acc + `${cur.id}.${cur.response ? cur.response : "?"},`,
+          ""
+        )
+        .trim();
 
       this.$store.dispatch("questionStore/answerQuestion", {
         questionId: this.question.question_id,
@@ -74,6 +91,9 @@ export default {
         answerText: answerText,
       });
     },
+    submit() {
+      
+    }
   },
 };
 </script>

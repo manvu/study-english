@@ -27,6 +27,7 @@
             :key="item.id"
             :id="item.id"
             :item="item.item"
+            :selectedOption="item.selectedOption"
             :availableOptions="rightMatchingItems"
             @updateResponse="updateResponse"
           ></matching-question-left-item>
@@ -51,11 +52,13 @@ export default {
     };
   },
   mounted() {
+    let items = this.question.answer_text.split(" ").map((s) => s.split("."));
+
     for (let i = 0; i < this.leftItems.length; i++) {
       this.leftMatchingItems.push({
         id: i + 1,
         item: this.leftItems[i],
-        selectedOption: "",
+        selectedOption: this.question.answer_text ? (items[i][1] === "?" ? "" :  items[i][1]) : "",
       });
     }
 
@@ -77,9 +80,7 @@ export default {
       let leftItem = this.leftMatchingItems.find((g) => g.id === leftIndex);
       leftItem.selectedOption = response;
 
-      let answerText = this.leftMatchingItems .reduce( (acc, cur) => acc + `${cur.id}.${cur.selectedOption ? cur.selectedOption : "?"} `,  ""
-        )
-        .trim();
+      let answerText = this.leftMatchingItems.reduce( (acc, cur) => acc + `${cur.id}.${cur.selectedOption ? cur.selectedOption : "?"} `,  "" ) .trim();
 
       this.$store.dispatch("questionStore/answerQuestion", {
         questionId: this.question.question_id,
