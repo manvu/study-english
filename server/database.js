@@ -528,6 +528,14 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
+    this.updateUserAnswerQuestion = async function( quizId, userId, attemptId, questionId, answerText) {
+      let query = `UPDATE user_answer_question
+      SET answer_text = '${answerText}'
+      WHERE quiz_id = ${quizId} AND user_id = ${userId} AND attempt_id = ${attemptId} AND question_id = ${questionId}`;
+
+      return this.executeQuery(query);
+    };
+
     this.getUserInfo = async function(userId) {
       let query = `SELECT user.email, user.first_name, user.last_name FROM user WHERE user_id = ${userId}`;
 
@@ -549,6 +557,8 @@ FROM discussion_thread dt`;
         return this.executeQuery(query);
       }
     }
+
+
   }
 }
 

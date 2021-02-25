@@ -13,6 +13,8 @@ export default {
     createQuiz: "quiz/create",
     createQuestion: "question/create",
 
+    answerQuestion: (questionId) => `question/answer/${questionId}`,
+
     getUserInfo: "user/info",
     saveUserInfo: "user/info",
     updateRating: (quizId) => `quiz/rating/${quizId}`,

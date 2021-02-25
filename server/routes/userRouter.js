@@ -19,7 +19,7 @@ userRouter.get("/users", async (req, res) => {
 });
 
 userRouter.get("/info", async (req, res) => {
-  debugger
+  
   const userId = getUserIdFromToken(req.headers.authorization);
 
   if (userId) {
@@ -45,7 +45,7 @@ userRouter.get("/info", async (req, res) => {
 });
 
 userRouter.post("/info", async (req, res) => {
-  debugger
+  
   const userId = getUserIdFromToken(req.headers.authorization);
   let email = req.body.email;
   let firstName = req.body.firstName;

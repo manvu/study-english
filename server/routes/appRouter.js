@@ -76,7 +76,7 @@ appRouter.get("/quiz/:id", async (req, res) => {
       // User has attempted this quiz but has not completed it
       const attemptId = latestAttemptResponse.response[0].attempt_id;
 
-      debugger
+      
 
       questionsByQuizIdResponse = await database.getQuestionsByQuizId(quizId, userId, attemptId);
       questionsContentByQuizIdResponse = await database.getQuestionsContentByQuizId( quizId );

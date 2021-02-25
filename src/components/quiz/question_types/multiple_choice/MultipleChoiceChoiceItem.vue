@@ -27,7 +27,7 @@ const characters = {
 };
 
 export default {
-  props: ["id", "text", "selectedOption"],
+  props: ["id", "text", "selectedOption", "item"],
   computed: {
     letter() {
       return characters[this.id];
@@ -35,13 +35,13 @@ export default {
     letterClass() {
       return {
         letter: true,
-        "letter-selected": this.id === this.selectedOption,
+        "letter-selected": this.item.choice_id == this.selectedOption,
       };
     },
     optionClass() {
       return {
         option: true,
-        "option-selected": this.id === this.selectedOption
+        "option-selected": this.item.choice_id == this.selectedOption
       }
     },
   },
@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     selectOption() {
-      this.$emit("selectOption", this.id);
+      this.$emit("selectOption", this.item.choice_id);
     },
   },
 };

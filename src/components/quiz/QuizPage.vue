@@ -11,6 +11,7 @@
             v-if="question.type_id === 1"
             :id="index"
             :text="question.question"
+            :question="question"
             :choices="question.content"
             :instruction="question.instruction"
             :selectedOption="question.selectedOption"
@@ -19,6 +20,7 @@
             v-else-if="question.type_id === 2"
             :id="index"
             :text="question.question"
+            :question="question"
             :instruction="question.instruction"
             :paragraph_title="question.paragraph_title"
           ></gap-filling-question-item>
@@ -26,6 +28,7 @@
             v-else-if="question.type_id === 3"
             :id="index"
             :text="question.question"
+            :question="question"
             :instruction="question.instruction"
             :leftItems=" question.content.filter((item) => item.column_assigned === 1) "
             :rightItems=" question.content.filter((item) => item.column_assigned === 2) "
@@ -60,18 +63,14 @@ export default {
       questions: [],
     };
   },
-  computed: {
-    getQuestions() {
-      return this.$store.getters["questionStore/getQuestionList"];
-    },
-  },
   created() {
     const quizId = this.$route.params.id
 
     this.$store
       .dispatch("questionStore/getQuestionList", { quizId })
       .then(() => {
-        this.questions = this.getQuestions;
+        this.questions = this.$store.getters["questionStore/getQuestionList"];
+        console.log(this.questions)
       });
   },
 };

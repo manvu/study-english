@@ -42,7 +42,7 @@ import MatchingQuestionLeftItem from "./MatchingQuestionLeftItem";
 
 export default {
   components: { MatchingQuestionLeftItem, MatchingQuestionRightItem },
-  props: ["id", "text", "instruction", "leftItems", "rightItems"],
+  props: ["id", "text", "instruction", "leftItems", "rightItems", "question"],
   data() {
     return {
       leftMatchingItems: [],
@@ -65,8 +65,6 @@ export default {
         item: this.rightItems[i],
       });
     }
-
-    
   },
   methods: {
     nextChar: function () {
@@ -78,7 +76,17 @@ export default {
     updateResponse(leftIndex, response) {
       let leftItem = this.leftMatchingItems.find((g) => g.id === leftIndex);
       leftItem.selectedOption = response;
-      
+
+      let answerText = this.leftMatchingItems .reduce( (acc, cur) => acc + `${cur.id}.${cur.selectedOption ? cur.selectedOption : "?"} `,  ""
+        )
+        .trim();
+
+      this.$store.dispatch("questionStore/answerQuestion", {
+        questionId: this.question.question_id,
+        quizId: this.question.quiz_id,
+        attemptId: this.question.attempt_id,
+        answerText: answerText,
+      });
     },
   },
 };

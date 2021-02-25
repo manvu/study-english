@@ -31,7 +31,7 @@ const authStore = {
           password: payload.password,
         }, { withCredentials: true })
         .then((response) => {
-          debugger
+          
           if (!response.data.error) {
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("email", response.data.userInfo.email);

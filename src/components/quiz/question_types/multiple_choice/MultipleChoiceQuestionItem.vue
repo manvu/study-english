@@ -1,7 +1,7 @@
 <template>
   <div class="quiz">
     <div class="quiz-header"></div>
-    
+
     <div class="question">
       <h3 class="instruction">{{ id + 1 + "." }} {{ instruction }}</h3>
       <h3><span v-html="questionText"> </span></h3>
@@ -12,6 +12,7 @@
       :key="index"
       :id="index"
       :text="item.choice_text"
+      :item="item"
       :selectedOption="selectedOption"
       @selectOption="selectOption"
     ></multiple-choice-choice-item>
@@ -36,19 +37,31 @@ export default {
       }
     },
   },
-  props: ["id", "text", "choices", "instruction"],
+  props: ["id", "text", "choices", "instruction", "question"],
   data() {
     return {
-      selectedOption: null,
+      selectedOption: this.question.answer_text ? this.question.answer_text : null,
       questionText: this.text,
       originalQuestionText: this.text,
     };
   },
   methods: {
     selectOption(option) {
-      this.selectedOption = option;
+      this.$store
+        .dispatch("questionStore/answerQuestion", {
+          questionId: this.question.question_id,
+          quizId: this.question.quiz_id,
+          attemptId: this.question.attempt_id,
+          answerText: option,
+        })
+        .then((response) => {
+          this.selectedOption = option;
+        });
     },
   },
+  created() {
+    console.log(this.question.answer_text)
+  }
 };
 </script>
 

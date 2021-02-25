@@ -83,9 +83,11 @@ questionRouter.post("/create", async (req, res) => {
   let question = req.body.question;
   let instruction = req.body.instruction;
   let isActive = req.body.isActive;
-  let paragraphTitle = !!req.body.paragraphTitle ? null : req.body.paragraphTitle;
+  let paragraphTitle = !!req.body.paragraphTitle
+    ? null
+    : req.body.paragraphTitle;
   let correctAnswers = req.body.correctAnswers;
-  let shuffleAnswers = req.body.shuffleAnswers ?  req.body.shuffleAnswers : 1;
+  let shuffleAnswers = req.body.shuffleAnswers ? req.body.shuffleAnswers : 1;
   const userId = getUserIdFromToken(req.headers.authorization);
 
   if (userId) {
@@ -120,7 +122,6 @@ questionRouter.post("/create", async (req, res) => {
           paragraphTitle,
           question
         );
-;
         if (!createQuestionResponse.error) {
           // Add items for different types of question
           const questionId = createQuestionResponse.response.insertId;
@@ -156,8 +157,11 @@ questionRouter.post("/create", async (req, res) => {
             );
 
             if (!createMatchingQuestionResponse.error) {
-              
-              let insertMatchingItemsResponse = await database.insertMatchingItems(items.leftItems, items.rightItems, questionId)
+              let insertMatchingItemsResponse = await database.insertMatchingItems(
+                items.leftItems,
+                items.rightItems,
+                questionId
+              );
 
               if (!insertMatchingItemsResponse.error) {
                 res.status(200).json({
@@ -165,7 +169,6 @@ questionRouter.post("/create", async (req, res) => {
                   questionId: createQuestionResponse.response.insertId,
                 });
               }
-
             }
           }
         } else {
@@ -187,7 +190,29 @@ questionRouter.post("/create", async (req, res) => {
 });
 
 questionRouter.post("/answer/:id", async (req, res) => {
+  let questionId = req.params.id;
+  let quizId = req.body.quizId
+  let attemptId = req.body.attemptId;
+  let answerText = req.body.answerText;
+  const userId = getUserIdFromToken(req.headers.authorization);
+
   
-})
+
+  if (userId) {
+    let updateUserAnswerQuestion = await database.updateUserAnswerQuestion(quizId, userId, attemptId, questionId, answerText)
+
+    if (!updateUserAnswerQuestion.error) {
+      if (updateUserAnswerQuestion.response.affectedRows === 1) {
+        res.status(200).json({
+          error: null
+        })
+      }
+    }
+  } else {
+    res.status(400).json({
+      error: AUTHENTICATION_FAILED,
+    });
+  }
+});
 
 module.exports = questionRouter;

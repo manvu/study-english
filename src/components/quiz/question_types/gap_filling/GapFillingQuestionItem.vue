@@ -26,8 +26,8 @@ import GapFillingQuestionGapItem from "./GapFillingQuestionGapItem";
 
 const regex = /{(\d*)}/g;
 export default {
-  props: ["id", "text", "instruction", "paragraph_title"],
-  components: {GapFillingQuestionGapItem},
+  props: ["id", "text", "instruction", "paragraph_title", "question"],
+  components: { GapFillingQuestionGapItem },
   computed: {
     questionText() {
       let formattedText = this.text.replaceAll(
@@ -58,14 +58,23 @@ export default {
       }
     }
 
-    console.log(this.paragraph_title)
+    console.log(this.paragraph_title);
   },
   methods: {
-      updateResponse(index, response) {
-          let gapItem = this.gapItems.find(g => g.id === index)
-          gapItem.response = response
-      }
-  }
+    updateResponse(index, response) {
+      let gapItem = this.gapItems.find((g) => g.id === index);
+      gapItem.response = response;
+
+      let answerText = this.gapItems .reduce( (acc, cur) => acc + `${cur.id}.${cur.response ? cur.response : "?"} `, "" ) .trim();
+
+      this.$store.dispatch("questionStore/answerQuestion", {
+        questionId: this.question.question_id,
+        quizId: this.question.quiz_id,
+        attemptId: this.question.attempt_id,
+        answerText: answerText,
+      });
+    },
+  },
 };
 </script>
 

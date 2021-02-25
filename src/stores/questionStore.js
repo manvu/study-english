@@ -32,6 +32,7 @@ const questionStore = {
         })
         .then((response) => {
           if (!response.data.error) {
+            
             let questions = response.data.questions;
             payload.questions = questions;
             context.commit("getQuestionList", payload);
@@ -109,6 +110,40 @@ const questionStore = {
           this.loading = false;
         });
     },
+    answerQuestion(context, payload) {
+      return axios
+      .post(
+        process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.answerQuestion(payload.questionId),
+        {
+          quizId: payload.quizId,
+          attemptId: payload.attemptId,
+          answerText: payload.answerText,
+        },
+        {
+          headers: {
+            Authorization: !!localStorage.getItem("token")
+              ? `Bearer ${localStorage.getItem("token")}`
+              : "",
+          },
+        }
+      )
+      .then((response) => {
+        if (!response.data.error) {
+          
+          // payload.question = response.data.question;
+          // context.commit("createQuestion", payload);
+        }
+
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.errored = true;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+    }
   },
   getters: {
     getQuestionList(state) {
