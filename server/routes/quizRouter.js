@@ -222,4 +222,8 @@ quizRouter.post("/rating/:id", async (req, res) => {
   }
 });
 
+quizRouter.post("/submit", async (req, res) => {
+  
+})
+
 module.exports = quizRouter;

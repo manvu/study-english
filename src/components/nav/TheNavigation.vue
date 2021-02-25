@@ -45,9 +45,9 @@
               :src="`${publicPath}assets/images/default-profile-picture.png`"
               alt=""
             />
-            Hi, {{ firstName }}
+
           </li>
-          <li class="nav-item dropdown">
+          <li v-if="isAuthenticated" class="nav-item dropdown ml-2 mr-3">
             <a
               class="nav-link dropdown-toggle"
               href="#"
@@ -56,7 +56,7 @@
               aria-haspopup="true"
               aria-expanded="false"
             >
-              Dropdown link
+              Hi, {{ authenticatedUser }}
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <router-link class="dropdown-item" to="/settings"
@@ -90,9 +90,11 @@ export default {
     isTeacher() {
       return this.$store.getters['authStore/isTeacher'];
     },
-    firstName() {
-      return this.$store.getters['authStore/firstName'];
-    }
+    authenticatedUser() {
+      
+      return this.$store.getters['authStore/getAuthenticatedUser'];
+    },
+
   },
   methods: {
     signOut() {

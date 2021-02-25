@@ -90,6 +90,7 @@ authRouter.post("/login", async (req, res) => {
             firstName,
             lastName,
             isTeacher,
+            email
           },
           token
         });

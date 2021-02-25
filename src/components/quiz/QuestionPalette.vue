@@ -53,12 +53,6 @@ export default {
 </script>
 
 <style scoped>
-/*!
- * Start Bootstrap - Simple Sidebar (https://startbootstrap.com/template/simple-sidebar)
- * Copyright 2013-2020 Start Bootstrap
- * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-simple-sidebar/blob/master/LICENSE)
- */
-
 #wrapper {
   overflow-x: hidden;
 }

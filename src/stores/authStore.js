@@ -7,7 +7,7 @@ const authStore = {
     return {
       isAuthenticated: !!localStorage.getItem("token"),
       isTeacher: !!localStorage.getItem("isTeacher"),
-      authenticatedUser: localStorage.getItem("firstName") || localStorage.getItem("email"),
+      authenticatedUser: localStorage.getItem("firstName") !== "null" ? localStorage.getItem("firstName") : localStorage.getItem("email"),
     };
   },
   mutations: {
@@ -31,10 +31,10 @@ const authStore = {
           password: payload.password,
         }, { withCredentials: true })
         .then((response) => {
-          
+          debugger
           if (!response.data.error) {
-            localStorage.setItem("email", response.data.email);
             localStorage.setItem("token", response.data.token);
+            localStorage.setItem("email", response.data.userInfo.email);
             localStorage.setItem("firstName", response.data.userInfo.firstName);
             localStorage.setItem("lastName", response.data.userInfo.lastName);
             localStorage.setItem("isTeacher", response.data.userInfo.isTeacher);
@@ -86,7 +86,7 @@ const authStore = {
     isTeacher(state) {
       return state.isTeacher;
     },
-    firstName(state) {
+    getAuthenticatedUser(state) {
       return state.authenticatedUser;
     },
   },

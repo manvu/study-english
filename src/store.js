@@ -6,6 +6,7 @@ import quizStore from "./stores/quizStore";
 import questionStore from "./stores/questionStore";
 import forumStore from "./stores/forumStore";
 import statisticsStore from "./stores/statisticsStore";
+import settingStore from "./stores/settingStore";
 
 const store = createStore({
   modules: {
@@ -13,7 +14,8 @@ const store = createStore({
     quizStore,
     questionStore,
     forumStore,
-    statisticsStore
+    statisticsStore,
+    settingStore
   },
 });
 

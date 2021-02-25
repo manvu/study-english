@@ -518,6 +518,37 @@ FROM discussion_thread dt`;
 
       return this.executeQuery(formattedQuery);
     };
+
+    this.getUserAnswerQuestionByUserIdAndQuizIdAndAttemptId = async function( quizId, userId, attemptId) {
+      let query = `SELECT * 
+      FROM user_answer_question 
+      WHERE quiz_id = ${quizId} AND user_id = ${userId} AND attempt_id = ${attemptId} 
+      ORDER BY question_id ASC`;
+
+      return this.executeQuery(query);
+    };
+
+    this.getUserInfo = async function(userId) {
+      let query = `SELECT user.email, user.first_name, user.last_name FROM user WHERE user_id = ${userId}`;
+
+      return this.executeQuery(query);
+    }
+
+    this.saveUserInfo = async function(userId, email, firstName, lastName, passwordHash, passwordSalt) {
+      if (passwordHash) {
+        let query = `UPDATE user
+        SET email = '${email}', first_name = '${firstName}', last_name = '${lastName}', password_salt = '${passwordSalt}', password_hash = '${passwordHash}'
+        WHERE user_id = ${userId}`;
+  
+        return this.executeQuery(query);
+      } else {
+        let query = `UPDATE user
+        SET email = '${email}', first_name = '${firstName}', last_name = '${lastName}'
+        WHERE user_id = ${userId}`;
+  
+        return this.executeQuery(query);
+      }
+    }
   }
 }
 

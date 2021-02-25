@@ -24,6 +24,7 @@
                       placeholder="Email Address is required"
                       name="email"
                       required
+                      v-model="email"
                     />
                   </div>
                 </div>
@@ -39,6 +40,7 @@
                       placeholder="Enter First Name"
                       name="firstName"
                       required
+                      v-model="firstName"
                     />
                   </div>
                 </div>
@@ -51,6 +53,7 @@
                       id="lastName"
                       placeholder="Enter Last Name"
                       name="lastName"
+                      v-model="lastName"
                     />
                   </div>
                 </div>
@@ -62,6 +65,7 @@
                       class="form-control"
                       id="password"
                       name="password"
+                      v-model="password"
                     />
                   </div>
                 </div>
@@ -75,11 +79,12 @@
                       class="form-control"
                       id="confirmPassword"
                       name="confirmPassword"
+                      v-model="confirmPassword"
                     />
                   </div>
                 </div>
                 <div class="form-group">
-                  <button class="btn btn-primary">Save</button>
+                  <button @click="save" class="btn btn-primary">Save</button>
                 </div>
               </div>
             </div>
@@ -98,6 +103,7 @@
 
 export default {
   //   components: { FontAwesomeIcon },
+  props: ["email_address", "first_name", "last_name"],
   computed: {
     // faCheckCircle() {
     //   return faCheckCircle;
@@ -105,6 +111,37 @@ export default {
     // faTimesCircle() {
     //   return faTimesCircle;
     // },
+  },
+  data() {
+    return {
+      email: this.email_address,
+      firstName: this.first_name ? this.first_name : "",
+      lastName: this.first_name ? this.last_name : "",
+      password: "",
+      confirmPassword: "",
+    };
+  },
+  methods: {
+    save() {
+      this.$store
+        .dispatch("settingStore/saveUserInfo", {
+          email: this.email,
+          firstName: this.firstName,
+          lastName: this.lastName,
+        })
+        .then((response) => {
+          this.user = this.$store.getters["settingStore/getUser"];
+        });
+    },
+  },
+  created() {
+    this.$store.dispatch("settingStore/fetchUserInfo", {}).then((response) => {
+      this.user = this.$store.getters["settingStore/getUser"];
+
+      this.email = this.user.email;
+      this.firstName = this.user.first_name;
+      this.lastName = this.user.last_name;
+    });
   },
 };
 </script>

@@ -27,12 +27,8 @@
             :id="index"
             :text="question.question"
             :instruction="question.instruction"
-            :leftItems="
-              question.content.filter((item) => item.column_assigned === 1)
-            "
-            :rightItems="
-              question.content.filter((item) => item.column_assigned === 2)
-            "
+            :leftItems=" question.content.filter((item) => item.column_assigned === 1) "
+            :rightItems=" question.content.filter((item) => item.column_assigned === 2) "
           ></matching-question-item>
         </div>
       </div>

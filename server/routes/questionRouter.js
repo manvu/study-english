@@ -186,4 +186,8 @@ questionRouter.post("/create", async (req, res) => {
   }
 });
 
+questionRouter.post("/answer/:id", async (req, res) => {
+  
+})
+
 module.exports = questionRouter;

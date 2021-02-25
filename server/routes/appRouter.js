@@ -50,6 +50,9 @@ appRouter.get("/quiz/:id", async (req, res) => {
   if (!latestAttemptResponse.error) {
     let questionsByQuizIdResponse;
     let questionsContentByQuizIdResponse;
+    let response;
+    let userAnswerQuestions;
+    
     if ( latestAttemptResponse.response.length === 0 || (latestAttemptResponse.response.length === 1 && latestAttemptResponse.response[0].end_time !== null) ) {
       // User has never attempted this quiz or has completed the quiz
       questionsByQuizIdResponse = await database.getQuestionsByQuizId(quizId);
@@ -60,30 +63,34 @@ appRouter.get("/quiz/:id", async (req, res) => {
       if (numberOfQuestions > 0) {
         let newAttemptId = latestAttemptResponse.response.length === 1 && latestAttemptResponse.response[0].end_time !== null ? latestAttemptResponse.response[0].attemptId + 1 : 1
 
-        debugger
-
         let newAttempt = await database.createNewAttempByUserIdAndQuizId(quizId, userId, newAttemptId) 
   
-        let userAnswerQuestions = await database.createUserAnswerQuestionByUserIdAndQuizIdAndAttemptId(quizId, userId, newAttemptId, numberOfQuestions)
-
-        debugger
+         userAnswerQuestions = await database.createUserAnswerQuestionByUserIdAndQuizIdAndAttemptId(quizId, userId, newAttemptId, numberOfQuestions)
       } else {
         res.status(400).json({
           error: ERROR_OCCURRED
         })
       }
     } else {
+      
       // User has attempted this quiz but has not completed it
       const attemptId = latestAttemptResponse.response[0].attempt_id;
 
+      debugger
+
       questionsByQuizIdResponse = await database.getQuestionsByQuizId(quizId, userId, attemptId);
       questionsContentByQuizIdResponse = await database.getQuestionsContentByQuizId( quizId );
+      userAnswerQuestions = await database.getUserAnswerQuestionByUserIdAndQuizIdAndAttemptId(quizId, userId, attemptId)
     }
 
     if ( !questionsByQuizIdResponse.error && !questionsContentByQuizIdResponse.error ) {
-      let response = questionsByQuizIdResponse.response;
+      response = questionsByQuizIdResponse.response;
 
       let questionsContentByQuizIdObject = {};
+
+      for (let i = 0; i < userAnswerQuestions.response.length; i++ ) {
+        response[i].answer_text = userAnswerQuestions.response[i].answer_text
+      }
 
       for ( let i = 0; i < questionsContentByQuizIdResponse.response.length; i++ ) {
         let currentItem = questionsContentByQuizIdResponse.response[i];
