@@ -13,10 +13,14 @@ const quizStore = {
   },
   mutations: {
     toggleFavorite(state, payload) {
-      debugger;
       let quizId = payload.id;
       let quiz = state.quizzes.find((q) => q.quiz_id === quizId);
       quiz.favorite = !quiz.favorite;
+    },
+    updateRating(state, payload) {
+      let quizId = payload.id;
+      let quiz = state.quizzes.find((q) => q.quiz_id === quizId);
+      quiz.ratingGiven = payload.ratingGiven;
     },
     getDataForHome(state, payload) {
       state.quizzes = payload.quizzes;
@@ -198,9 +202,39 @@ const quizStore = {
         )
         .then((response) => {
           if (!response.data.error) {
-            debugger;
+            ;
             payload.quiz = response.data.quiz;
             context.commit("updateQuiz", payload);
+          }
+
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    updateRating(context, payload) {
+      return axios
+        .post(
+          process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.updateRating(payload.id), {
+            ratingGiven: payload.ratingGiven
+          },
+          {
+            headers: {
+              Authorization: !!localStorage.getItem("token")
+                ? `Bearer ${localStorage.getItem("token")}`
+                : "",
+            },
+          }
+        )
+        .then((response) => {
+          if (!response.data.error) {
+            payload.ratingGiven = payload.updateRating
+            context.commit("updateRating", payload);
           }
 
           console.log(response);

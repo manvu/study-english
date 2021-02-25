@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const { getUserIdFromToken } = require("../helper");
 const { AUTHENTICATION_FAILED } = require("../strings");
 const dotenv = require("dotenv").config();
-const helper = require("../helper")
+const helper = require("../helper");
 
 var corsOptions = {
   credentials: true,
@@ -21,10 +21,8 @@ appRouter.use(bodyParser.json());
 appRouter.use(bodyParser.urlencoded({ extended: true }));
 
 appRouter.get("/home", async (req, res) => {
-  
   const userId = getUserIdFromToken(req.headers.authorization);
-  debugger
-  
+
   let quizzesInfoResponse = await database.getQuizInfo(userId);
 
   if (!quizzesInfoResponse.error) {
@@ -97,7 +95,7 @@ appRouter.get("/statistics", async (req, res) => {
     let getAnswerStatisticsByUserIdResponse = await database.getAnswerStatisticsByUserId(
       userId
     );
-  
+
     if (!getQuizStatisticsByUserIdResponse.error) {
       res.status(200).json({
         error: null,
@@ -114,15 +112,19 @@ appRouter.get("/statistics", async (req, res) => {
 
 appRouter.get("/teacher", async (req, res) => {
   let getQuizInfoResponse = await database.getQuizInfo();
-  let getAllSkillsResponse = await database.getAllSkills()
-  let getAllQuestionTypesResponse = await database.getAllQuestionTypes()
+  let getAllSkillsResponse = await database.getAllSkills();
+  let getAllQuestionTypesResponse = await database.getAllQuestionTypes();
 
-  if (!getQuizInfoResponse.error && !getAllSkillsResponse.error && !getAllQuestionTypesResponse.error) {
+  if (
+    !getQuizInfoResponse.error &&
+    !getAllSkillsResponse.error &&
+    !getAllQuestionTypesResponse.error
+  ) {
     res.status(200).json({
       error: null,
       quizzes: getQuizInfoResponse.response,
       allSkills: getAllSkillsResponse.response,
-      allQuestionTypes: getAllQuestionTypesResponse.response
+      allQuestionTypes: getAllQuestionTypesResponse.response,
     });
   }
 });

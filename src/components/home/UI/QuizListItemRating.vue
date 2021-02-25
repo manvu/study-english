@@ -69,8 +69,11 @@ export default {
   },
   methods: {
     vote(starScore) {
-      console.log(this.id, starScore);
-      this.voted = true;
+      this.$store
+        .dispatch("quizStore/updateRating", { id: this.id, ratingGiven: starScore })
+        .then((response) => {
+          this.voted = true;
+        });
     },
   },
 };

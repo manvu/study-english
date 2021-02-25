@@ -103,7 +103,7 @@ export default {
     addChoice() {
       let index = this.nextChar();
       let currentId = ++this.currentChoiceId
-      debugger
+      
       this.items.push({
         choice_id: currentId,
         choice_order: index,

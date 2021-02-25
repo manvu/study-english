@@ -156,7 +156,7 @@ questionRouter.post("/create", async (req, res) => {
             );
 
             if (!createMatchingQuestionResponse.error) {
-              debugger
+              
               let insertMatchingItemsResponse = await database.insertMatchingItems(items.leftItems, items.rightItems, questionId)
 
               if (!insertMatchingItemsResponse.error) {

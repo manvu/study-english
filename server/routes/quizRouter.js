@@ -45,7 +45,7 @@ quizRouter.post("/create", async (req, res) => {
       userId
     );
 
-    debugger;
+    ;
 
     if (
       !createQuizResponse.error &&
@@ -86,7 +86,7 @@ quizRouter.post("/edit/:id", async (req, res) => {
   let selectedSkillId = req.body.selectedSkillId;
   const userId = getUserIdFromToken(req.headers.authorization);
 
-  debugger;
+  ;
 
   if (userId) {
     let createQuizResponse = await database.updateQuiz(
@@ -99,7 +99,7 @@ quizRouter.post("/edit/:id", async (req, res) => {
       userId
     );
 
-    debugger;
+    ;
 
     if (
       !createQuizResponse.error &&
@@ -139,7 +139,7 @@ quizRouter.post("/favorite/:id", async (req, res) => {
       userId
     );
 
-    debugger;
+    ;
 
     if (!checkFavoriteByQuizIdAndUserIdResponse.error) {
       if (checkFavoriteByQuizIdAndUserIdResponse.response[0].favorite == 1) {
@@ -164,6 +164,52 @@ quizRouter.post("/favorite/:id", async (req, res) => {
         });
       }
 
+    } else {
+      res.status(400).json({
+        error: ERROR_OCCURRED,
+      });
+    }
+  } else {
+    res.status(400).json({
+      error: AUTHENTICATION_FAILED,
+    });
+  }
+});
+
+quizRouter.post("/rating/:id", async (req, res) => {
+  let quizId = req.params.id;
+  let ratingGiven = req.body.ratingGiven;
+  
+  const userId = getUserIdFromToken(req.headers.authorization);
+
+  if (userId) {
+    let getQuizRatingByQuizIdAndUserIdResponse = await database.getQuizRatingByQuizIdAndUserId(
+      quizId,
+      userId
+    );
+
+    if (!getQuizRatingByQuizIdAndUserIdResponse.error) {
+      if (getQuizRatingByQuizIdAndUserIdResponse.response.length === 0) {
+        let insertQuizRatingByQuizIdAndUserIdResponse = await database.insertQuizRatingByQuizIdAndUserId(
+          quizId,
+          userId,
+          ratingGiven
+        );
+
+        res.status(200).json({
+          error: null,
+        });
+      } else {
+        let updateQuizRatingByQuizIdAndUserIdResponse = await database.updateQuizRatingByQuizIdAndUserId(
+          quizId,
+          userId,
+          ratingGiven
+        );
+
+        res.status(200).json({
+          error: null,
+        });
+      }
     } else {
       res.status(400).json({
         error: ERROR_OCCURRED,

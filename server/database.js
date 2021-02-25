@@ -427,6 +427,35 @@ FROM discussion_thread dt`;
 
       return this.executeQuery(query);
     };
+
+    this.getQuizRatingByQuizIdAndUserId = async function(quizId, userId) {
+      let query = `SELECT rating_given FROM user_rating
+                   WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId} `;
+
+      return this.executeQuery(query);
+    };
+
+    this.deleteQuizRatingByQuizIdAndUserId = async function(quizId, userId) {
+      let query = `DELETE FROM user_rating 
+                   WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId}`;
+
+      return this.executeQuery(query);
+    };
+
+    this.insertQuizRatingByQuizIdAndUserId = async function(quizId, userId, ratingGiven) {
+      let query = `INSERT INTO user_rating (user_id, quiz_id, rating_given)
+                   VALUES ('${userId}', '${quizId}', '${ratingGiven}')`;
+
+      return this.executeQuery(query);
+    };
+
+    this.updateQuizRatingByQuizIdAndUserId = async function(quizId, userId, ratingGiven) {
+      let query = `UPDATE user_rating 
+                   SET rating_given = '${ratingGiven}'
+                   WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId}`;
+
+      return this.executeQuery(query);
+    };
   }
 }
 

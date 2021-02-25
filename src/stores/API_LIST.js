@@ -13,6 +13,8 @@ export default {
     createQuiz: "quiz/create",
     createQuestion: "question/create",
 
+    updateRating: (quizId) => `quiz/rating/${quizId}`,
+
     toggleFavorite: (quizId) => `quiz/favorite/${quizId}`,
     getQuizById: (quizId) => `quiz/${quizId}`,
     getQuestionById: (questionId) => `question/${questionId}`,

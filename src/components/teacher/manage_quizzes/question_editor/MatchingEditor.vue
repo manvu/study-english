@@ -147,7 +147,7 @@ export default {
       rightItem.item = item.item;
     },
     save() {
-      debugger
+      
       if (this.mode === "create") {
         this.$store.dispatch("questionStore/createQuestion", {
           typeId: 3,
