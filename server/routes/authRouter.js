@@ -64,8 +64,6 @@ authRouter.post("/login", async (req, res) => {
   // Get user_id and password
   const response = await database.validateUserAsync(email);
 
-  ;
-
   if (!response.error) {
     if (response.response.length === 0) {
       res.status(400).json({
@@ -84,8 +82,6 @@ authRouter.post("/login", async (req, res) => {
         let token = jwt.sign({ id: userId }, process.env.JWT_SECRET_KEY, {
           expiresIn: 86400,
         });
-
-        
 
         res.status(200).json({
           error: null,

@@ -114,16 +114,29 @@ class Database {
       return this.executeQuery(query);
     };
 
-    this.getQuestionsByQuizId = async function(quizId) {
-      let query = `SELECT q.question_id, q.type_id, qt.type_name, q.is_active, q.paragraph_title, q.question, qi.instruction
-      FROM question q 
-      JOIN quiz_question qq ON qq.question_id = q.question_id 
-      JOIN question_instruction qi ON q.instruction_id = qi.instruction_id
-      JOIN question_type qt ON q.type_id = qt.type_id 
-      WHERE qq.quiz_id = ${quizId} AND q.is_active = 1
-      ORDER BY q.question_id`;
+    this.getQuestionsByQuizId = async function(quizId, userId, attemptId) {
+      if (attemptId && userId) {
+        let query = `SELECT q.question_id, q.type_id, qt.type_name, q.is_active, q.paragraph_title, q.question, qi.instruction, uaq.*
+        FROM question q 
+        JOIN quiz_question qq ON qq.question_id = q.question_id 
+        JOIN question_instruction qi ON q.instruction_id = qi.instruction_id
+        JOIN question_type qt ON q.type_id = qt.type_id 
+        JOIN user_answer_question uaq ON uaq.question_id = q.question_id
+        WHERE qq.quiz_id = '${quizId}' AND q.is_active = 1 AND uaq.user_id = '${userId}' AND uaq.attempt_id = '${attemptId}'
+        ORDER BY q.question_id`;
 
-      return this.executeQuery(query);
+        return this.executeQuery(query);
+      } else {
+        let query = `SELECT q.question_id, q.type_id, qt.type_name, q.is_active, q.paragraph_title, q.question, qi.instruction
+        FROM question q 
+        JOIN quiz_question qq ON qq.question_id = q.question_id 
+        JOIN question_instruction qi ON q.instruction_id = qi.instruction_id
+        JOIN question_type qt ON q.type_id = qt.type_id 
+        WHERE qq.quiz_id = ${quizId} AND q.is_active = 1
+        ORDER BY q.question_id`;
+
+        return this.executeQuery(query);
+      }
     };
 
     this.getQuestionsContentByQuizId = async function(quizId) {
@@ -442,19 +455,68 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.insertQuizRatingByQuizIdAndUserId = async function(quizId, userId, ratingGiven) {
+    this.insertQuizRatingByQuizIdAndUserId = async function(
+      quizId,
+      userId,
+      ratingGiven
+    ) {
       let query = `INSERT INTO user_rating (user_id, quiz_id, rating_given)
                    VALUES ('${userId}', '${quizId}', '${ratingGiven}')`;
 
       return this.executeQuery(query);
     };
 
-    this.updateQuizRatingByQuizIdAndUserId = async function(quizId, userId, ratingGiven) {
+    this.updateQuizRatingByQuizIdAndUserId = async function(
+      quizId,
+      userId,
+      ratingGiven
+    ) {
       let query = `UPDATE user_rating 
                    SET rating_given = '${ratingGiven}'
                    WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId}`;
 
       return this.executeQuery(query);
+    };
+
+    this.getLatestAttemptByQuizIdAndUserId = async function(quizId, userId) {
+      let query = `SELECT attempt_id, start_time, end_time 
+      FROM user_attempt 
+      WHERE user_id = ${userId} AND quiz_id = ${quizId}
+      ORDER BY attempt_id DESC LIMIT 1`;
+
+      return this.executeQuery(query);
+    };
+
+    this.createUserNewAttemptByQuizIdAndUserId = async function(
+      quizId,
+      userId
+    ) {
+      let query = `SELECT attempt_id, start_time, end_time 
+      FROM user_attempt 
+      WHERE user_id = ${userId} AND quiz_id = ${quizId}
+      ORDER BY attempt_id DESC LIMIT 1`;
+
+      return this.executeQuery(query);
+    };
+
+    this.createNewAttempByUserIdAndQuizId = async function( quizId, userId, attemptId ) {
+      let query = `INSERT INTO user_attempt (quiz_id, user_id, attempt_id) VALUES ('${quizId}', '${userId}', '${attemptId}')`;
+
+      return this.executeQuery(query);
+    };
+
+    this.createUserAnswerQuestionByUserIdAndQuizIdAndAttemptId = async function( quizId, userId, attemptId, numberOfQuestions ) {
+      let query = `INSERT INTO user_answer_question (quiz_id, user_id, attempt_id, question_id, answer_text) VALUES `;
+
+      for (let i = 1; i <= numberOfQuestions; i++) {
+        query = query.concat( `('${quizId}', '${userId}', '${attemptId}', '${i}', ''), ` );
+      }
+
+      let formattedQuery = query.substring(0, query.length - 2);
+
+      console.log(formattedQuery);
+
+      return this.executeQuery(formattedQuery);
     };
   }
 }

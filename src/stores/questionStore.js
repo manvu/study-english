@@ -23,7 +23,13 @@ const questionStore = {
       const quizId = payload.quizId;
 
       return axios
-        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getQuizById(quizId))
+        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getQuizById(quizId), {
+          headers: {
+            Authorization: !!localStorage.getItem("token")
+              ? `Bearer ${localStorage.getItem("token")}`
+              : "",
+          },
+        })
         .then((response) => {
           if (!response.data.error) {
             let questions = response.data.questions;
