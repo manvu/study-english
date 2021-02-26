@@ -1,21 +1,30 @@
 <template>
   <div class="bg-light border-right" id="sidebar-wrapper">
     <div class="sidebar-heading">
-      <h4><span>
-        <font-awesome-icon :icon="faClock"></font-awesome-icon>
-      </span> 45 minutes</h4>
+      <h4>
+        <span>
+          <font-awesome-icon :icon="faClock"></font-awesome-icon>
+        </span>
+        45 minutes
+      </h4>
     </div>
 
     <div class="sidebar-heading mt-3">
-      <h4><span><font-awesome-icon :icon="faBars"></font-awesome-icon> </span>
-      Question Palette</h4>
+      <h4>
+        <span><font-awesome-icon :icon="faBars"></font-awesome-icon> </span>
+        Question Palette
+      </h4>
     </div>
 
     <div class="row mt-3 mb-3">
-      <div v-for="(q,index) in questions" :key="index" :class="letterClass">{{ index + 1 }}</div>
+      <div v-for="(q, index) in questions" :key="index" :class="letterClass">
+        {{ index + 1 }}
+      </div>
     </div>
     <div>
-      <button class="btn btn-primary"><font-awesome-icon :icon="faPaperPlane"></font-awesome-icon> Submit </button>
+      <button @click="submit" class="btn btn-primary">
+        <font-awesome-icon :icon="faPaperPlane"></font-awesome-icon> Submit
+      </button>
     </div>
   </div>
 </template>
@@ -46,8 +55,16 @@ export default {
       };
     },
   },
-  setup() {
-    return {};
+  methods: {
+    submit() {
+      
+      this.$store.dispatch("quizStore/submitQuiz", {
+        quizId: this.questions[0].quiz_id,
+        attemptId: this.questions[0].attempt_id,
+      }).then(response => {
+        this.$router.push({ name: "quiz-result"})
+      })
+    },
   },
 };
 </script>

@@ -4,7 +4,7 @@ const STRINGS = require("../strings");
 var quizRouter = express.Router();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const { getUserIdFromToken } = require("../helper");
+const { getUserIdFromToken, mark, userAnswersToObject, correctAnswerstoObject } = require("../helper");
 const { AUTHENTICATION_FAILED, ERROR_OCCURRED } = require("../strings");
 
 var corsOptions = {
@@ -224,6 +224,64 @@ quizRouter.post("/rating/:id", async (req, res) => {
 
 quizRouter.post("/submit", async (req, res) => {
   
+  let quizId = req.body.quizId;
+  let attemptId = req.body.attemptId;
+  const userId = getUserIdFromToken(req.headers.authorization);
+
+  if (userId) {
+    // compare result
+    
+    let getCorrectAnswers = await database.getCorrectAnswers(quizId);
+    let userAnswerQuestions = await database.getUserAnswerQuestionByUserIdAndQuizIdAndAttemptId(quizId, userId, attemptId)
+
+    let correctAnswers = correctAnswerstoObject(getCorrectAnswers.response)
+    let userAnswers = userAnswersToObject(userAnswerQuestions.response)
+    let typeArray = userAnswerQuestions.response.map(result => result.type_id)
+
+    console.log(userAnswers)
+    console.log(correctAnswers)
+
+    // mark user response
+
+    // 1 - correct, 2 - partially correct, 3 - incorrect, 4 - unanswered
+    var userAnswersArray = Object.keys(userAnswers).map((key) => [Number(key), userAnswers[key]]);
+    var correctAnswersArray = Object.keys(correctAnswers).map((key) => [Number(key), correctAnswers[key]]);
+
+    
+
+    let marked = mark(userAnswersArray, correctAnswersArray, typeArray)
+    
+    let markResponse = await database.markUserAnswerQuestion(marked, userId, quizId, attemptId)
+    
+    let markedArray = []
+
+    for (let i = 0; i < marked.length; i++) {
+      markedArray.push({
+        question_id: marked[i][0],
+        user_answers: marked[i][1],
+        marked: marked[i][2],
+        corrects: marked[i][3],
+        incorrects: marked[i][4],
+      })
+    }
+
+    if (!markResponse.error) {
+      res.status(200).json({
+        error: null,
+        marked: markedArray,
+        attempt_id: attemptId,
+        quiz_id: quizId
+      });
+    } else {
+
+    }
+  } else {
+    res.status(400).json({
+      error: AUTHENTICATION_FAILED,
+    });
+  }
 })
+
+
 
 module.exports = quizRouter;

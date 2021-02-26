@@ -499,17 +499,28 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.createNewAttempByUserIdAndQuizId = async function( quizId, userId, attemptId ) {
+    this.createNewAttempByUserIdAndQuizId = async function(
+      quizId,
+      userId,
+      attemptId
+    ) {
       let query = `INSERT INTO user_attempt (quiz_id, user_id, attempt_id) VALUES ('${quizId}', '${userId}', '${attemptId}')`;
 
       return this.executeQuery(query);
     };
 
-    this.createUserAnswerQuestionByUserIdAndQuizIdAndAttemptId = async function( quizId, userId, attemptId, numberOfQuestions ) {
+    this.createUserAnswerQuestionByUserIdAndQuizIdAndAttemptId = async function(
+      quizId,
+      userId,
+      attemptId,
+      numberOfQuestions
+    ) {
       let query = `INSERT INTO user_answer_question (quiz_id, user_id, attempt_id, question_id, answer_text) VALUES `;
 
       for (let i = 1; i <= numberOfQuestions; i++) {
-        query = query.concat( `('${quizId}', '${userId}', '${attemptId}', '${i}', ''), ` );
+        query = query.concat(
+          `('${quizId}', '${userId}', '${attemptId}', '${i}', ''), `
+        );
       }
 
       let formattedQuery = query.substring(0, query.length - 2);
@@ -519,16 +530,26 @@ FROM discussion_thread dt`;
       return this.executeQuery(formattedQuery);
     };
 
-    this.getUserAnswerQuestionByUserIdAndQuizIdAndAttemptId = async function( quizId, userId, attemptId) {
-      let query = `SELECT * 
-      FROM user_answer_question 
-      WHERE quiz_id = ${quizId} AND user_id = ${userId} AND attempt_id = ${attemptId} 
-      ORDER BY question_id ASC`;
+    this.getUserAnswerQuestionByUserIdAndQuizIdAndAttemptId = async function(
+      quizId,
+      userId,
+      attemptId
+    ) {
+      let query = `SELECT ua.*, q.type_id
+      FROM user_answer_question ua JOIN question q ON q.question_id = ua.question_id
+      WHERE ua.quiz_id = ${quizId} AND ua.user_id = ${userId} AND ua.attempt_id = ${attemptId} 
+      ORDER BY ua.question_id ASC`;
 
       return this.executeQuery(query);
     };
 
-    this.updateUserAnswerQuestion = async function( quizId, userId, attemptId, questionId, answerText) {
+    this.updateUserAnswerQuestion = async function(
+      quizId,
+      userId,
+      attemptId,
+      questionId,
+      answerText
+    ) {
       let query = `UPDATE user_answer_question
       SET answer_text = '${answerText}'
       WHERE quiz_id = ${quizId} AND user_id = ${userId} AND attempt_id = ${attemptId} AND question_id = ${questionId}`;
@@ -540,25 +561,64 @@ FROM discussion_thread dt`;
       let query = `SELECT user.email, user.first_name, user.last_name FROM user WHERE user_id = ${userId}`;
 
       return this.executeQuery(query);
-    }
+    };
 
-    this.saveUserInfo = async function(userId, email, firstName, lastName, passwordHash, passwordSalt) {
+    this.saveUserInfo = async function(
+      userId,
+      email,
+      firstName,
+      lastName,
+      passwordHash,
+      passwordSalt
+    ) {
       if (passwordHash) {
         let query = `UPDATE user
         SET email = '${email}', first_name = '${firstName}', last_name = '${lastName}', password_salt = '${passwordSalt}', password_hash = '${passwordHash}'
         WHERE user_id = ${userId}`;
-  
+
         return this.executeQuery(query);
       } else {
         let query = `UPDATE user
         SET email = '${email}', first_name = '${firstName}', last_name = '${lastName}'
         WHERE user_id = ${userId}`;
-  
+
         return this.executeQuery(query);
       }
-    }
+    };
 
+    this.getCorrectAnswers = async function(quizId) {
+      let query = `SELECT q.question_id, qmc.choice_id, qmc.is_correct_choice, qgf.sequence_id, qgf.correct_answer, qm.correct_answers, q.type_id
+      FROM question q 
+      JOIN quiz_question qq ON qq.question_id = q.question_id 
+      JOIN question_instruction qi ON q.instruction_id = qi.instruction_id
+      LEFT JOIN question_multiple_choice qmc ON q.question_id =  qmc.question_id
+      LEFT JOIN question_gap_filling qgf ON q.question_id = qgf.question_id
+      LEFT JOIN question_matching qm ON q.question_id = qm.question_id
+      WHERE qq.quiz_id = ${quizId} AND q.is_active = 1
+      ORDER BY q.question_id, qmc.choice_id, qgf.sequence_id`;
 
+      return this.executeQuery(query);
+    };
+
+    this.markUserAnswerQuestion = async function(items, userId, quizId, attemptId) {
+      let query = `INSERT INTO user_answer_question 
+      (user_id, quiz_id, attempt_id, question_id, answer_text, is_correct)
+      VALUES `;
+
+      for (let i = 0; i < items.length; i++) {
+        query = query.concat(
+          `(${userId}, ${quizId}, '${attemptId}', '${items[i][0]}', '', '${items[i].marked}'), `
+        );
+      }
+
+      let formattedQuery = query.substring(0, query.length - 2);
+      formattedQuery +=
+        " ON DUPLICATE KEY UPDATE is_correct = VALUES(is_correct)";
+
+      console.log(formattedQuery);
+
+      return this.executeQuery(formattedQuery);
+    };
   }
 }
 

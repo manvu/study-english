@@ -2,32 +2,30 @@
   <header>
     <div class="header js-header js-dropdown">
       <div class="container">
-        <div class="header__logo">
-          <h1>
-            <img src="./fonts/icons/main/Logo_Forum.svg" alt="logo" />
-          </h1>
-          <div class="header__logo-btn" data-dropdown-btn="logo">
-            Unity<i class="icon-Arrow_Below"></i>
+        <div class="header__search">
+          <form action="#">
+            <input
+              type="search"
+              placeholder="Search all forums"
+              class="form-control"
+            />
+          </form>
+          <div class="create__section">
+            <select class="custom-select form-input" id="category">
+              <option>All Quizzes</option>
+            </select>
           </div>
         </div>
         <div class="header__search">
           <form action="#">
-            <label>
-              <i class="icon-Search js-header-search-btn-open"></i>
-              <input
-                type="search"
-                placeholder="Search all forums"
-                class="form-control"
-              />
-            </label>
+            <input
+              type="search"
+              placeholder="Search all forums"
+              class="form-control"
+            />
           </form>
-          <div class="header__search-close js-header-search-btn-close">
-            <i class="icon-Cancel"></i>
-          </div>
-          <div class="header__search-btn" data-dropdown-btn="search">
-            Topics<i class="icon-Arrow_Below"></i>
-          </div>
         </div>
+
         <div class="header__menu">
           <div class="header__menu-btn" data-dropdown-btn="menu">
             Latest Topics<i class="icon-Menu_Icon"></i>
@@ -2584,7 +2582,7 @@ select {
 @media only screen and (min-width: 1040px) {
   .header__search {
     position: relative;
-    width: 600px;
+    width: 400px;
     padding-left: 30px;
     padding-right: 30px;
     border-right: solid 1px #e9ecee;
@@ -2609,7 +2607,7 @@ select {
   width: 100%;
 }
 .header__search form input {
-  padding-left: 42px;
+  /* padding-left: 42px; */
   border: 0;
   outline: 0;
   font-weight: 300;

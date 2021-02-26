@@ -9,6 +9,7 @@ const quizStore = {
       allSkills: [],
       allQuestionTypes: [],
       editQuiz: {},
+      quizResult: {}
     };
   },
   mutations: {
@@ -45,6 +46,11 @@ const quizStore = {
       quiz.timeAllowed = payload.timeAllowed;
       quiz.selectedSkillId = payload.selectedSkillId;
     },
+    submitQuiz(state, payload) {
+      state.quizResult.attempt_id = payload.attempt_id
+      state.quizResult.marked = payload.marked
+      state.quizResult.quiz_id = payload.quiz_id
+    }
   },
   actions: {
     toggleFavorite(context, payload) {
@@ -247,6 +253,40 @@ const quizStore = {
           this.loading = false;
         });
     },
+    submitQuiz(context, payload) {
+      return axios
+      .post(
+        process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.submitQuiz,
+        {
+          quizId: payload.quizId,
+          attemptId: payload.attemptId,
+        },
+        {
+          headers: {
+            Authorization: !!localStorage.getItem("token")
+              ? `Bearer ${localStorage.getItem("token")}`
+              : "",
+          },
+        }
+      )
+      .then((response) => {
+        if (!response.data.error) {
+          payload.marked = response.data.marked;
+          payload.attempt_id = response.data.attempt_id;
+          payload.quiz_id = response.data.quiz_id;
+          context.commit("submitQuiz", payload);
+        }
+
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.errored = true;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+    }
   },
   getters: {
     getQuizList(state) {
@@ -261,6 +301,9 @@ const quizStore = {
     getAllSkills(state) {
       return state.allSkills;
     },
+    getQuizResult(state) {
+      return state.quizResult
+    }
   },
 };
 

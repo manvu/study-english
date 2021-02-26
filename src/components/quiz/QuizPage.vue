@@ -70,8 +70,6 @@ export default {
       .dispatch("questionStore/getQuestionList", { quizId })
       .then(() => {
         this.questions = this.$store.getters["questionStore/getQuestionList"];
-        console.log(this.questions)
-        
       });
   },
 };

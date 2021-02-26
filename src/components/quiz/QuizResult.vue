@@ -10,32 +10,20 @@
           </div>
           <div class="right-column">
             <h6>Accuracy: 80%</h6>
-            <h6>Quiz: 1</h6>
+            <h6>Quiz: {{ result.quiz_id }}</h6>
           </div>
         </div>
         <div class="detailed-result">
           <table>
             <tbody>
-              <tr>
-                <td>
-                  1. C
-                  <font-awesome-icon
-                    :icon="faCheckCircle"
-                    :style="{ color: 'green' }"
-                  ></font-awesome-icon>
-                </td>
-                <td>
-                  2. C
-                  <font-awesome-icon
-                    :icon="faTimesCircle"
-                    :style="{ color: 'red' }"
-                  ></font-awesome-icon>
-                </td>
-              </tr>
-              <tr>
-                <td>3. C</td>
-                <td>4. C</td>
-              </tr>
+              <quiz-result-item
+                v-for="r in result.marked"
+                :key="r.question_id"
+                :question_id="r.question_id"
+                :corrects="r.corrects"
+                :incorrects="r.incorrects"
+                :user_answers="r.user_answers"
+              ></quiz-result-item>
             </tbody>
           </table>
         </div>
@@ -46,19 +34,12 @@
 </template>
 
 <script>
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import QuizResultItem from './QuizResultItem'
 
 export default {
-  components: { FontAwesomeIcon },
-  computed: {
-    faCheckCircle() {
-      return faCheckCircle;
-    },
-    faTimesCircle() {
-      return faTimesCircle;
-    },
+  components: {QuizResultItem},
+  created() {
+    this.result = this.$store.getters["quizStore/getQuizResult"];
   },
 };
 </script>
@@ -161,6 +142,6 @@ table {
 }
 
 td {
-    padding: 15px;
+  padding: 15px;
 }
 </style>

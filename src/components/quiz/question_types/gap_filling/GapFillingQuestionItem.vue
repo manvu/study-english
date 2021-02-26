@@ -55,7 +55,7 @@ export default {
         this.gapItems.push({
           id: gap.sequence_id,
           response:
-            items[gap.sequence_id][1] === "?" ? "" : items[gap.sequence_id][1],
+            items[i][1] === "?" ? "" : items[i][1],
         });
       }
       console.log(this.paragraph_title);
@@ -77,12 +77,14 @@ export default {
       let gapItem = this.gapItems.find((g) => g.id === index);
       gapItem.response = response;
 
-      let answerText = this.gapItems
-        .reduce(
-          (acc, cur) => acc + `${cur.id}.${cur.response ? cur.response : "?"},`,
-          ""
-        )
-        .trim();
+      let answerText = this.gapItems.reduce(
+        (acc, cur) => acc + `${cur.id}.${cur.response ? cur.response : "?"},`,
+        ""
+      );
+
+      answerText = answerText.substring(0, answerText.length - 1);
+
+      console.log(answerText);
 
       this.$store.dispatch("questionStore/answerQuestion", {
         questionId: this.question.question_id,
@@ -91,9 +93,6 @@ export default {
         answerText: answerText,
       });
     },
-    submit() {
-      
-    }
   },
 };
 </script>
