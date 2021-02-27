@@ -49,7 +49,8 @@ const quizStore = {
     submitQuiz(state, payload) {
       state.quizResult.attempt_id = payload.attempt_id
       state.quizResult.marked = payload.marked
-      state.quizResult.quiz_id = payload.quiz_id
+      state.quizResult.quiz_id = payload.quiz_id 
+      state.quizResult.accuracy = payload.accuracy 
     }
   },
   actions: {
@@ -274,6 +275,7 @@ const quizStore = {
           payload.marked = response.data.marked;
           payload.attempt_id = response.data.attempt_id;
           payload.quiz_id = response.data.quiz_id;
+          payload.accuracy = response.data.accuracy;
           context.commit("submitQuiz", payload);
         }
 

@@ -255,22 +255,54 @@ quizRouter.post("/submit", async (req, res) => {
     
     let markedArray = []
 
+    
+
+    let accuracy = {
+      totalSubquestions: 0,
+      correctSubquestions: 0,
+      incorrectSubquestions: 0,
+      percentage: 0
+    }
+
     for (let i = 0; i < marked.length; i++) {
+      let detailedAnswers = []
+      for (let j = 0; j < marked[i][1].length; j++) {
+        accuracy.totalSubquestions += 1
+        if (marked[i][3][j].length !== 0) {
+          accuracy.correctSubquestions += 1
+        } else {
+          accuracy.incorrectSubquestions += 1
+        }
+
+        detailedAnswers.push({
+          subquestion_id: j + 1,
+          answer: marked[i][1][j],
+          correct: marked[i][3][j],
+          incorrect: marked[i][4][j]
+        })
+      }
+
+      
+
+      console.log(accuracy)
+       
       markedArray.push({
         question_id: marked[i][0],
-        user_answers: marked[i][1],
+        answers: detailedAnswers,
         marked: marked[i][2],
-        corrects: marked[i][3],
-        incorrects: marked[i][4],
+        type_id: typeArray[i],
       })
     }
+
+    accuracy.percentage = ((accuracy.correctSubquestions * 100) / accuracy.totalSubquestions).toFixed(2)
 
     if (!markResponse.error) {
       res.status(200).json({
         error: null,
         marked: markedArray,
         attempt_id: attemptId,
-        quiz_id: quizId
+        quiz_id: quizId,
+        accuracy: accuracy
       });
     } else {
 

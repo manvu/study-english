@@ -55,55 +55,79 @@ function getUserIdFromToken(authorization) {
 function mark(userAnswers, correctAnswers, typeArray) {
   for (let i = 0; i < userAnswers.length; i++) {
     let type_id = typeArray[i];
-    debugger
     if (
       (userAnswers[i][1].length === 1 && userAnswers[i][1][0][0] === "") ||
       (type_id === 2 && userAnswers[i][1].every(ans => ans[1] === "?"))
     ) {
+      
       userAnswers[i].push(4)
-      userAnswers[i].push(correctAnswers[i][1])
       userAnswers[i].push([])
+      userAnswers[i].push(correctAnswers[i][1])
       userAnswers[i].marked = 4;
 
     } else {
       let incorrects = [];
       let corrects = [];
 
+      
+
       if (type_id === 1) {
         for (let j = 0; j < correctAnswers[i][1].length; j++) {
           if (!userAnswers[i][1].includes(correctAnswers[i][1][j])) {
             incorrects.push(correctAnswers[i]);
+            corrects.push([]);
           } else {
             corrects.push(correctAnswers[i]);
+            incorrects.push([]);
+          }
+
+          if (corrects[0].length === 0) {
+            userAnswers[i].marked = 3;
+          } else if (corrects[0].length === correctAnswers[i].length) {
+            userAnswers[i].marked = 1;
+          } else {
+            debugger
+            userAnswers[i].marked = 2;
           }
         }
       } else if (type_id === 2) {
         for (let j = 0; j < userAnswers[i][1].length; j++) {
           if (correctAnswers[i][1][j][1] === userAnswers[i][1][j][1]) {
-            corrects.push(correctAnswers[i]);
+            corrects.push(correctAnswers[i][1][j]);
+            incorrects.push([]);
           } else {
-            incorrects.push(correctAnswers[i]);
+            incorrects.push(correctAnswers[i][1][j]);
+            corrects.push([]);
           }
+        }
+
+        if (corrects.length === 0) {
+          userAnswers[i].marked = 3;
+        } else if ( corrects.filter(c => c.length === 2).length === correctAnswers[i][1].length) {
+          debugger
+          userAnswers[i].marked = 1;
+        } else {
+          userAnswers[i].marked = 2;
         }
       } else if (type_id === 3) {
         for (let j = 0; j < userAnswers[i][1].length; j++) {
           if (correctAnswers[i][1][j][1] === userAnswers[i][1][j][1]) {
             corrects.push(correctAnswers[i][1][j]);
+            incorrects.push([]);
           } else {
             incorrects.push(correctAnswers[i][1][j]);
+            corrects.push([]);
           }
         }
-      }
 
-      if (corrects.length === 0) {
-        userAnswers[i].marked = 3;
-      } else if (
-        corrects.length === correctAnswers[i][1].length &&
-        incorrects.length === 0
-      ) {
-        userAnswers[i].marked = 1;
-      } else {
-        userAnswers[i].marked = 2;
+        if (corrects.length === 0) {
+          userAnswers[i].marked = 3;
+        } else if ( corrects.filter(c => c.length === 2).length === correctAnswers[i][1].length) {
+          userAnswers[i].marked = 1;
+        } else {
+          debugger
+          userAnswers[i].marked = 2;
+        }
       }
 
       userAnswers[i].push(userAnswers[i].marked);

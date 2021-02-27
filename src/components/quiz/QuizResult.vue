@@ -6,10 +6,10 @@
         <div class="quiz-result-header">
           <div class="left-column">
             <h6>Time spent: 45 minutes</h6>
-            <h6>Result: 8/10</h6>
+            <h6>Result: {{ result.accuracy.correctSubquestions}}/{{ result.accuracy.totalSubquestions}}</h6>
           </div>
           <div class="right-column">
-            <h6>Accuracy: 80%</h6>
+            <h6>Accuracy: {{ result.accuracy.percentage }}%</h6>
             <h6>Quiz: {{ result.quiz_id }}</h6>
           </div>
         </div>
@@ -20,9 +20,9 @@
                 v-for="r in result.marked"
                 :key="r.question_id"
                 :question_id="r.question_id"
-                :corrects="r.corrects"
-                :incorrects="r.incorrects"
-                :user_answers="r.user_answers"
+                :user_answers="r"
+                :answers="r.answers"
+                :type_id="r.type_id"
               ></quiz-result-item>
             </tbody>
           </table>
@@ -133,13 +133,17 @@ h2 {
 }
 
 .detailed-result {
-  padding: 15px;
+  
 }
 
 table {
   width: 100%;
   height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
 }
+
 
 td {
   padding: 15px;
