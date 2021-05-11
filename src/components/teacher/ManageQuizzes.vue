@@ -16,7 +16,6 @@ export default {
   },
   computed: {
     quiz() {
-      ;
       return this.$store.getters["quizStore/getEditQuiz"];
     },
   },

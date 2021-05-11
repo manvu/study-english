@@ -5,7 +5,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "export NODE_ENV=test && mocha 'server/api/test/*.test.js' --recursive --timeout 60000 --exit",
+    "dev": "export NODE_ENV=development && nodemon 'server/server.js'",
+    "prod": "export NODE_ENV=production && nodemon 'server/server.js'"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
@@ -16,14 +19,17 @@
     "axios": "^0.21.1",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
+    "chai": "^4.3.4",
     "connect-redis": "^5.1.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "jsonwebtoken": "^8.5.1",
+    "mocha": "^8.4.0",
     "mysql": "^2.18.1",
     "redis": "^3.0.2",
+    "sequelize": "^6.6.2",
     "uniqid": "^5.2.0",
     "vue": "^3.0.5",
     "vue-loader": "^15.9.6",

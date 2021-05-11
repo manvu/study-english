@@ -1,43 +1,39 @@
 const express = require("express");
 const app = express();
 const database = new (require("./database"))();
-const { checkPassword, hashPasswordAsync } = require("./helper");
+const { corsOptions } = require("./config/init");
+const { server_port } = require("./config/index");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const dotenv = require("dotenv").config();
-const STRINGS = require("./strings");
 
-const authRouter = require("./routes/authRouter");
-const appRouter = require("./routes/appRouter");
-const userRouter = require("./routes/userRouter");
-const securityRouter = require("./routes/securityRouter");
-const quizRouter = require("./routes/quizRouter");
-const forumRouter = require("./routes/forumRouter");
-const questionRouter = require("./routes/questionRouter");
-
-app.use("/auth", authRouter);
-app.use("/", appRouter);
-app.use("/user", userRouter);
-app.use("/security", securityRouter);
-app.use("/quiz", quizRouter);
-app.use("/discussion", forumRouter);
-app.use("/question", questionRouter);
-
-var corsOptions = {
-  credentials: true,
-  origin: true,
-};
+/* 
+  Import all routes in the application
+*/
+const authRoutes = require("./api/routes/auth");
+const appRoutes = require("./api/routes/app");
+const securityRoutes = require("./api/routes/security");
+const userRoutes = require("./api/routes/users");
+const quizRoutes = require("./api/routes/quizzes");
+const threadsRoutes = require("./api/routes/threads");
+const postsRoutes = require("./api/routes/posts");
+const questionsRoutes = require("./api/routes/questions");
 
 app.use(cors(corsOptions));
 
-// parse requests of content-type - application/json
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+// Use these routes
+app.use("/auth", authRoutes);
+app.use("/", appRoutes);
+app.use("/security", securityRoutes);
+app.use("/users", userRoutes);
+app.use("/quizzes", quizRoutes);
+app.use("/threads", threadsRoutes);
+app.use("/posts", postsRoutes);
+app.use("/questions", questionsRoutes);
 
 // set port, listen for requests
-const PORT = process.env.SERVER_PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+app.listen(server_port, () => {
+  console.log(`Server is running on port ${server_port}.`);
 });

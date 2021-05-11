@@ -1,10 +1,10 @@
 var express = require("express");
-const database = new (require("../database"))();
+const database = new (require("../../database"))();
 var securityRouter = express.Router();
-const PERMISSIONS = require("../permissions");
-const STRINGS = require("../strings");
+const PERMISSIONS = require("../../misc/permissions");
+const STRINGS = require("../../misc/strings");
 const cors = require("cors");
-const {getUserIdFromToken} = require("../helper");
+const {getUserIdFromToken} = require("../../misc/helper");;
 
 var corsOptions = {
   origin: "*",

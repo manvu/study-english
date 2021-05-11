@@ -1,15 +1,21 @@
 const mysql = require("mysql");
-const dotenv = require("dotenv").config();
+const {
+  host,
+  mysql_user,
+  mysql_port,
+  mysql_password,
+  database_name,
+} = require("./config/index");
 
 class Database {
   constructor() {
     this.pool = mysql.createPool({
-      connectionLimit: 30, //important
-      host: process.env.HOST,
-      user: process.env.MYSQL_USER,
-      port: process.env.MYSQL_PORT,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.DATABASE_NAME,
+      connectionLimit: 10,
+      host: host,
+      user: mysql_user,
+      port: mysql_port,
+      password: mysql_password,
+      database: database_name,
       debug: false,
     });
 
@@ -22,6 +28,7 @@ class Database {
     };
 
     this.validateUserAsync = async function(email) {
+      console.log(__dirname);
       let query = `SELECT user_id, role_id, password_hash, first_name, last_name FROM user WHERE email='${email}'`;
 
       return this.executeQuery(query);
@@ -76,7 +83,7 @@ class Database {
       return this.executeQuery(query);
     };
 
-    this.getQuizInfo = async function(userId) {
+    this.getHomeSummary = async function(userId) {
       if (userId) {
         let query = `SELECT quiz.*, quiz_skill.skill_description, 
         (SELECT COUNT(*) FROM user_attempt WHERE user_attempt.quiz_id = quiz.quiz_id) as attempts,
@@ -224,7 +231,7 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.getContentForMultipleChoiceQuestionById = async function(questionId) {
+    this.getMultipleChoiceOptions = async function(questionId) {
       let query = `SELECT qmc.choice_id, qmc.choice_text, qmc.is_correct_choice
       FROM question q 
       JOIN question_multiple_choice qmc ON q.question_id = qmc.question_id
@@ -233,7 +240,7 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.getContentForGapFillingQuestionById = async function(questionId) {
+    this.getGapFillingOptions = async function(questionId) {
       let query = `SELECT qgf.sequence_id, qgf.correct_answer
       FROM question q 
       JOIN question_gap_filling qgf ON q.question_id = qgf.question_id
@@ -242,7 +249,7 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.getContentForMatchingQuestionById = async function(questionId) {
+    this.getMatchingOptions = async function(questionId) {
       let query = `SELECT qms.letter, qms.text, qms.column_assigned
       FROM question q
       JOIN question_matching_sub qms ON q.question_id = qms.question_id
@@ -251,7 +258,7 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.createNewThread = async function(subject, content, userId, quizId) {
+    this.createNewThread = async function({subject, content, userId, quizId}) {
       let query = `
       INSERT INTO discussion_thread(subject, content, user_id, quiz_id) 
       VALUES ('${subject}', '${content}', '${userId}', '${quizId}');
@@ -281,29 +288,29 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.createQuiz = async function(
+    this.createQuiz = async function({
       courseName,
       description,
       isActive,
       timeAllowed,
       selectedSkillId,
-      userId
-    ) {
+      userId,
+    }) {
       let query = `INSERT INTO quiz (course_name, description, is_active, time_allowed, skill_id, created_by) 
       VALUES ('${courseName}', '${description}', '${isActive}', '${timeAllowed}', '${selectedSkillId}', '${userId}')`;
 
       return this.executeQuery(query);
     };
 
-    this.updateQuiz = async function(
+    this.updateQuiz = async function({
       quizId,
       courseName,
       description,
       isActive,
       timeAllowed,
       selectedSkillId,
-      userId
-    ) {
+      userId,
+    }) {
       let query = `UPDATE quiz 
                   SET course_name = '${courseName}', 
                       description = '${description}', 
@@ -322,18 +329,18 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.findInstructionByInstruction = async function(instruction) {
+    this.findInstruction = async function(instruction) {
       let query = `SELECT instruction_id FROM question_instruction WHERE instruction = '${instruction}'`;
       return this.executeQuery(query);
     };
 
-    this.createQuestion = async function(
+    this.createQuestion = async function({
       typeId,
       instructionId,
       isActive,
       paragraphTitle,
       question
-    ) {
+    }) {
       let query = `INSERT INTO question(type_id, instruction_id, is_active, paragraph_title, question) 
       VALUES ('${typeId}', '${instructionId}', '${isActive}', ${
         !paragraphTitle ? "NULL" : paragraphTitle
@@ -419,7 +426,7 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.checkFavoriteByQuizIdAndUserId = async function(quizId, userId) {
+    this.getQuizFavoriteStatus = async function(quizId, userId) {
       let query = `SELECT COUNT(*) as favorite
                               FROM user_favorite 
                               WHERE user_favorite.user_id = ${userId} AND user_favorite.quiz_id = ${quizId} `;
@@ -441,7 +448,7 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.getQuizRatingByQuizIdAndUserId = async function(quizId, userId) {
+    this.getQuizRating = async function(quizId, userId) {
       let query = `SELECT rating_given FROM user_rating
                    WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId} `;
 
@@ -455,22 +462,14 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.insertQuizRatingByQuizIdAndUserId = async function(
-      quizId,
-      userId,
-      ratingGiven
-    ) {
+    this.insertQuizRating = async function({quizId, userId, ratingGiven}) {
       let query = `INSERT INTO user_rating (user_id, quiz_id, rating_given)
                    VALUES ('${userId}', '${quizId}', '${ratingGiven}')`;
 
       return this.executeQuery(query);
     };
 
-    this.updateQuizRatingByQuizIdAndUserId = async function(
-      quizId,
-      userId,
-      ratingGiven
-    ) {
+    this.updateQuizRating = async function({quizId, userId, ratingGiven}) {
       let query = `UPDATE user_rating 
                    SET rating_given = '${ratingGiven}'
                    WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId}`;
@@ -478,7 +477,7 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.getLatestAttemptByQuizIdAndUserId = async function(quizId, userId) {
+    this.getLatestAttempt = async function(quizId, userId) {
       let query = `SELECT attempt_id, start_time, end_time 
       FROM user_attempt 
       WHERE user_id = ${userId} AND quiz_id = ${quizId}
@@ -487,7 +486,7 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.createUserNewAttemptByQuizIdAndUserId = async function(
+    this.createNewAttempt = async function(
       quizId,
       userId
     ) {
@@ -499,7 +498,7 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.createNewAttempByUserIdAndQuizId = async function(
+    this.createNewAttempt = async function(
       quizId,
       userId,
       attemptId
@@ -509,7 +508,7 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.createUserAnswerQuestionByUserIdAndQuizIdAndAttemptId = async function(
+    this.createPlaceholderAnswer = async function(
       quizId,
       userId,
       attemptId,
@@ -544,11 +543,11 @@ FROM discussion_thread dt`;
     };
 
     this.updateUserAnswerQuestion = async function(
-      quizId,
+      {quizId,
       userId,
       attemptId,
       questionId,
-      answerText
+      answerText}
     ) {
       let query = `UPDATE user_answer_question
       SET answer_text = '${answerText}'
@@ -600,7 +599,12 @@ FROM discussion_thread dt`;
       return this.executeQuery(query);
     };
 
-    this.markUserAnswerQuestion = async function(items, userId, quizId, attemptId) {
+    this.markUserAnswerQuestion = async function(
+      items,
+      userId,
+      quizId,
+      attemptId
+    ) {
       let query = `INSERT INTO user_answer_question 
       (user_id, quiz_id, attempt_id, question_id, answer_text, is_correct)
       VALUES `;

@@ -62,11 +62,7 @@
     <div v-else>There is no choice created for this question</div>
   </div>
   <button @click="addChoice" class="mb-3 btn btn-primary">Add Choice</button>
-  <div class="form-group">
-    <button
-      type="button"
-      @click="closeQuestionEditorModal()"
-      class="btn btn-dark"
+  <div class="form-group"> <button type="button" @click="closeQuestionEditorModal()" class="btn btn-dark"
     >
       Cancel
     </button>
@@ -124,6 +120,8 @@ export default {
           question: this.question,
           instruction: this.instruction,
           isActive: this.isActive === "yes" ? 1 : 0,
+        }).then(response => {
+          this.closeQuestionEditorModal()
         });
       } else if (this.mode === "edit") {
         this.$store.dispatch("questionStore/updateQuestion", {
@@ -131,9 +129,10 @@ export default {
           question: this.question,
           instruction: this.instruction,
           isActive: this.isActive === "yes" ? 1 : 0,
+        }).then(response => {
+          this.closeQuestionEditorModal()
         });
       }
-      this.$emit("close");
     },
   },
   created() {

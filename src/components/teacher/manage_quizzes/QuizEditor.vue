@@ -78,30 +78,21 @@
       <div class="form-group">
         <label class="control-label col-sm-6" for="type">Skill</label>
         <div class="form-row col-sm-10">
-          <select
-            name="type"
-            class="col-4 form-control"
-            id="question-type"
-            v-model="selectedSkillId"
-          >
-            <option
-              v-for="s in allSkills"
-              :key="s.skill_id"
-              class="dropdown-item"
-              href="#"
-              :value="s.skill_id"
+          <select name="type" class="col-4 form-control" id="question-type" v-model="selectedSkillId" >
+            <option v-for="s in allSkills" :key="s.skill_id" class="dropdown-item" href="#" :value="s.skill_id"
             >
               {{ s.skill_description }}
             </option>
           </select>
         </div>
       </div>
-      <questions-list
-        v-if="questions.length > 0"
-        :questions="questions"
-      ></questions-list>
-      <div class="mt-2 mb-2" v-else>
+      <questions-list v-if="questions.length > 0" :questions="questions" ></questions-list>
+            <div class="mt-2 mb-2" v-else>
         There is no question created for this quiz yet
+      </div>
+      <questions-list v-if="questionsList.length > 0" :questions="questionsList" ></questions-list>
+      <div class="mt-2 mb-2" v-else>
+        There is no incoming question created for this quiz yet
       </div>
       <button
         @click="openQuestionEditorModal(null, 'create')"
@@ -159,6 +150,10 @@ export default {
     editQuestion() {
       return this.$store.getters["questionStore/getEditQuestion"];
     },
+    questionsList() {
+      let questionList = this.$store.getters["questionStore/getQuestionList"] 
+      return questionList
+    }
   },
   methods: {
     openQuestionEditorModal(questionId, mode) {
@@ -204,7 +199,6 @@ export default {
     },
   },
   created() {
-    console.log(this.question);
     this.allSkills = this.$store.getters["quizStore/getAllSkills"];
   },
 };

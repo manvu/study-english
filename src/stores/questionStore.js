@@ -7,6 +7,8 @@ const questionStore = {
     return {
       questions: [],
       editQuestion: {},
+      newQuestions: [],
+      updatedQuestions: [],
     };
   },
   mutations: {
@@ -16,25 +18,38 @@ const questionStore = {
     getQuestionForEdit(state, payload) {
       state.editQuestion = payload.question;
     },
-    createQuestion(context, payload) {},
+    createQuestion(state, payload) {
+      let newQuestion = {
+        question_id: payload.question_id,
+        type_id: payload.typeId,
+        items: payload.items,
+        question: payload.question,
+        instruction: payload.instruction,
+        paragraphTitle: payload.paragraphTitle,
+        isActive: payload.isActive,
+        correctAnswer: payload.correctAnswers,
+      };
+      state.newQuestions.push(newQuestion);
+      state.questions.push(newQuestion)
+    },
   },
   actions: {
     getQuestionList(context, payload) {
       const quizId = payload.quizId;
 
-      
-
       return axios
-        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getQuizById(quizId), {
-          headers: {
-            Authorization: !!localStorage.getItem("token")
-              ? `Bearer ${localStorage.getItem("token")}`
-              : "",
-          },
-        })
+        .get(
+          process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getQuizById(quizId),
+          {
+            headers: {
+              Authorization: !!localStorage.getItem("token")
+                ? `Bearer ${localStorage.getItem("token")}`
+                : "",
+            },
+          }
+        )
         .then((response) => {
           if (!response.data.error) {
-            
             let questions = response.data.questions;
             payload.questions = questions;
             context.commit("getQuestionList", payload);
@@ -86,7 +101,7 @@ const questionStore = {
             instruction: payload.instruction,
             paragraphTitle: payload.paragraphTitle,
             isActive: payload.isActive,
-            correctAnswers: payload.correctAnswers
+            correctAnswers: payload.correctAnswers,
           },
           {
             headers: {
@@ -98,7 +113,8 @@ const questionStore = {
         )
         .then((response) => {
           if (!response.data.error) {
-            payload.question = response.data.question;
+            debugger;
+            payload.question_id = response.data.question_id;
             context.commit("createQuestion", payload);
           }
 
@@ -114,38 +130,38 @@ const questionStore = {
     },
     answerQuestion(context, payload) {
       return axios
-      .post(
-        process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.answerQuestion(payload.questionId),
-        {
-          quizId: payload.quizId,
-          attemptId: payload.attemptId,
-          answerText: payload.answerText,
-        },
-        {
-          headers: {
-            Authorization: !!localStorage.getItem("token")
-              ? `Bearer ${localStorage.getItem("token")}`
-              : "",
+        .post(
+          process.env.VUE_APP_SERVER_ENDPOINT +
+            API_LIST.answerQuestion(payload.questionId),
+          {
+            quizId: payload.quizId,
+            attemptId: payload.attemptId,
+            answerText: payload.answerText,
           },
-        }
-      )
-      .then((response) => {
-        if (!response.data.error) {
-          
-          // payload.question = response.data.question;
-          // context.commit("createQuestion", payload);
-        }
+          {
+            headers: {
+              Authorization: !!localStorage.getItem("token")
+                ? `Bearer ${localStorage.getItem("token")}`
+                : "",
+            },
+          }
+        )
+        .then((response) => {
+          if (!response.data.error) {
+            // payload.question = response.data.question;
+            // context.commit("createQuestion", payload);
+          }
 
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-        this.errored = true;
-      })
-      .finally(() => {
-        this.loading = false;
-      });
-    }
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
   },
   getters: {
     getQuestionList(state) {

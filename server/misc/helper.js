@@ -43,7 +43,7 @@ function getUserIdFromToken(authorization) {
     const authorizationString = authorization;
     const tokens = authorizationString.split(" ");
     const jwtToken = tokens[1];
-    const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY);
+    const decoded = jwt.verify(jwtToken, process.env.JWT_SECRET_KEY || 'secretkey');
     var userId = decoded.id;
     return userId;
   } else {
