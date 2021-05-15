@@ -5,7 +5,7 @@ const {
   mysql_port,
   mysql_password,
   database_name,
-} = require("./config/index");
+} = require("./index");
 
 class Database {
   constructor() {
@@ -429,14 +429,14 @@ FROM discussion_thread dt`;
     this.getQuizFavoriteStatus = async function(quizId, userId) {
       let query = `SELECT COUNT(*) as favorite
                               FROM user_favorite 
-                              WHERE user_favorite.user_id = ${userId} AND user_favorite.quiz_id = ${quizId} `;
+                              WHERE user_favorite.user_id = ${userId} AND user_favorite.quiz_id = ${quizId}`;
 
       return this.executeQuery(query);
     };
 
     this.toggleOnFavorite = async function(quizId, userId) {
       let query = `INSERT INTO user_favorite (user_id, quiz_id)
-                              VALUES ('${userId}', '${quizId}') `;
+                              VALUES ('${userId}', '${quizId}')`;
 
       return this.executeQuery(query);
     };
@@ -450,7 +450,7 @@ FROM discussion_thread dt`;
 
     this.getQuizRating = async function(quizId, userId) {
       let query = `SELECT rating_given FROM user_rating
-                   WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId} `;
+                   WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId}`;
 
       return this.executeQuery(query);
     };

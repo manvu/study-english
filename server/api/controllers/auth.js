@@ -1,11 +1,10 @@
 const jwt = require("jsonwebtoken");
-
-const database = new (require("../../database"))();
 const { jwt_secret_key, jwt_expiry_time } = require("../../config/index");
 const { hashPasswordAsync, checkPassword } = require("../../misc/helper");
-const STRINGS = require("../../misc/strings");
+const STRINGS = require("../../config/strings");
 const { sendSuccess, sendFailure } = require("../../config/res");
 const { validateEmail, validatePassword, validateProfilePictureId, validateGender, validateRoleId } = require("../validators/validator");
+const UserModel = new(require("../../models/user"))();
 
 module.exports = {
   register: async (data) => {
@@ -27,11 +26,12 @@ module.exports = {
       return sendFailure(STRINGS.INVALID_ROLE_ID)
     }
 
+
     // Generate hash and salt out of password
     const { passwordHash, passwordSalt } = await hashPasswordAsync(password);
 
     // Add a user
-    const response = await database.addUserAsync(
+    const response = await UserModel.addOne(
       email,
       passwordHash,
       passwordSalt,
@@ -42,9 +42,9 @@ module.exports = {
 
     if (!response.error) {
       if (response.response.affectedRows === 1) {
-        return sendSuccess(STRINGS.REGISTERING_USER_SUCCEEDED);
+        return sendSuccess(201, { email, roleId, profilePictureId, gender});
       } else {
-        return sendFailure(401, STRINGS.REGISTERING_USER_FAILED);
+        return sendFailure(400, STRINGS.REGISTERING_USER_FAILED);
       }
     } else {
       return sendFailure(STRINGS.CANNOT_REGISTER_USER_WITH_EMAIL(email));
@@ -59,7 +59,7 @@ module.exports = {
     }
 
     // Get user_id and password
-    const validatedUser = await database.validateUserAsync(email);
+    const validatedUser = await UserModel.findOneByEmail(email);
 
     if (!validatedUser.error) {
       if (validatedUser.response.length === 0) {

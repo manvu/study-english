@@ -1,12 +1,23 @@
 const express = require("express");
-const database = new (require("../../database"))();
 const quizzesController = require("../controllers/quizzes");
 const authMiddleware = require("../middlewares/auth");
+const authTeacherMiddleware = require("../middlewares/authTeacher");
 const router = express.Router();
 
-// POST: [routes/router]
-// Create a new question
-router.post("/", authMiddleware, async (req, res) => {
+router.post("/start/:id", authMiddleware, async (req, res) => {
+  const quizId = req.params.id
+  const userId = req.user.id
+  const quiz = await quizzesController.startQuiz(quizId, userId)
+  res.status(200).json(quiz)
+});
+
+router.get("/:id", authMiddleware, async (req, res) => {
+  const id = req.params.id
+  const quiz = await quizzesController.getQuiz(id)
+  res.status(200).json(quiz)
+});
+
+router.post("/", authTeacherMiddleware, async (req, res) => {
   const data = {
     courseName: req.body.courseName,
     description: req.body.description,
@@ -16,21 +27,19 @@ router.post("/", authMiddleware, async (req, res) => {
     id: req.user.id,
   };
 
-  const quiz = quizzesController.createQuiz(data)
+  const quiz = quizzesController.createQuiz(data);
 
-  res.json(quiz)
+  res.json(quiz);
 });
 
-// POST: [routes/router]
-// Create a new question
-router.put(":id", async (req, res) => {
+router.put("/:id", authTeacherMiddleware, async (req, res) => {
   let quizId = req.params.id;
   let courseName = req.body.courseName;
   let description = req.body.description;
   let isActive = req.body.isActive;
   let timeAllowed = req.body.timeAllowed;
   let selectedSkillId = req.body.selectedSkillId;
-  const userId = getUserIdFromToken(req.headers.authorization);
+  const userId = req.user.id;
 
   if (userId) {
     let createQuizResponse = await database.updateQuiz(
@@ -71,7 +80,7 @@ router.put(":id", async (req, res) => {
   }
 });
 
-router.put(":id/favorite", async (req, res) => {
+router.post(":id/favorite", authMiddleware, async (req, res) => {
   let quizId = req.params.id;
   const userId = getUserIdFromToken(req.headers.authorization);
 
@@ -91,9 +100,7 @@ router.put(":id/favorite", async (req, res) => {
         res.status(200).json({
           error: null,
         });
-      } else if (
-        getQuizFavoriteStatusResponse.response[0].favorite == 0
-      ) {
+      } else if (getQuizFavoriteStatusResponse.response[0].favorite == 0) {
         let toggleOnFavoriteResponse = await database.toggleOnFavorite(
           quizId,
           userId
@@ -115,17 +122,14 @@ router.put(":id/favorite", async (req, res) => {
   }
 });
 
-router.put(":id/rating", async (req, res) => {
+router.post(":id/rating", authMiddleware, async (req, res) => {
   let quizId = req.params.id;
   let ratingGiven = req.body.ratingGiven;
 
   const userId = getUserIdFromToken(req.headers.authorization);
 
   if (userId) {
-    let getQuizRatingResponse = await database.getQuizRating(
-      quizId,
-      userId
-    );
+    let getQuizRatingResponse = await database.getQuizRating(quizId, userId);
 
     if (!getQuizRatingResponse.error) {
       if (getQuizRatingResponse.response.length === 0) {
@@ -161,7 +165,7 @@ router.put(":id/rating", async (req, res) => {
   }
 });
 
-router.post("/submit", async (req, res) => {
+router.post("/submit", authMiddleware, async (req, res) => {
   let quizId = req.body.quizId;
   let attemptId = req.body.attemptId;
   const userId = getUserIdFromToken(req.headers.authorization);

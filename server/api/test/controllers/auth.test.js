@@ -1,6 +1,6 @@
 const { expect } = require("chai");
-const STRINGS = require("../../misc/strings");
-const authController = require("../controllers/auth");
+const STRINGS = require("../../../config/strings");
+const authController = require("../../controllers/auth");
 
 describe("AuthController: Register", () => {
   it(`Should log ${STRINGS.PLEASE_CHECK_YOUR_EMAIL}`, async () => {
@@ -78,7 +78,7 @@ describe("AuthController: Register", () => {
     expect(actual.response).to.equal(null);
   })
 
-  it(`Should log ${STRINGS.CANNOT_REGISTER_USER_WITH_EMAIL()}`, async () => {
+  it(`Should not create a new user with duplicated email}`, async () => {
     const data = {
       email: "test@gmail.com",
       password: "123456890",
@@ -92,6 +92,21 @@ describe("AuthController: Register", () => {
     expect(actual.error).to.equal(STRINGS.CANNOT_REGISTER_USER_WITH_EMAIL(data.email));
     expect(actual.response).to.equal(null);
   })
+
+  // it(`Should create a new user successfully`, async () => {
+  //   const data = {
+  //     email: "test1@gmail.com",
+  //     password: "123456890",
+  //     gender: "M",
+  //     profilePictureId: "1",
+  //     roleId: "2"
+  //   }
+
+  //   const actual = await authController.register(data);
+  //   expect(actual.statusCode).to.equal(201);
+  //   expect(actual.error).to.equal(null);
+  //   expect(actual.response.email).to.not.equal("")
+  // })
 })
 
 describe("AuthController: Login", () => {

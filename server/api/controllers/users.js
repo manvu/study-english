@@ -1,67 +1,49 @@
-const database = new (require("../../database"))();
-const STRINGS = require("../../misc/strings");
+const { sendSuccess, sendFailure } = require("../../config/res");
+const STRINGS = require("../../config/strings");
+const UserModel = new(require("../../models/user"))();
 
 module.exports = {
   getUsers: async () => {
-    const users = await database.getAllUsersAsync();
+    const users = await UserModel.findAll();
 
-    return {
-      statusCode: 200,
-      response: users.response,
-      error: null,
-    };
+    return sendSuccess(users.response);
   },
 
   getUser: async (id) => {
-    let user = await database.getUserInfo(id);
+    let user = await UserModel.findOneById(id)
 
     if (!user.error) {
       if (user.response.length === 0) {
-        return {
-          statusCode: 400,
-          error: STRINGS.ERROR_OCCURRED,
-          response: null,
-        };
+        return sendFailure(STRINGS.ERROR_OCCURRED);
       } else {
-        return {
-          statusCode: 200,
-          error: null,
-          response: user.response[0],
-        };
+        return sendSuccess(user.response[0]);
       }
     }
   },
-
-  createUser: async (data) => {},
 
   updateUser: async (data) => {
     const { id, email, firstName, lastName, password } = data;
 
     if (!email || !password) {
-
+      return sendFailure(STRINGS.EMAIL_AND_PASSWORD_CANNOT_BE_BLANK);
     }
 
     let userInfo;
     if (password) {
       const { passwordHash, passwordSalt } = await hashPasswordAsync(password);
-      userInfo = await database.saveUserInfo(
-        id,
-        email,
-        firstName,
-        lastName,
-        passwordHash,
-        passwordSalt
-      );
+      userInfo = await UserModel.saveOne({ ...data, passwordHash, passwordSalt });
     } else {
-      userInfo = await database.saveUserInfo(id, email, firstName, lastName);
+      userInfo = await UserModel.saveOne({id, email, firstName, lastName});
     }
 
     if (!userInfo.error) {
       if (userInfo.response.affectedRows === 1) {
-        return {
-          error: null,
-        };
+        return sendSuccess(200);
+      } else {
+        return sendFailure(STRINGS.CANNOT_SAVE_USER_INFO);
       }
+    } else {
+      return sendFailure(STRINGS.CANNOT_SAVE_USER_INFO);
     }
   },
 };

@@ -1,42 +1,32 @@
-const database = new (require("../../database"))();
 const { sendSuccess, sendFailure } = require("../../config/res");
-const STRINGS = require("../../misc/strings");
+const STRINGS = require("../../config/strings");
+const UserAnswerModel = require("../../models/user_answer");
+const QuestionModel = new(require("../../models/question"))();
+const MCModel = new(require("../../models/multiple_choice_option"))();
+const GModel = new(require("../../models/gap_filling_option"))();
+const MModel = new(require("../../models/matching_option"))();
+const InstructionModel = new(require("../../models/instruction"))();
 
 async function getQuestionContent(id, typeId) {
   if (typeId === 1) {
-    let content = await database.getMultipleChoiceOptions(id);
+    let content = await MCModel.findMany(id);
 
     if (!content.error) {
-      return {
-        statusCode: 200,
-        error: null,
-        response: content.response,
-      };
+      return sendSuccess(content.response)
     } else {
-      return {
-        statusCode: 400,
-        error: STRINGS.CANNOT_LOAD_QUESTION,
-        response: null,
-      };
+      return sendFailure(STRINGS.CANNOT_LOAD_QUESTION)
     }
   } else if (typeId === 2) {
-    let content = await database.getGapFillingOptions(id);
+    let content = await GModel.findMany(id);
 
     if (!content.error) {
-      return {
-        statusCode: 200,
-        error: null,
-        response: content.response,
-      };
+      return sendSuccess(content.response)
     } else {
-      return {
-        statusCode: 400,
-        error: STRINGS.CANNOT_LOAD_QUESTION,
-        response: null,
-      };
+      return sendFailure(STRINGS.CANNOT_LOAD_QUESTION)
     }
   } else {
-    let content = await database.getMatchingOptions(id);
+    let content = await MModel.findMany(id);
+    let splits = null;
 
     if (!content.error) {
       let leftItems = content.response.filter(
@@ -46,8 +36,7 @@ async function getQuestionContent(id, typeId) {
         (item) => item.column_assigned === 2
       );
 
-      let splits = content.response.matching_question_correct_answers
-        .split(" ")
+      splits = content.response.matching_question_correct_answers .split(" ")
         .map((s) => s.split("."));
 
       splits.forEach((answer) => {
@@ -55,64 +44,42 @@ async function getQuestionContent(id, typeId) {
         item.correct_answer = answer[1];
       });
 
-      return {
-        statusCode: 200,
-        error: null,
-        response: {
-          leftItems,
-          rightItems,
-        },
-      };
+      return sendSuccess({ leftItems, rightItems })
     } else {
-      return {
-        statusCode: 400,
-        error: STRINGS.CANNOT_LOAD_QUESTION,
-        response: null,
-      };
+      return sendFailure(STRINGS.CANNOT_LOAD_QUESTION)
     }
   }
 }
 
-async function createQuestionContent(questionId, typeId, { items }) {
+async function createQuestionContent(questionId, typeId, { items }, correctAnswers, shuffleAnswers) {
   if (typeId === 1) {
-    let content = await database.insertMultipleChoiceItems(items, questionId);
+    let content = await MCModel.addMany(items, questionId);
 
     if (!content.error) {
       return sendSuccess(201, { questionId: createQuestion.response.insertId });
     }
   } else if (typeId === 2) {
-    let content = await database.insertGapFillingItems(items, questionId);
+    let content = await GModel.addMany(items, questionId);
 
     if (!content.error) {
       return sendSuccess(201, { questionId: createQuestion.response.insertId });
     }
   } else if (typeId === 3) {
-    let content = await database.createMatchingQuestion(
-      correctAnswers,
-      questionId,
-      shuffleAnswers
-    );
+    let content = await MModel.addManyItems(correctAnswers, questionId, shuffleAnswers);
 
     if (!content.error) {
-      let insertMatchingItemsResponse = await database.insertMatchingItems(
-        items.leftItems,
-        items.rightItems,
-        questionId
+      let insertItems = await MModel.addManyItems( items.leftItems, items.rightItems, questionId
       );
 
-      if (!insertMatchingItemsResponse.error) {
-        return sendSuccess(201, {
-          questionId: createQuestion.response.insertId,
-        });
+      if (!insertItems.error) {
+        return sendSuccess(201, { questionId: createQuestion.response.insertId });
       }
     }
   }
 }
 
 async function createInstruction(instruction) {
-  let createInstruction = await database.createInstructionIfNotExists(
-    instruction
-  );
+  let createInstruction = await InstructionModel.addOne( instruction );
 
   if (!createInstruction.error) {
     return sendSuccess(201, createInstruction.response);
@@ -123,52 +90,32 @@ async function createInstruction(instruction) {
 
 async function getInstruction(instruction) {
   if (instructionId === 0) {
-    const findInstruction = await database.findInstruction(instruction);
+    const findInstruction = await InstructionModel.findOne(instruction);
 
-    if (!createInstruction.error) {
-      return {
-        statusCode: 200,
-        error: null,
-        response: findInstruction.response,
-      };
+    if (!findInstruction.error) {
+      return sendSuccess(findInstruction.response);
     } else {
-      return {
-        statusCode: 400,
-        error: STRINGS.CANNOT_CREATE_INSTRUCTION,
-        response: null,
-      };
+      return sendFailure(STRINGS.CANNOT_LOAD_INSTRUCTION);
     }
   } else {
-    return {
-      statusCode: 400,
-      error: STRINGS.INVALID_INSTRUCTION_ID,
-      response: null,
-    };
+    return sendFailure(STRINGS.INVALID_INSTRUCTION_ID);
   }
 }
 
 module.exports = {
   getQuestion: async (id) => {
     if (!id || id < 1) {
-      return {
-        statusCode: 400,
-        error: STRINGS.INVALID_QUESTION_ID,
-        response: null,
-      };
+      return sendFailure(STRINGS.INVALID_QUESTION_ID);
     }
 
-    const question = await database.getQuestionById(id);
+    const question = await QuestionModel.getQuestionById(id);
 
     if (!question.error) {
       const firstQuestion = question.response[0];
       const typeId = firstQuestion.type_id;
       return await getQuestionContent(id, typeId);
     } else {
-      return {
-        statusCode: 400,
-        error: STRINGS.CANNOT_LOAD_QUESTION,
-        response: null,
-      };
+      return sendFailure(STRINGS.CANNOT_LOAD_QUESTION);
     }
   },
   createQuestion: async (data) => {
@@ -194,39 +141,30 @@ module.exports = {
         // Create Question
         const d = { typeId, instructionId, isActive, paragraphTitle, question };
 
-        let createQuestion = await database.createQuestion(d);
+        let createQuestion = await QuestionModel.addOne(d);
         if (!createQuestion.error) {
           // Add items for different types of question
           const questionId = createQuestion.response.insertId;
 
-          return await createQuestionContent(questionId, typeId, items);
+          return await createQuestionContent(questionId, typeId, items, correctAnswers, shuffleAnswers);
         } else {
-          return {
-            statusCode: 400,
-            error: STRINGS.ERROR_OCCURRED,
-            response: null,
-          };
+          return sendFailure(STRINGS.ERROR_OCCURRED);
         }
       } else {
-        return {
-          statusCode: 400,
-          error: STRINGS.CANNOT_CREATE_INSTRUCTION,
-          response: null,
-        };
+        return sendFailure(STRINGS.CANNOT_CREATE_INSTRUCTION);
       }
     }
   },
   updateAnswer: async (data) => {
     const { questionId, quizId, attemptId, answerText, userId } = data;
-    let answer = await database.updateUserAnswerQuestion(data);
+    let answer = await UserAnswerModel.saveOne(data);
 
     if (!answer.error) {
       if (answer.response.affectedRows === 1) {
-        return {
-          statusCode: 200,
-          error: null,
-        };
+        return sendSuccess(200, null);
       }
+    } else {
+      return sendFailure(200, STRINGS.ERROR_OCCURRED)
     }
   },
 };

@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test": "export NODE_ENV=test && mocha 'server/api/test/*.test.js' --recursive --timeout 60000 --exit",
+    "test": "export NODE_ENV=test && mocha 'server/api/test/**/*.test.js' --recursive --timeout 60000 --exit",
+    "test-coverage": "nyc mocha 'server/api/test/**/*.test.js' --recursive --timeout 60000 --exit",
     "dev": "export NODE_ENV=development && nodemon 'server/server.js'",
     "prod": "export NODE_ENV=production && nodemon 'server/server.js'"
   },
@@ -29,7 +30,6 @@
     "mocha": "^8.4.0",
     "mysql": "^2.18.1",
     "redis": "^3.0.2",
-    "sequelize": "^6.6.2",
     "uniqid": "^5.2.0",
     "vue": "^3.0.5",
     "vue-loader": "^15.9.6",
@@ -44,7 +44,8 @@
     "@vue/compiler-sfc": "^3.0.5",
     "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-vue": "^7.4.0"
+    "eslint-plugin-vue": "^7.4.0",
+    "nyc": "^15.1.0"
   },
   "eslintConfig": {
     "root": true,

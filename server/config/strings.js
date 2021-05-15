@@ -16,20 +16,26 @@ const STRINGS = {
     ERROR_OCCURRED: "Error occurred",
     CANNOT_REGISTER_USER_WITH_EMAIL: (email = "$email") => `Cannot register user with email ${email}`,
     THREAD_TITLE_MUST_BE_AT_LEAST_20_CHARACTERS: "Thread title must be at least 20 characters",
+    CONTENT_MUST_BE_AT_LEAST_30_CHARACTERS: "Content must be at least 30 characters",
     THREAD_DESCRIPTION_CANNOT_BE_LEFT_BLANK: "Thread description cannot be left blank",
     SELECT_RELATED_QUIZ_CANNOT_BE_LEFT_BLANK: "Select related quiz cannot be left blank",
     CANNOT_LOAD_THREADS: "Cannot load threads",
     CANNOT_LOAD_QUESTION: "Cannot load question",
+    CANNOT_LOAD_INSTRUCTION: "Cannot load instruction",
     CANNOT_LOAD_QUIZ: "Cannot load quiz",
+    CANNOT_LOAD_POST: "Cannot load post",
     CANNOT_CREATE_INSTRUCTION: "Cannot create instruction.",
+    CANNOT_CREATE_POST: "Cannot create post.",
     INVALID_QUESTION_ID: "Invalid question id",
     INVALID_THREAD_ID: "Invalid thread id",
+    INVALID_POST_ID: "Invalid post id",
     INVALID_INSTRUCTION_ID: "Invalid instruction id",
     INVALID_PROFILE_PICTURE_ID: "Invalid profile picture id",
     INVALID_GENDER: "Invalid gender",
     INVALID_ROLE_ID: "Invalid role id",
     POST_CONTENT_CANNOT_BE_LEFT_BLANK: "Post content cannot be left blank",
-
+    CANNOT_SAVE_USER_INFO: "Cannot save user info.",
+    ERROR_LOADING_TEACHER_PAGE: "Error loading teacher page"
 }
 
 module.exports = STRINGS

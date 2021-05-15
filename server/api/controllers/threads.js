@@ -1,6 +1,7 @@
-const database = new (require("../../database"))();
 const { sendSuccess, sendFailure } = require("../../config/res");
-const STRINGS = require("../../misc/strings");
+const STRINGS = require("../../config/strings");
+const ThreadModel = new(require("../../models/thread"))();
+const PostModel = new(require("../../models/post"))();
 
 module.exports = {
   createThread: async (data) => {
@@ -18,7 +19,7 @@ module.exports = {
       return sendFailure(STRINGS.SELECT_RELATED_QUIZ_CANNOT_BE_LEFT_BLANK);
     }
 
-    let newThread = await database.createNewThread(data);
+    let newThread = await ThreadModel.addOne(data);
 
     if (!newThread.error && newThread.response.affectedRows === 1) {
       const newThreadId = newThread.response.insertId;
@@ -30,19 +31,9 @@ module.exports = {
   },
 
   getThread: async (id) => {
-    let thread = await database.getDiscussionThreadsByIdAsync(id);
-    let posts = await database.getDiscussionPostsByThreadIdAsync(id);
+    let thread = await ThreadModel.findOne(id);
+    let posts = await PostModel.findMany(id);
 
     return sendSuccess({ ...thread.response[0], posts: posts.response });
-  },
-
-  getThreads: async () => {
-    let threads = await database.getDiscussionThreadsAsync();
-
-    if (!threads.error) {
-      return sendSuccess(threads);
-    } else {
-      return sendFailure(STRINGS.CANNOT_LOAD_THREADS);
-    }
-  },
+  }
 };
