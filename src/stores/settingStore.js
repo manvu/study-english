@@ -18,14 +18,7 @@ const settingStore = {
   },
   actions: {
     fetchUserInfo(context, payload) {
-      return axios
-        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getUserInfo, {
-          headers: {
-            Authorization: !!localStorage.getItem("token")
-              ? `Bearer ${localStorage.getItem("token")}`
-              : "",
-          },
-        })
+      return axios(API_LIST.getUserInfo)
         .then((response) => {
           if (!response.data.error) {
             payload.user = response.data.user;
@@ -43,22 +36,7 @@ const settingStore = {
         });
     },
     saveUserInfo(context, payload) {
-      return axios
-        .post(
-          process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.saveUserInfo,
-          {
-            email: payload.email,
-            firstName: payload.firstName,
-            lastName: payload.lastName,
-          },
-          {
-            headers: {
-              Authorization: !!localStorage.getItem("token")
-                ? `Bearer ${localStorage.getItem("token")}`
-                : "",
-            },
-          }
-        )
+      return axios(API_LIST.saveUserInfo(payload))
         .then((response) => {
           if (!response.data.error) {
             payload.user = response.data.user;

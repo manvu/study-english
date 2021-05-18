@@ -149,7 +149,7 @@ export default {
     save() {
       
       if (this.mode === "create") {
-        this.$store.dispatch("questionStore/createQuestion", {
+        this.$store.dispatch("teacherStore/createQuestion", {
           typeId: 3,
           items: { leftItems: this.leftItems, rightItems: this.rightItems },
           question: this.question,
@@ -159,7 +159,7 @@ export default {
             .reduce((string, current) => string + `${current.letter}.${current.correct_answer} `, "" ).trim(),
         });
       } else if (this.mode === "edit") {
-        this.$store.dispatch("questionStore/updateQuestion", {
+        this.$store.dispatch("teacherStore/updateQuestion", {
           items: { leftItems: this.leftItems, rightItems: this.rightItems },
           question: this.question,
           instruction: this.instruction,

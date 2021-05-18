@@ -5,14 +5,18 @@ class UserAnswerModel {
     this.db = database;
   }
 
-  async findAll(quizId, userId, attemptId) {
+  async findAll({quizId, userId, attemptId}) {
     return await this.db.executeQuery(`SELECT ua.*, q.type_id
     FROM user_answer_question ua JOIN question q ON q.question_id = ua.question_id
     WHERE ua.quiz_id = ${quizId} AND ua.user_id = ${userId} AND ua.attempt_id = ${attemptId} 
     ORDER BY ua.question_id ASC`);
   }
 
-  async addOne(items, userId, quizId, attemptId) {
+  async closeOne({quizId, userId, attemptId, grade}) {
+    return await this.db.executeQuery(``);
+  }
+
+  async markOne({items, userId, quizId, attemptId}) {
     let query = `INSERT INTO user_answer_question 
     (user_id, quiz_id, attempt_id, question_id, answer_text, is_correct)
     VALUES `;

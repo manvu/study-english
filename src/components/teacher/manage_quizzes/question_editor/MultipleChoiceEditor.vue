@@ -114,7 +114,7 @@ export default {
     },
     save() {
       if (this.mode === "create") {
-        this.$store.dispatch("questionStore/createQuestion", {
+        this.$store.dispatch("teacherStore/createQuestion", {
           typeId: 1,
           items: this.items,
           question: this.question,
@@ -124,7 +124,7 @@ export default {
           this.closeQuestionEditorModal()
         });
       } else if (this.mode === "edit") {
-        this.$store.dispatch("questionStore/updateQuestion", {
+        this.$store.dispatch("teacherStore/updateQuestion", {
           items: this.items,
           question: this.question,
           instruction: this.instruction,

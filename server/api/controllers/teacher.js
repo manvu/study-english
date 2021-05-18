@@ -6,7 +6,7 @@ const QuestionTypeModel = new(require("../../models/question_type"))();
 
 module.exports = {
   getTeacherHome: async () => {
-    let homeSummary = await HomeModel.getHomeSummary();
+    let homeSummary = await HomeModel.getHomeSummaryForGuest();
     let allSkills = await SkillModel.findAll();
     let questionTypes = await QuestionTypeModel.findAll();
 

@@ -61,7 +61,7 @@ export default {
   created() {
     console.log(this.question);
     
-    this.allQuestionTypes = this.$store.getters["quizStore/getAllQuestionTypes"]
+    this.allQuestionTypes = this.$store.getters["teacherStore/getAllQuestionTypes"]
   },
 };
 </script>

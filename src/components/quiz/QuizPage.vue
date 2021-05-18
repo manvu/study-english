@@ -65,7 +65,7 @@ export default {
   },
   created() {
     const quizId = this.$route.params.id
-
+  
     this.$store
       .dispatch("questionStore/getQuestionList", { quizId })
       .then(() => {

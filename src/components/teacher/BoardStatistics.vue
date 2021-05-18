@@ -3,7 +3,12 @@
     <div id="filter" class="form-row details-wrapper">
       <div class="form-inline">
         <label>Filter by</label>
-        <select name="filterBy" id="filter-by" v-model="filterBy">
+        <select
+          name="filterBy"
+          id="filter-by"
+          class="form-select"
+          v-model="filterBy"
+        >
           <option class="dropdown-item" href="#" value="student">
             Student
           </option>
@@ -16,19 +21,27 @@
       </div>
       <div v-else-if="filterBy === 'quiz'" class="form-inline">
         <label>Quiz</label>
-        <select name="quizNumber" id="filter-by" v-model="quizNumber">
+        <select
+          name="quizNumber"
+          class="form-select"
+          id="filter-by"
+          v-model="quizNumber"
+        >
           <option class="dropdown-item" href="#" value="1">1</option>
           <option class="dropdown-item" href="#" value="2">2</option>
         </select>
       </div>
       <div class="form-inline">
-        <label>Between dates</label>
-        <input type="date" class="form-control" />
-        <label>and</label>
-        <input type="date" class="form-control" />
+        <label>Date From:</label>
+        <input type="date" class="form-control" v-model="dateFrom"/>
+      </div><div class="form-inline">
+        <label>Date To:</label>
+        <input type="date" class="form-control" v-model="dateTo"/>
       </div>
       <div class="form-inline">
-        <button @click="loadStatistics" class="btn btn-primary">Search</button>
+        <button @click="loadStatistics" class="btn btn-primary">          <font-awesome-icon
+            :icon="faSearch"
+          ></font-awesome-icon></button>
       </div>
     </div>
   </header>
@@ -41,23 +54,33 @@
 <script>
 import StudentStatistics from "./board_statistics/StudentStatistics";
 import QuizStatistics from "./board_statistics/QuizStatistics";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import moment from 'moment'
 
 export default {
   components: {
     StudentStatistics,
     QuizStatistics,
+    FontAwesomeIcon,
+  },
+  computed: {
+    faSearch() {
+      return faSearch;
+    },
   },
   data: function () {
     return {
       filterBy: "student",
       quizNumber: 1,
       statisticsLoadedBy: "",
+      dateFrom: moment().subtract('months', 1).format('YYYY-MM-DD'),
+      dateTo: moment().format('YYYY-MM-DD'),
     };
   },
   methods: {
     loadStatistics: function () {
-      this.statisticsLoadedBy = this.filterBy
-      
+      this.statisticsLoadedBy = this.filterBy;
     },
   },
 };
@@ -66,7 +89,7 @@ export default {
 <style scoped>
 .details-wrapper {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   margin-bottom: 3px;
 }
@@ -74,7 +97,7 @@ export default {
 .details-wrapper div {
   /* flex: 1; */
   padding: 1em; /* add some padding ?*/
-  text-align: center;
+  /* text-align: center; */
   /* border: 1px solid #000; */
 }
 
@@ -94,7 +117,8 @@ export default {
 }
 
 #filter label {
-  padding-left: 20px;
+  font-weight: bold;
+  /* padding-left: 20px; */
   padding-right: 20px;
 }
 </style>

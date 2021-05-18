@@ -23,7 +23,7 @@ class AttemptModel {
     );
   }
 
-  async addOne(quizId, userId, attemptId) {
+  async addOne({quizId, userId, attemptId}) {
     return await this.db.executeQuery(
       `INSERT INTO user_attempt (quiz_id, user_id, attempt_id) VALUES ('${quizId}', '${userId}', '${attemptId}')`
     );
@@ -40,7 +40,7 @@ class AttemptModel {
     WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId}`);
   }
 
-  async addPlaceHolder(quizId, userId, attemptId, numberOfQuestions) {
+  async addPlaceHolder({quizId, userId, attemptId, numberOfQuestions}) {
     let query = `INSERT INTO user_answer_question (quiz_id, user_id, attempt_id, question_id, answer_text) VALUES `;
 
     for (let i = 1; i <= numberOfQuestions; i++) {
@@ -54,6 +54,12 @@ class AttemptModel {
     console.log(formattedQuery);
 
     return await this.db.executeQuery(formattedQuery);
+  }
+
+  async closeOne({quizId, userId, attemptId, endTime, grade}) {
+    return await this.db.executeQuery(`UPDATE user_attempt 
+    SET end_time = '${endTime}', grade = ${grade}, remaining_time = 0
+    WHERE quiz_id = ${quizId} AND user_id = ${userId} AND attempt_id = ${attemptId}`);
   }
 }
 

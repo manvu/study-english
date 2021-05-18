@@ -4,6 +4,14 @@ import { createApp } from "vue";
 import store from "./store";
 import App from "./App.vue";
 import router from './router'
+import axios from 'axios'
+
+axios.defaults.baseURL = process.env.VUE_APP_SERVER_ENDPOINT;
+axios.defaults.headers.common['Authorization'] = !!localStorage.getItem("token")
+? `Bearer ${localStorage.getItem("token")}`
+: ""
+
+console.log(process.env.VUE_APP_SERVER_ENDPOINT)
 
 const app = createApp(App);
 

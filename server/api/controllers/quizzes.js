@@ -1,12 +1,35 @@
 const STRINGS = require("../../config/strings");
 const { sendSuccess, sendFailure } = require("../../config/res");
-const helper = require("../../misc/helper")
+const helper = require("../../misc/helper");
+const { datetime_format } = require("../../config/index")
+const moment = require("moment")
 const QuizModel = new (require("../../models/quiz"))();
 const RatingModel = new (require("../../models/rating"))();
 const FavoriteModel = new (require("../../models/favorite"))();
 const QuestionModel = new (require("../../models/question"))();
 const AttemptModel = new (require("../../models/attempt"))();
 const UserAnswerModel = new (require("../../models/user_answer"))();
+const CorrectAnswerModel = new (require("../../models/correct_answer"))();
+
+async function markFavorite({ quizId, userId }) {
+  let favorite = await FavoriteModel.addOne(quizId, userId);
+
+  if (!favorite.error && favorite.response.affectedRows === 1) {
+    return sendSuccess(null);
+  } else {
+    return sendFailure(STRINGS.ERROR_OCCURRED);
+  }
+}
+
+async function unmarkFavorite({ quizId, userId }) {
+  let favorite = await FavoriteModel.deleteOne(quizId, userId);
+
+  if (!favorite.error && favorite.response.affectedRows === 1) {
+    return sendSuccess(200, null);
+  } else {
+    return sendFailure(STRINGS.ERROR_OCCURRED);
+  }
+}
 
 module.exports = {
   startQuiz: async (quizId, userId) => {
@@ -24,43 +47,44 @@ module.exports = {
           latestAttempt.response[0].end_time !== null)
       ) {
         // User has never attempted this quiz or has completed the quiz
-        questions = await QuestionModel.findManyByQuizId(quizId);
+        questions = await QuestionModel.findManyByQuizId({ quizId });
         questionsContent = await QuestionModel.loadContent(quizId);
 
         let numberOfQuestions = questions.response.length;
 
         if (numberOfQuestions > 0) {
-          let newAttemptId =
+          const newAttemptId =
             latestAttempt.response.length === 1 &&
             latestAttempt.response[0].end_time !== null
               ? latestAttempt.response[0].attemptId + 1
               : 1;
 
-          let newAttempt = await AttemptModel.addOne(quizId, userId, newAttemptId );
+          const newAttemptData = { quizId, userId, newAttemptId, numberOfQuestions };
+
+          const newAttempt = await AttemptModel.addOne(newAttemptData);
 
           userAnswerQuestions = await AttemptModel.addPlaceHolder(
-            quizId,
-            userId,
-            newAttemptId,
-            numberOfQuestions
+            newAttemptData
           );
         } else {
-          return sendFailure(STRINGS.ERROR_OCCURRED)
+          return sendFailure(STRINGS.ERROR_OCCURRED);
         }
       } else {
         // User has attempted this quiz but has not completed it
         const attemptId = latestAttempt.response[0].attempt_id;
 
-        questions = await QuestionModel.findManyByQuizId( quizId, userId, attemptId );
+        const userAnswerData = { quizId, userId, attemptId };
+
+        questions = await QuestionModel.findManyByQuizId(userAnswerData);
 
         questionsContent = await QuestionModel.loadContent(quizId);
-        userAnswerQuestions = await UserAnswerModel.findAll( quizId, userId, attemptId );
+        userAnswerQuestions = await UserAnswerModel.findAll(userAnswerData);
       }
 
       if (!questions.error && !questionsContent.error) {
         response = questions.response;
 
-        let questionsContentByQuizIdObject = {};
+        let resObject = {};
 
         for (let i = 0; i < userAnswerQuestions.response.length; i++) {
           response[i].answer_text = userAnswerQuestions.response[i].answer_text;
@@ -68,23 +92,19 @@ module.exports = {
 
         for (let i = 0; i < questionsContent.response.length; i++) {
           let currentItem = questionsContent.response[i];
-          if (questionsContentByQuizIdObject[currentItem.question_id]) {
-            questionsContentByQuizIdObject[currentItem.question_id].push(
-              currentItem
-            );
+          if (resObject[currentItem.question_id]) {
+            resObject[currentItem.question_id].push(currentItem);
           } else {
-            questionsContentByQuizIdObject[currentItem.question_id] = [
-              currentItem,
-            ];
+            resObject[currentItem.question_id] = [currentItem];
           }
         }
 
         for (let i = 0; i < response.length; i++) {
-          let obj = helper.cleanObject(questionsContentByQuizIdObject[i + 1]);
+          let obj = helper.cleanObject(resObject[i + 1]);
           response[i].content = obj;
         }
 
-        return sendSuccess(response)
+        return sendSuccess(response);
       }
     }
   },
@@ -109,7 +129,17 @@ module.exports = {
     }
   },
   updateQuiz: async (data) => {
-    let quiz = await QuizModel.saveOne(data);
+    const {
+      quizId,
+      courseName,
+      description,
+      isActive,
+      timeAllowed,
+      selectedSkillId,
+      userId,
+    } = data;
+
+    const quiz = await QuizModel.saveOne(data);
 
     if (!quiz.error && quiz.response.affectedRows === 1) {
       return module.exports.getQuiz(quizId);
@@ -118,9 +148,7 @@ module.exports = {
     }
   },
   toggleFavorite: async (data) => {
-    const quizId = data.quizId;
-    const userId = data.userId;
-
+    const { quizId, userId } = data;
     let status = await FavoriteModel.findOne(quizId, userId);
 
     if (!status.error) {
@@ -133,91 +161,74 @@ module.exports = {
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
-  markFavorite: async ({ quizId, userId }) => {
-    let favorite = await FavoriteModel.addOne(quizId, userId);
-
-    if (!favorite.error && favorite.response.affectedRows === 1) {
-      return sendSuccess(null);
-    } else {
-      return sendFailure(STRINGS.ERROR_OCCURRED);
-    }
-  },
-  unmarkFavorite: async ({ quizId, userId }) => {
-    let favorite = await FavoriteModel.deleteOne(quizId, userId);
-
-    if (!favorite.error && favorite.response.affectedRows === 1) {
-      return sendSuccess(200, null);
-    } else {
-      return sendFailure(STRINGS.ERROR_OCCURRED);
-    }
-  },
   setRating: async ({ quizId, userId, ratingGiven }) => {
-    let rating = await RatingModel.findOne(quizId, userId);
-
     // Validation
+    if (!quizId || !userId || quizId < 1 || userId < 0) {
+      return sendFailure(STRINGS.INVALID_QUIZ_ID);
+    }
+
+    let rating = await RatingModel.findOne(quizId, userId);
 
     if (!rating.error) {
       const data = { quizId, userId, ratingGiven };
       if (rating.response.length === 0) {
-        let rating = await RatingModel.addOne(data);
+        const rating = await RatingModel.addOne(data);
 
-        return {
-          error: null,
-        };
+        if (!rating.error && rating.response.affectedRows === 1) {
+          return sendSuccess(200, null);
+        } else {
+          return sendFailure(STRINGS.CANNOT_UPDATE_RATING);
+        }
       } else {
-        let rating = await RatingModel.saveOne(data);
+        const rating = await RatingModel.saveOne(data);
 
-        return {
-          error: null,
-        };
+        if (!rating.error && rating.response.affectedRows === 1) {
+          return module.exports.getQuiz(quizId);
+        } else {
+          return sendFailure(STRINGS.CANNOT_UPDATE_RATING);
+        }
       }
     } else {
-      return sendFailure(STRINGS.ERROR_OCCURRED)
+      return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
-  submitAndMark: async ({ quizId, userId, attemptId }) => {
+  submitAndMark: async (data) => {
     // compare result
+    const { quizId, userId, attemptId } = data;
 
-    let getCorrectAnswers = await database.getCorrectAnswers(quizId);
-    let userAnswerQuestions = await database.getUserAnswerQuestionByUserIdAndQuizIdAndAttemptId(
-      quizId,
-      userId,
-      attemptId
+    const getCorrectAnswers = await CorrectAnswerModel.findAll(quizId);
+    const userAnswerQuestions = await UserAnswerModel.findAll(data);
+
+    const correctAnswers = helper.correctAnswerstoObject(
+      getCorrectAnswers.response
     );
-
-    let correctAnswers = correctAnswerstoObject(getCorrectAnswers.response);
-    let userAnswers = userAnswersToObject(userAnswerQuestions.response);
-    let typeArray = userAnswerQuestions.response.map(
+    const userAnswers = helper.userAnswersToObject(
+      userAnswerQuestions.response
+    );
+    const typeArray = userAnswerQuestions.response.map(
       (result) => result.type_id
     );
-
-    console.log(userAnswers);
-    console.log(correctAnswers);
 
     // mark user response
 
     // 1 - correct, 2 - partially correct, 3 - incorrect, 4 - unanswered
-    var userAnswersArray = Object.keys(userAnswers).map((key) => [
+    const userAnswersArray = Object.keys(userAnswers).map((key) => [
       Number(key),
       userAnswers[key],
     ]);
-    var correctAnswersArray = Object.keys(correctAnswers).map((key) => [
+    const correctAnswersArray = Object.keys(correctAnswers).map((key) => [
       Number(key),
       correctAnswers[key],
     ]);
-
-    let marked = mark(userAnswersArray, correctAnswersArray, typeArray);
-
-    let markResponse = await database.markUserAnswerQuestion(
-      marked,
-      userId,
-      quizId,
-      attemptId
+    const marked = helper.mark(
+      userAnswersArray,
+      correctAnswersArray,
+      typeArray
     );
-
-    let markedArray = [];
-
-    let accuracy = {
+    const userAnswerData = { items: marked, userId, quizId, attemptId };
+    const attemptData = { userId, quizId, attemptId, endTime: moment(Date.now()).format(datetime_format) };
+    const markedArray = [];
+    const accuracy = {
       totalSubquestions: 0,
       correctSubquestions: 0,
       incorrectSubquestions: 0,
@@ -252,10 +263,12 @@ module.exports = {
       });
     }
 
-    accuracy.percentage = (
-      (accuracy.correctSubquestions * 100) /
-      accuracy.totalSubquestions
-    ).toFixed(2);
+    attemptData.grade = ((accuracy.correctSubquestions * 100) / accuracy.totalSubquestions );
+
+    accuracy.percentage = attemptData.grade.toFixed(2);
+
+    const markResponse = await UserAnswerModel.markOne(userAnswerData);
+    const closedAttempt = await AttemptModel.closeOne(attemptData);
 
     if (!markResponse.error) {
       return sendSuccess({

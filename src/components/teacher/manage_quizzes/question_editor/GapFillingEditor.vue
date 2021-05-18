@@ -121,7 +121,7 @@ export default {
     },
     save() {
       if (this.mode === "create") {
-        this.$store.dispatch("questionStore/createQuestion", {
+        this.$store.dispatch("teacherStore/createQuestion", {
           typeId: 2,
           items: this.items,
           question: this.question,
@@ -130,7 +130,7 @@ export default {
           isActive: this.isActive === "yes" ? 1 : 0,
         });
       } else if (this.mode === "edit") {
-        this.$store.dispatch("questionStore/updateQuestion", {
+        this.$store.dispatch("teacherStore/updateQuestion", {
           items: this.items,
           question: this.question,
           instruction: this.instruction,

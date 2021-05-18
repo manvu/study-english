@@ -13,5 +13,8 @@ module.exports = {
         answerStatistics: answerStats.response[0],
       })
     }
+  },
+  getBoardStatisticsByQuiz: async(quizId) => {
+    
   }
 }

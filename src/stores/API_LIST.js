@@ -1,34 +1,110 @@
+const baseURL = process.env.VUE_APP_SERVER_ENDPOINT;
+
 export default {
-    login: "auth/login",
-    register: "auth/register",
+  login: (body) => ({ method: "post", url: "auth/login", baseURL, data: body }),
+  register: (body) => ({
+    method: "post",
+    url: "auth/register",
+    baseURL,
+    data: body,
+  }),
 
-    getUsers: "users",
-    getDataForHome: "home",
-    getDataForTeacher: "teacher",
-    getDataForDiscussion: "discussion",
-    getStatistics: "statistics",
+  getUsers: { method: "get", url: "users", baseURL },
+  getDataForHome: { method: "get", url: "home", baseURL },
+  getDataForTeacher: { method: "get", url: "teacher", baseURL },
+  getDataForDiscussion: { method: "get", url: "discussion", baseURL },
+  getStatistics: { method: "get", url: "statistics", baseURL },
 
-    createThread: "discussion/threads/create",
-    createPost: "discussion/posts/create",
-    createQuiz: "quiz/create",
-    createQuestion: "question/create",
+  createThread: (body) => ({
+    method: "post",
+    url: "threads",
+    baseURL,
+    data: body,
+  }),
+  createPost: (body) => ({ method: "post", url: "posts", baseURL, data: body }),
+  createQuiz: (body) => ({
+    method: "post",
+    url: "quizzes",
+    baseURL,
+    data: body,
+  }),
+  createQuestion: (body) => ({
+    method: "post",
+    url: "questions",
+    baseURL,
+    data: body,
+  }),
 
-    submitQuiz: "quiz/submit",
+  submitQuiz: (body) => ({
+    method: "post",
+    url: "quizzes/submit",
+    baseURL,
+    data: body,
+  }),
 
-    answerQuestion: (questionId) => `question/answer/${questionId}`,
+  answerQuestion: (questionId) => ({
+    method: "put",
+    url: `questions/answer/${questionId}`,
+    baseURL,
+  }),
 
-    getUserInfo: "user/info",
-    saveUserInfo: "user/info",
-    updateRating: (quizId) => `quiz/rating/${quizId}`,
+  getUserInfo: { method: "get", url: "/users", baseURL },
+  saveUserInfo: (body) => ({ method: "put", url: "/users", baseURL, data: body }),
 
-    toggleFavorite: (quizId) => `quiz/favorite/${quizId}`,
-    getQuizById: (quizId) => `quiz/${quizId}`,
-    getQuestionById: (questionId) => `question/${questionId}`,
-    getDiscussionThreadById: (threadId) => `discussion/thread/${threadId}`,
+  updateRating: (quizId, body) => ({
+    method: "put",
+    url: `quizzes/${quizId}/rating`,
+    baseURL,
+    data: body 
+  }),
 
-    saveQuizById: (quizId) => `quiz/edit/${quizId}`,
-    saveQuestionById: (questionId) => `question/edit/${questionId}`,
+  toggleFavorite: (quizId) => ({
+    method: "put",
+    url: `quizzes/${quizId}/favorite`,
+    baseURL,
+  }),
 
-    deleteQuizById: (quizId) => `quiz/delete/${quizId}`,
-    deleteQuestionById: (questionId) => `question/delete/${questionId}`,
-}
+  getQuizById: (quizId) => ({
+    method: "post",
+    url: `quizzes/start/${quizId}`,
+    baseURL,
+  }),
+
+  getQuestionById: (questionId) => ({
+    method: "get",
+    url: `questions/${questionId}`,
+    baseURL,
+  }),
+
+  getDiscussionThreadById: (threadId) => ({
+    method: "get",
+    url: `threads/${threadId}`,
+    baseURL,
+  }),
+
+  saveQuizById: (quizId, body) => ({
+    method: "put",
+    url: `quizzes/${quizId}`,
+    baseURL,
+    data: body 
+  }),
+
+  saveQuestionById: (questionId, body) => ({
+    method: "put",
+    url: `questions/${questionId}`,
+    baseURL,
+    data: body 
+  }),
+
+  deleteQuizById: (quizId) => ({
+    method: "delete",
+    url: `quizzes/${quizId}`,
+    baseURL,
+  }),
+
+  deleteQuestionById: (questionId) => ({
+    method: "delete",
+    url: `questions/${questionId}`,
+    baseURL,
+  }),
+};

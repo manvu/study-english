@@ -18,7 +18,7 @@ class FavoriteModel {
     WHERE quiz.is_active = 1`);
   }
 
-  async getHomeSummary() {
+  async getHomeSummaryForGuest() {
     return await this.db
       .executeQuery(`SELECT quiz.*, quiz_skill.skill_description, 
     (SELECT COUNT(*) FROM user_attempt WHERE user_attempt.quiz_id = quiz.quiz_id) as attempts,

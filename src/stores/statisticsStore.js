@@ -18,21 +18,13 @@ const quizStore = {
   },
   actions: {
     loadData(context, payload) {
-      return axios
-        .get(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getStatistics, {
-          withCredentials: true,
-          headers: {
-            Authorization: !!localStorage.getItem("token")
-              ? `Bearer ${localStorage.getItem("token")}`
-              : "",
-          },
-        })
+      return axios(API_LIST.getStatistics)
         .then((response) => {
             
           if (!response.data.error) {
             context.commit("loadData", {
-              quizStatistics: response.data.quizStatistics,
-              answerStatistics: response.data.answerStatistics,
+              quizStatistics: response.data.response.quizStatistics,
+              answerStatistics: response.data.response.answerStatistics,
             });
           }
 

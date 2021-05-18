@@ -1,16 +1,20 @@
 const { sendSuccess, sendFailure } = require("../../config/res");
 const STRINGS = require("../../config/strings");
-const UserModel = new(require("../../models/user"))();
+const UserModel = new (require("../../models/user"))();
 
 module.exports = {
   getUsers: async () => {
     const users = await UserModel.findAll();
 
-    return sendSuccess(users.response);
+    if (!users.error) {
+      return sendSuccess(users.response);
+    } else {
+      return sendFailure(STRINGS.ERROR_OCCURRED);
+    }
   },
 
   getUser: async (id) => {
-    let user = await UserModel.findOneById(id)
+    let user = await UserModel.findOneById(id);
 
     if (!user.error) {
       if (user.response.length === 0) {
@@ -31,9 +35,13 @@ module.exports = {
     let userInfo;
     if (password) {
       const { passwordHash, passwordSalt } = await hashPasswordAsync(password);
-      userInfo = await UserModel.saveOne({ ...data, passwordHash, passwordSalt });
+      userInfo = await UserModel.saveOne({
+        ...data,
+        passwordHash,
+        passwordSalt,
+      });
     } else {
-      userInfo = await UserModel.saveOne({id, email, firstName, lastName});
+      userInfo = await UserModel.saveOne({ id, email, firstName, lastName });
     }
 
     if (!userInfo.error) {

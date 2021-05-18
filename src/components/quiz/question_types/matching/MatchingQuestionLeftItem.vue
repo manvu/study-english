@@ -12,6 +12,7 @@
         v-model="selected"
         @change="updateResponse"
       >
+        <option selected value="">Please select an option</option>
         <option v-for="option in availableOptions" :key="option.id">
           {{ option.id }}
         </option>

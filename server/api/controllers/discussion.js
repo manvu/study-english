@@ -7,7 +7,7 @@ module.exports = {
     const threads = await ThreadModel.findAll();
 
     if (!threads.error) {
-      return sendSuccess(threads);
+      return sendSuccess(threads.response);
     } else {
       return sendFailure(STRINGS.CANNOT_LOAD_THREADS);
     }

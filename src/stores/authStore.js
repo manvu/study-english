@@ -25,19 +25,16 @@ const authStore = {
   },
   actions: {
     login(context, payload) {
-      return axios
-        .post(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.login, {
-          email: payload.email,
-          password: payload.password,
-        }, { withCredentials: true })
+      return axios(API_LIST.login(payload))
         .then((response) => {
-          
+          debugger
+          const {token, email, firstName, lastName, isTeacher} = response.data.response 
           if (!response.data.error) {
-            localStorage.setItem("token", response.data.token);
-            localStorage.setItem("email", response.data.userInfo.email);
-            localStorage.setItem("firstName", response.data.userInfo.firstName);
-            localStorage.setItem("lastName", response.data.userInfo.lastName);
-            localStorage.setItem("isTeacher", response.data.userInfo.isTeacher);
+            localStorage.setItem("token", token);
+            localStorage.setItem("email", email);
+            localStorage.setItem("firstName", firstName);
+            localStorage.setItem("lastName", lastName);
+            localStorage.setItem("isTeacher", isTeacher);
           }
 
           console.log(response);
@@ -52,12 +49,7 @@ const authStore = {
         });
     },
     register(context, payload) {
-      axios
-      .post(process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.register, {
-        email: payload.email,
-        password: payload.password,
-      })
-      .then((response) => {
+      axios(API_LIST.register(payload)).then((response) => {
         
         if (!response.data.error) {
           localStorage.setItem("email", payload.email);

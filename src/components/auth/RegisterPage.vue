@@ -16,7 +16,7 @@
         </li>
       </ul> -->
 
-      <form @submit.prevent="register" class="form">
+      <form @submit.prevent="register" class="form" autocomplete="on">
         <h2 class="title">REGISTER YOUR ACCOUNT</h2>
         <input
           type="text"

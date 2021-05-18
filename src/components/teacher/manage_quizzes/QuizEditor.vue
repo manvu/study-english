@@ -148,10 +148,10 @@ export default {
   },
   computed: {
     editQuestion() {
-      return this.$store.getters["questionStore/getEditQuestion"];
+      return this.$store.getters["teacherStore/getEditQuestion"];
     },
     questionsList() {
-      let questionList = this.$store.getters["questionStore/getQuestionList"] 
+      let questionList = this.$store.getters["teacherStore/getQuestionList"] 
       return questionList
     }
   },
@@ -161,7 +161,7 @@ export default {
 
       if (mode === "edit") {
         this.$store
-          .dispatch("questionStore/getQuestionForEdit", { questionId })
+          .dispatch("teacherStore/getQuestionForEdit", { questionId })
           .then((response) => {
             this.showQuestionEditor = true;
             this.editQuestion;
@@ -178,7 +178,7 @@ export default {
     },
     handleSave() {
       if (this.mode === "create") {
-        this.$store.dispatch("quizStore/createQuiz", {
+        this.$store.dispatch("teacherStore/createQuiz", {
           quizId: this.quizId,
           courseName: this.courseName,
           description: this.description,
@@ -187,7 +187,7 @@ export default {
           selectedSkillId: this.selectedSkillId,
         });
       } else if (this.mode === "edit") {
-        this.$store.dispatch("quizStore/updateQuiz", {
+        this.$store.dispatch("teacherStore/updateQuiz", {
           quizId: this.quizId,
           courseName: this.courseName,
           description: this.description,
@@ -199,7 +199,7 @@ export default {
     },
   },
   created() {
-    this.allSkills = this.$store.getters["quizStore/getAllSkills"];
+    this.allSkills = this.$store.getters["teacherStore/getAllSkills"];
   },
 };
 </script>

@@ -34,7 +34,7 @@ router.post("/", authMiddleware, async (req, res) => {
 
 // POST: [routes/questions]
 // Create a new answer
-router.post(":id/attempts/:attemptId/answers/", authMiddleware, async (req, res) => {
+router.post("/answer/:id", authMiddleware, async (req, res) => {
   const data = {
     questionId: req.params.id,
     attemptId: req.body.attemptId,

@@ -16,7 +16,7 @@ export default {
   },
   computed: {
     quiz() {
-      return this.$store.getters["quizStore/getEditQuiz"];
+      return this.$store.getters["teacherStore/getEditQuiz"];
     },
   },
   components: { QuizzesList, QuizEditor },
@@ -28,7 +28,7 @@ export default {
         
       } else {
         this.$store
-          .dispatch("quizStore/getQuizForEdit", { quizId: data.quizId })
+          .dispatch("teacherStore/getQuizForEdit", { quizId: data.quizId })
           .then((response) => {
             this.quiz;
             this.mode = "edit"

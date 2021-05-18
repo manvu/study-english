@@ -15,7 +15,7 @@ router.get("/", authMiddleware, async (req, res) => {
   res.json(user);
 });
 
-router.post("/", authMiddleware, async (req, res) => {
+router.put("/", authMiddleware, async (req, res) => {
   const data = {
     id: req.user.id,
     email: req.body.email,

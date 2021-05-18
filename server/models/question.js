@@ -34,7 +34,7 @@ class QuestionModel {
     ORDER BY q.question_id, qmc.choice_id, qgf.sequence_id, qms.subquestion_id`);
   }
 
-  async findManyByQuizId(quizId, userId, attemptId) {
+  async findManyByQuizId({quizId, userId, attemptId}) {
     if (attemptId && userId) {
       return await this.db
         .executeQuery(`SELECT q.question_id, q.type_id, qt.type_name, q.is_active, q.paragraph_title, q.question, qi.instruction, uaq.*

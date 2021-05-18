@@ -27,7 +27,6 @@
         <div class="cell" data-title="Attempts">{{ quiz.attempts }}</div>
         <div class="cell" data-title="Time Allowed">{{ quiz.time_allowed }}</div>
         <div class="cell" data-title="Action">
-          
           <font-awesome-icon
             class="button-item"
             :icon="faEdit"
@@ -53,7 +52,7 @@ export default {
   components: { FontAwesomeIcon },
   computed: {
     quizzes() {
-      return this.$store.getters["quizStore/getQuizList"];
+      return this.$store.getters["teacherStore/getQuizList"];
     },
     faEdit() {
       return faEdit;
@@ -63,7 +62,7 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("quizStore/getDataForTeacher").then((response) => {
+    this.$store.dispatch("teacherStore/getDataForTeacher").then((response) => {
       this.quizzes;
     });
   },

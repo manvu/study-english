@@ -2,20 +2,24 @@
 
 import { createStore } from "vuex";
 import authStore from "./stores/authStore";
+import homeStore from "./stores/homeStore";
 import quizStore from "./stores/quizStore";
 import questionStore from "./stores/questionStore";
 import forumStore from "./stores/forumStore";
 import statisticsStore from "./stores/statisticsStore";
 import settingStore from "./stores/settingStore";
+import teacherStore from "./stores/teacherStore";
 
 const store = createStore({
   modules: {
     authStore,
+    homeStore,
     quizStore,
     questionStore,
     forumStore,
     statisticsStore,
-    settingStore
+    settingStore,
+    teacherStore
   },
 });
 

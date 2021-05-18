@@ -5,7 +5,6 @@ const dotenv = require("dotenv").config({
 });
 
 const envFile = {
-  
   vue_app_server_endpoint: process.env.VUE_APP_SERVER_ENDPOINT,
   vue_app_client_endpoint: process.env.VUE_APP_CLIENT_ENDPOINT,
   server_port: process.env.SERVER_PORT,
@@ -19,7 +18,10 @@ const envFile = {
   redis_port: process.env.REDIS_PORT,
   redis_ttl: process.env.REDIS_TTL,
   jwt_secret_key: process.env.JWT_SECRET_KEY,
-  jwt_expiry_time: process.env.JWT_EXPIRY_TIME
+  jwt_expiry_time: process.env.JWT_EXPIRY_TIME ? parseInt(process.env.JWT_EXPIRY_TIME) : 86400,
+  datetime_format: process.env.DATETIME_FORMAT
 };
+
+// console.log(envFile)
 
 module.exports = envFile;

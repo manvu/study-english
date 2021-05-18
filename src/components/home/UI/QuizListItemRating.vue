@@ -70,7 +70,7 @@ export default {
   methods: {
     vote(starScore) {
       this.$store
-        .dispatch("quizStore/updateRating", { id: this.id, ratingGiven: starScore })
+        .dispatch("homeStore/updateRating", { id: this.id, ratingGiven: starScore })
         .then((response) => {
           this.voted = true;
         });

@@ -1,6 +1,6 @@
 const { sendSuccess, sendFailure } = require("../../config/res");
 const STRINGS = require("../../config/strings");
-const UserAnswerModel = require("../../models/user_answer");
+const UserAnswerModel = new(require("../../models/user_answer"))();
 const QuestionModel = new(require("../../models/question"))();
 const MCModel = new(require("../../models/multiple_choice_option"))();
 const GModel = new(require("../../models/gap_filling_option"))();
@@ -157,7 +157,7 @@ module.exports = {
   },
   updateAnswer: async (data) => {
     const { questionId, quizId, attemptId, answerText, userId } = data;
-    let answer = await UserAnswerModel.saveOne(data);
+    const answer = await UserAnswerModel.saveOne(data);
 
     if (!answer.error) {
       if (answer.response.affectedRows === 1) {

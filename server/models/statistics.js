@@ -18,6 +18,15 @@ class StatisticsModel {
       (SELECT COUNT(*) FROM user_answer_question uaq WHERE uaq.user_id = ${userId} AND uaq.is_correct = 3) as incorrect,
       (SELECT COUNT(*) FROM user_answer_question uaq WHERE uaq.user_id = ${userId} AND uaq.is_correct = 4) as unanswered`)
   }
+  async findBoardStatisticsByQuiz(quizId) {
+    return await this.db.executeQuery(`SELECT start_time, grade
+    FROM user_attempt ua
+    WHERE quiz_id = ${quizId} AND ua.end_time IS NOT NULL`)
+  }
+  
+  async findBoardStatisticsSummaryByQuiz(quizId) {
+    
+  }
 }
 
 module.exports = StatisticsModel;

@@ -1,7 +1,7 @@
 <template>
   <div id="bg">
     <div class="module">
-      <form @submit.prevent="authenticate" class="form">
+      <form @submit.prevent="authenticate" class="form" autocomplete="on">
         <h2 class="title">LOG IN YOUR ACCOUNT</h2>
         <input
           type="text"

@@ -27,12 +27,12 @@ export default {
   components: { QuizListItem },
   computed: {
     quizzes() {
-      console.log(this.$store.getters["quizStore/getQuizList"]);
-      return this.$store.getters["quizStore/getQuizList"];
+      console.log(this.$store.getters["homeStore/getQuizList"]);
+      return this.$store.getters["homeStore/getQuizList"];
     },
   },
   created() {
-    this.$store.dispatch("quizStore/getDataForHome").then(response => {
+    this.$store.dispatch("homeStore/getDataForHome").then(response => {
       this.quizzes
     })
   },

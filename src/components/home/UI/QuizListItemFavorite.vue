@@ -32,7 +32,7 @@ export default {
   methods: {
     toggleFavorite: function () {
       
-      this.$store.dispatch("quizStore/toggleFavorite", {
+      this.$store.dispatch("homeStore/toggleFavorite", {
         id: this.id,
       });
 

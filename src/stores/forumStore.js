@@ -26,13 +26,10 @@ const quizStore = {
   },
   actions: {
     getDataForDiscussion(context, payload) {
-      return axios
-        .get(
-          process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getDataForDiscussion
-        )
-        .then((response) => {
+      return axios(API_LIST.getDataForDiscussion)
+      .then((response) => {
           if (!response.data.error) {
-            let threads = response.data.threads;
+            let threads = response.data.response;
             payload.threads = threads;
             context.commit("getDataForDiscussion", payload);
           }
@@ -48,15 +45,10 @@ const quizStore = {
         });
     },
     getDataForDiscussionThread(context, payload) {
-      const threadId = payload.threadId
-
-      return axios
-      .get(
-        process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.getDiscussionThreadById(threadId)
-      )
+      return axios(API_LIST.getDiscussionThreadById(payload.threadId))
       .then((response) => {
         if (!response.data.error) {
-          let currentThread = response.data.thread;
+          let currentThread = response.data.response;
           payload.currentThread = currentThread;
           context.commit("getDataForDiscussionThread", payload);
         }
@@ -72,23 +64,10 @@ const quizStore = {
       });
     },
     createThread(context, payload) {
-      return axios
-      .post(
-        process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.createThread, {
-          threadTitle: payload.threadTitle,
-          selectedRelatedQuizId: payload.selectedRelatedQuizId,
-          description: payload.description,
-        }, {
-          headers: {
-            Authorization: !!localStorage.getItem("token")
-              ? `Bearer ${localStorage.getItem("token")}`
-              : "",
-          },
-        }
-      )
+      return axios(API_LIST.createThread(payload))
       .then((response) => {
         if (!response.data.error) {
-          let newThreadId = response.data.newThreadId;
+          let newThreadId = response.data.response.newThreadId;
           payload.newThreadId = newThreadId;
           return {newThreadId}
         }
@@ -104,19 +83,7 @@ const quizStore = {
       });
     },
     createPost(context, payload) {
-      return axios
-      .post(
-        process.env.VUE_APP_SERVER_ENDPOINT + API_LIST.createPost, {
-          threadId: payload.threadId,
-          content: payload.content,
-        }, {
-          headers: {
-            Authorization: !!localStorage.getItem("token")
-              ? `Bearer ${localStorage.getItem("token")}`
-              : "",
-          },
-        }
-      )
+      return axios(API_LIST.createPost(payload))
       .then((response) => {
         if (!response.data.error) {
           payload.post = response.data.post
