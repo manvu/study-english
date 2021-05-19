@@ -12,21 +12,24 @@ router.get("/", authMiddleware, async (req, res) => {
     res.status(200).json(statistics)
 });
 
-router.get("/board/quiz", authTeacherMiddleware, async (req, res) => {
+router.post("/board/quiz/:id", authTeacherMiddleware, async (req, res) => {
     const dateFrom = req.body.dateFrom
     const dateTo = req.body.dateTo
-    const quizId = req.body.quizId
+    const quizId = req.params.id
 
-    const statistics = await statisticsController.getBoardStatisticsByQuiz(quizId)
+    const data = {dateFrom, dateTo, quizId}
+    const statistics = await statisticsController.getBoardStatisticsByQuiz(data)
 
     res.status(200).json(statistics)
 });
 
-router.get("/board/student", authTeacherMiddleware, async (req, res) => {
+router.post("/board/student/:id", authTeacherMiddleware, async (req, res) => {
     const dateFrom = req.body.dateFrom
     const dateTo = req.body.dateTo
+    const userId = req.params.id
 
-    const statistics = await statisticsController.getStatistics(userId)
+    const data = {dateFrom, dateTo, userId}
+    const statistics = await statisticsController.getBoardStatisticsByStudent(data)
 
     res.status(200).json(statistics)
 });

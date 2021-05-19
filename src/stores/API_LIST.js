@@ -42,10 +42,11 @@ export default {
     data: body,
   }),
 
-  answerQuestion: (questionId) => ({
+  answerQuestion: (questionId, body) => ({
     method: "put",
     url: `questions/answer/${questionId}`,
     baseURL,
+    data: body,
   }),
 
   getUserInfo: { method: "get", url: "/users", baseURL },
@@ -107,4 +108,24 @@ export default {
     url: `questions/${questionId}`,
     baseURL,
   }),
+
+  getBoardStatisticsByQuiz: (questionId, body) => ({
+    method: "post",
+    url: `statistics/board/quiz/${questionId}`,
+    baseURL,
+    data: body 
+  }),
+
+  getBoardStatisticsByStudent: (userId, body) => ({
+    method: "post",
+    url: `statistics/board/student/${userId}`,
+    baseURL,
+    data: body 
+  }),
+
+  getAllStudents: {
+    method: "get",
+    url: `users/students/all`,
+    baseURL,
+  },
 };

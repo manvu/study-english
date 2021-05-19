@@ -2,9 +2,16 @@ const express = require("express");
 const router = express.Router();
 const usersController = require("../controllers/users");
 const authMiddleware = require("../middlewares/auth");
+const authTeacherMiddleware = require("../middlewares/authTeacher");
 
-router.get("/all", async (req, res) => {
+router.get("/all", authTeacherMiddleware,  async (req, res) => {
   const allUsers = await usersController.getUsers();
+
+  res.json(allUsers);
+});
+
+router.get("/students/all", authTeacherMiddleware, async (req, res) => {
+  const allUsers = await usersController.getAllStudents();
 
   res.json(allUsers);
 });

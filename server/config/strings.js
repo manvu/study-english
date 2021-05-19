@@ -26,6 +26,7 @@ const STRINGS = {
     CANNOT_LOAD_POST: "Cannot load post.",
     CANNOT_CREATE_INSTRUCTION: "Cannot create instruction.",
     CANNOT_CREATE_POST: "Cannot create post.",
+    CANNOT_LOAD_STATISTICS: "Cannot load statistics.",
     INVALID_QUESTION_ID: "Invalid question id.",
     INVALID_THREAD_ID: "Invalid thread id.",
     INVALID_POST_ID: "Invalid post id.",

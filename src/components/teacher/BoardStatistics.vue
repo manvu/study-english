@@ -17,7 +17,22 @@
       </div>
       <div v-if="filterBy === 'student'" class="form-inline">
         <label>Student Name</label>
-        <input type="text" class="form-control" placeholder="Mark..." />
+                <select
+          name="quizNumber"
+          class="form-select"
+          id="filter-by"
+          v-model="selectedStudentId"
+        >
+          <option selected value="">Select a student</option>
+          <option
+            v-for="s in students"
+            :key="s.user_id"
+            :value="s.user_id"
+            class="dropdown-item"
+          >
+            {{ `${s.user_id} - ${s.first_name}` }}
+          </option>
+        </select>
       </div>
       <div v-else-if="filterBy === 'quiz'" class="form-inline">
         <label>Quiz</label>
@@ -25,23 +40,31 @@
           name="quizNumber"
           class="form-select"
           id="filter-by"
-          v-model="quizNumber"
+          v-model="selectedQuizId"
         >
-          <option class="dropdown-item" href="#" value="1">1</option>
-          <option class="dropdown-item" href="#" value="2">2</option>
+          <option selected value="">Select a quiz</option>
+          <option
+            v-for="q in quizzes"
+            :key="q.quiz_id"
+            :value="q.quiz_id"
+            class="dropdown-item"
+          >
+            {{ `${q.quiz_id} - ${q.description}` }}
+          </option>
         </select>
       </div>
       <div class="form-inline">
         <label>Date From:</label>
-        <input type="date" class="form-control" v-model="dateFrom"/>
-      </div><div class="form-inline">
-        <label>Date To:</label>
-        <input type="date" class="form-control" v-model="dateTo"/>
+        <input type="date" class="form-control" v-model="dateFrom" />
       </div>
       <div class="form-inline">
-        <button @click="loadStatistics" class="btn btn-primary">          <font-awesome-icon
-            :icon="faSearch"
-          ></font-awesome-icon></button>
+        <label>Date To:</label>
+        <input type="date" class="form-control" v-model="dateTo" />
+      </div>
+      <div class="form-inline">
+        <button @click="loadStatistics" class="btn btn-primary">
+          <font-awesome-icon :icon="faSearch"></font-awesome-icon>
+        </button>
       </div>
     </div>
   </header>
@@ -56,7 +79,7 @@ import StudentStatistics from "./board_statistics/StudentStatistics";
 import QuizStatistics from "./board_statistics/QuizStatistics";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import moment from 'moment'
+import moment from "moment";
 
 export default {
   components: {
@@ -64,23 +87,54 @@ export default {
     QuizStatistics,
     FontAwesomeIcon,
   },
+  created(){
+    this.$store.dispatch("teacherStore/getAllStudents").then(() => {
+      this.students = this.$store.getters["teacherStore/getAllStudents"]
+    })
+  },
   computed: {
     faSearch() {
       return faSearch;
+    },
+    quizzes() {
+      console.log(this.$store.getters["teacherStore/getQuizList"]);
+      return this.$store.getters["teacherStore/getQuizList"];
     },
   },
   data: function () {
     return {
       filterBy: "student",
-      quizNumber: 1,
       statisticsLoadedBy: "",
-      dateFrom: moment().subtract('months', 1).format('YYYY-MM-DD'),
-      dateTo: moment().format('YYYY-MM-DD'),
+      dateFrom: moment().subtract(1, "months").format("YYYY-MM-DD"),
+      dateTo: moment().format("YYYY-MM-DD"),
+      selectedStudentId: "",
+      selectedQuizId: "",
+      students: []
     };
   },
   methods: {
     loadStatistics: function () {
-      this.statisticsLoadedBy = this.filterBy;
+      if (this.filterBy === "quiz") {
+        this.$store
+          .dispatch("teacherStore/getBoardStatisticsByQuiz", {
+            dateFrom: moment(this.dateFrom).startOf('day').format(process.env.VUE_APP_DATETIME_FORMAT),
+            dateTo: moment(this.dateTo).endOf('day').format(process.env.VUE_APP_DATETIME_FORMAT),
+            quizId: this.selectedQuizId,
+          })
+          .then(() => {
+            this.statisticsLoadedBy = this.filterBy;
+          });
+      } else {
+        this.$store
+          .dispatch("teacherStore/getBoardStatisticsByStudent", {
+            dateFrom: moment(this.dateFrom).startOf('day').format(process.env.VUE_APP_DATETIME_FORMAT),
+            dateTo: moment(this.dateTo).endOf('day').format(process.env.VUE_APP_DATETIME_FORMAT),
+            userId: this.selectedStudentId,
+          })
+          .then(() => {
+            this.statisticsLoadedBy = this.filterBy;
+          });
+      }
     },
   },
 };

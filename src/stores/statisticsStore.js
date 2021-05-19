@@ -20,7 +20,6 @@ const quizStore = {
     loadData(context, payload) {
       return axios(API_LIST.getStatistics)
         .then((response) => {
-            
           if (!response.data.error) {
             context.commit("loadData", {
               quizStatistics: response.data.response.quizStatistics,

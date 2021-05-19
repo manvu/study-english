@@ -9,6 +9,10 @@ class UserModel {
     return await this.db.executeQuery("SELECT * FROM user");
   }
 
+  async findAllStudents() {
+    return await this.db.executeQuery("SELECT * FROM user WHERE role_id = 2");
+  }
+
   async findOneById(id) {
     return await this.db.executeQuery(
       `SELECT user.email, user.first_name, user.last_name 

@@ -133,10 +133,6 @@ h2 {
   justify-content: center;
 }
 
-.detailed-result {
-  
-}
-
 table {
   width: 100%;
   height: 100%;

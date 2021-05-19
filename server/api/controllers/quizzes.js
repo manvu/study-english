@@ -34,6 +34,9 @@ async function unmarkFavorite({ quizId, userId }) {
 module.exports = {
   startQuiz: async (quizId, userId) => {
     let latestAttempt = await AttemptModel.findLatest(quizId, userId);
+    const hasCompleted = latestAttempt.response.length === 1 &&
+    latestAttempt.response[0].end_time !== null
+    const hasNeverTaken = latestAttempt.response.length === 0
 
     if (!latestAttempt.error) {
       let questions;
@@ -41,11 +44,7 @@ module.exports = {
       let response;
       let userAnswerQuestions;
 
-      if (
-        latestAttempt.response.length === 0 ||
-        (latestAttempt.response.length === 1 &&
-          latestAttempt.response[0].end_time !== null)
-      ) {
+      if (hasCompleted || hasNeverTaken) {
         // User has never attempted this quiz or has completed the quiz
         questions = await QuestionModel.findManyByQuizId({ quizId });
         questionsContent = await QuestionModel.loadContent(quizId);
@@ -53,13 +52,14 @@ module.exports = {
         let numberOfQuestions = questions.response.length;
 
         if (numberOfQuestions > 0) {
-          const newAttemptId =
-            latestAttempt.response.length === 1 &&
-            latestAttempt.response[0].end_time !== null
-              ? latestAttempt.response[0].attemptId + 1
+          const newAttemptId = hasCompleted
+              ? latestAttempt.response[0].attempt_id + 1
               : 1;
 
-          const newAttemptData = { quizId, userId, newAttemptId, numberOfQuestions };
+          const newAttemptData = { quizId, userId, 
+            attemptId: newAttemptId, 
+            numberOfQuestions, 
+            startTime: moment(Date.now()).format(datetime_format) };
 
           const newAttempt = await AttemptModel.addOne(newAttemptData);
 
@@ -105,6 +105,8 @@ module.exports = {
         }
 
         return sendSuccess(response);
+      } else {
+        return sendFailure(STRINGS.ERROR_OCCURRED);
       }
     }
   },

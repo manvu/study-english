@@ -23,9 +23,9 @@ class AttemptModel {
     );
   }
 
-  async addOne({quizId, userId, attemptId}) {
+  async addOne({quizId, userId, attemptId, startTime}) {
     return await this.db.executeQuery(
-      `INSERT INTO user_attempt (quiz_id, user_id, attempt_id) VALUES ('${quizId}', '${userId}', '${attemptId}')`
+      `INSERT INTO user_attempt (quiz_id, user_id, attempt_id, start_time) VALUES ('${quizId}', '${userId}', '${attemptId}', '${startTime}')`
     );
   }
 

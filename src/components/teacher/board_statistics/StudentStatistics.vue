@@ -1,11 +1,11 @@
 <template>
-  <div id="chartArea" class="mt-5">
+  <div v-if="!isLoading" id="chartArea" class="mt-5">
     <span class="chart">
       <apexchart
         width="500"
         type="pie"
-        :options="quizzesChartOptions"
-        :series="quizzesData"
+        :options="statistics.quizStatistics.chartOptions"
+        :series="statistics.quizStatistics.data"
       ></apexchart>
     </span>
 
@@ -13,10 +13,13 @@
       <apexchart
         width="500"
         type="pie"
-        :options="accuracyDataOptions"
-        :series="accuracyData"
+        :options="statistics.answerStatistics.chartOptions"
+        :series="statistics.answerStatistics.data"
       ></apexchart>
     </span>
+  </div>
+  <div v-else>
+    <h1>Loading data...</h1>
   </div>
 </template>
 
@@ -27,80 +30,18 @@ export default {
   components: {
     apexchart: VueApexCharts,
   },
-  data: function () {
+  data() {
     return {
-      quizzesData: [44, 33, 12],
-      quizzesChartOptions: {
-        chart: {
-          width: 380,
-          type: "pie",
-        },
-        title: {
-          text: "How many quizzes have you completed?",
-          align: "center",
-          margin: 10,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "18px",
-            fontWeight: "bold",
-            fontFamily: undefined,
-            color: "#263238",
-          },
-        },
-        labels: ["Completed", "Incomplete", "Not Attempted"],
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200,
-              },
-              legend: {
-                position: "bottom",
-              },
-            },
-          },
-        ],
-      },
-      accuracyData: [40, 50, 10],
-      accuracyDataOptions: {
-        chart: {
-          width: 380,
-          type: "pie",
-        },
-        labels: ["Correct", "Incorrect", "Unanswered"],
-
-        title: {
-          text: "How well do you perform?",
-          align: "center",
-          margin: 10,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "18px",
-            fontWeight: "bold",
-            fontFamily: undefined,
-            color: "#263238",
-          },
-        },
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200,
-              },
-              legend: {
-                position: "bottom",
-              },
-            },
-          },
-        ],
-      },
+      isLoading: true,
     };
+  },
+  created() {
+    this.statistics = this.$store.getters[
+      "teacherStore/getBoardStatisticsByStudent"
+    ];
+    console.log(this.statistics)
+    if (this.statistics)
+    this.isLoading = false
   },
 };
 </script>
@@ -131,9 +72,8 @@ export default {
     display: flex;
     flex-direction: column;
   }
-    .chart {
+  .chart {
     margin-top: 2rem;
   }
 }
-
 </style>

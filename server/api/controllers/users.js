@@ -13,6 +13,16 @@ module.exports = {
     }
   },
 
+  getAllStudents: async () => {
+    const students = await UserModel.findAllStudents();
+
+    if (!students.error) {
+      return sendSuccess(students.response);
+    } else {
+      return sendFailure(STRINGS.ERROR_OCCURRED);
+    }
+  },
+
   getUser: async (id) => {
     let user = await UserModel.findOneById(id);
 

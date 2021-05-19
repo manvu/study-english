@@ -6,6 +6,7 @@ const teacherStore = {
   state() {
     return {
       quizzes: [],
+      students: [],
       allSkills: [],
       allQuestionTypes: [],
       editQuiz: {},
@@ -14,6 +15,7 @@ const teacherStore = {
       editQuestion: {},
       newQuestions: [],
       updatedQuestions: [],
+      statistics: {},
     };
   },
   mutations: {
@@ -52,16 +54,25 @@ const teacherStore = {
         correctAnswer: payload.correctAnswers,
       };
       state.newQuestions.push(newQuestion);
-      state.questions.push(newQuestion)
+      state.questions.push(newQuestion);
+    },
+    getBoardStatisticsByQuiz(state, payload) {
+      state.statistics.quizStatistics = payload.quizStatistics;
+    },
+    getBoardStatisticsByStudent(state, payload) {
+      state.statistics.studentsStatistics = payload
+    },
+    getAllStudents(state, payload) {
+      state.students = payload.students;
     },
   },
   actions: {
-    getDataForTeacher(context, payload) {
+    getDataForTeacher(context, payload = {}) {
       return axios(API_LIST.getDataForTeacher)
         .then((response) => {
           if (!response.data.error) {
-            const {quizzes, allSkills, allQuestionTypes} = response.data.response;
-            context.commit("getDataForTeacher", { quizzes, allSkills, allQuestionTypes, });
+            payload = response.data.response
+            context.commit("getDataForTeacher", payload);
           }
 
           console.log(response);
@@ -117,7 +128,6 @@ const teacherStore = {
       return axios(API_LIST.saveQuizById(payload.quizId, payload))
         .then((response) => {
           if (!response.data.error) {
-            ;
             payload.quiz = response.data.quiz;
             context.commit("updateQuiz", payload);
           }
@@ -155,9 +165,67 @@ const teacherStore = {
       return axios(API_LIST.createQuestion(payload))
         .then((response) => {
           if (!response.data.error) {
-            debugger;
             payload.question_id = response.data.question_id;
             context.commit("createQuestion", payload);
+          }
+
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    getBoardStatisticsByQuiz(context, payload) {
+      return axios(API_LIST.getBoardStatisticsByQuiz(payload.quizId, payload))
+        .then((response) => {
+          if (!response.data.error) {
+            payload.quizStatistics = response.data.response;
+            context.commit("getBoardStatisticsByQuiz", payload);
+          }
+
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    getBoardStatisticsByStudent(context, payload) {
+      return axios(
+        API_LIST.getBoardStatisticsByStudent(payload.userId, payload)
+      )
+        .then((response) => {
+          if (!response.data.error) {
+            context.commit("getBoardStatisticsByStudent", {
+              quizStatistics: response.data.response.quizStatistics,
+              answerStatistics: response.data.response.answerStatistics,
+            });
+          }
+
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    getAllStudents(context, payload = {}) {
+      console.log(API_LIST.getAllStudents);
+      return axios(API_LIST.getAllStudents)
+        .then((response) => {
+          if (!response.data.error) {
+            payload.students = response.data.response;
+            context.commit("getAllStudents", payload);
           }
 
           console.log(response);
@@ -185,13 +253,22 @@ const teacherStore = {
       return state.allSkills;
     },
     getQuizResult(state) {
-      return state.quizResult
+      return state.quizResult;
     },
     getQuestionList(state) {
       return state.questions;
     },
     getEditQuestion(state) {
       return state.editQuestion;
+    },
+    getBoardStatisticsByQuiz(state) {
+      return state.statistics.quizStatistics;
+    },
+    getBoardStatisticsByStudent(state) {
+      return state.statistics.studentsStatistics
+    },
+    getAllStudents(state) {
+      return state.students;
     },
   },
 };

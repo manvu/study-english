@@ -1,22 +1,25 @@
 <template>
-  <div id="chartArea" class="mt-5">
-    <span v-if="statistics !== null" class="chart">
+  <div v-if="!isLoading" id="chartArea" class="mt-5">
+    <span class="chart">
       <apexchart
         width="500"
         type="pie"
-        :options="statistics.quizzesChartOptions"
-        :series="statistics.quizzesData"
+        :options="statistics.quizStatistics.chartOptions"
+        :series="statistics.quizStatistics.data"
       ></apexchart>
     </span>
 
-    <span v-if="statistics !== null" class="chart">
+    <span class="chart">
       <apexchart
         width="500"
         type="pie"
-        :options="statistics.accuracyDataOptions"
-        :series="statistics.accuracyData"
+        :options="statistics.answerStatistics.chartOptions"
+        :series="statistics.answerStatistics.data"
       ></apexchart>
     </span>
+  </div>
+  <div v-else>
+    <h1>Loading data...</h1>
   </div>
 </template>
 
@@ -27,106 +30,16 @@ export default {
   components: {
     apexchart: VueApexCharts,
   },
-  computed: {
-    statistics() {
-      
-      const statistics = this.$store.getters["statisticsStore/getStatistics"];
-
-      if (statistics.quizStatistics === null || statistics.answerStatistics === null) {
-        return null
-      }
-
-      const numberOfQuizzes = statistics.quizStatistics.number_of_quizzes 
-      const completedQuizzes = statistics.quizStatistics.completed
-      const incompleteQuizzes = statistics.quizStatistics.incomplete
-      const unattemptedQuizzes = numberOfQuizzes - (completedQuizzes + incompleteQuizzes)
-
-      const correctAnswers = statistics.answerStatistics.correct 
-      const partiallyCorrectAnswers = statistics.answerStatistics.partially_correct
-      const incorrectAnswers = statistics.answerStatistics.incorrect
-      const unansweredAnswers = statistics.answerStatistics.unanswered
-
-
-      return {
-        quizzesData: [completedQuizzes, incompleteQuizzes, unattemptedQuizzes],
-        quizzesChartOptions: {
-          chart: {
-            width: 380,
-            type: "pie",
-          },
-          title: {
-            text: "How many quizzes have you completed?",
-            align: "center",
-            margin: 10,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
-            style: {
-              fontSize: "18px",
-              fontWeight: "bold",
-              fontFamily: undefined,
-              color: "#263238",
-            },
-          },
-          labels: ["Completed", "Incomplete", "Not Attempted"],
-          responsive: [
-            {
-              breakpoint: 480,
-              options: {
-                chart: {
-                  width: 200,
-                },
-                legend: {
-                  position: "bottom",
-                },
-              },
-            },
-          ],
-        },
-        accuracyData: [correctAnswers, partiallyCorrectAnswers, incorrectAnswers, unansweredAnswers],
-        accuracyDataOptions: {
-          chart: {
-            width: 380,
-            type: "pie",
-          },
-          labels: ["Correct", "Partially Correct", "Incorrect", "Unanswered"],
-
-          title: {
-            text: "How well do you perform?",
-            align: "center",
-            margin: 10,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
-            style: {
-              fontSize: "18px",
-              fontWeight: "bold",
-              fontFamily: undefined,
-              color: "#263238",
-            },
-          },
-          responsive: [
-            {
-              breakpoint: 480,
-              options: {
-                chart: {
-                  width: 200,
-                },
-                legend: {
-                  position: "bottom",
-                },
-              },
-            },
-          ],
-        },
-      };
-    },
+  data() {
+    return {
+      isLoading: false
+    }
   },
   created() {
-    
-    this.$store.dispatch("statisticsStore/loadData").then((response) => {
-      
-      this.statistics;
+    this.isLoading = true
+    this.$store.dispatch("statisticsStore/loadData").then(() => {
+      this.isLoading = false
+      this.statistics = this.$store.getters["statisticsStore/getStatistics"];
     });
   },
 };
