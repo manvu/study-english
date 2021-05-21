@@ -24,7 +24,7 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-import { characters } from "../shared/helper";
+import { characters } from "../common/helper";
 
 export default {
   components: { FontAwesomeIcon },

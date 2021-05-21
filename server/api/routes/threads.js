@@ -17,13 +17,13 @@ router.get("/", async (_req, res) => {
 });
 
 router.post("/", authMiddleware, async (req, res) => {
-  let threadTitle = req.body.threadTitle;
+  let subject = req.body.subject;
   let selectedRelatedQuizId = req.body.selectedRelatedQuizId;
   let description = req.body.description;
   const userId = req.user.id;
 
   const newThread = await threadsController.createThread({
-    threadTitle,
+    subject,
     selectedRelatedQuizId,
     description,
     userId,

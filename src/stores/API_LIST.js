@@ -123,6 +123,13 @@ export default {
     data: body 
   }),
 
+  searchThread: (body) => ({
+    method: "post",
+    url: `discussion/search`,
+    baseURL,
+    data: body 
+  }),
+
   getAllStudents: {
     method: "get",
     url: `users/students/all`,

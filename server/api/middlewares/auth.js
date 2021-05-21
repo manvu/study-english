@@ -14,6 +14,9 @@ module.exports = (req, res, next) => {
     jwt.verify(token, jwt_secret_key, (err, decoded) => {
       
       if (err) {
+        if (err.name === "TokenExpiredError") {
+          return res.sendStatus(403, "TokenExpiredError");
+        }
         if (guestAccessibleURLs[req.originalUrl]) {
           next()
           return

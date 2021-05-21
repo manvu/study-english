@@ -6,7 +6,7 @@
         <select
           name="filterBy"
           id="filter-by"
-          class="form-select"
+          class="form-control"
           v-model="filterBy"
         >
           <option class="dropdown-item" href="#" value="student">
@@ -19,7 +19,7 @@
         <label>Student Name</label>
                 <select
           name="quizNumber"
-          class="form-select"
+          class="form-control"
           id="filter-by"
           v-model="selectedStudentId"
         >
@@ -38,7 +38,7 @@
         <label>Quiz</label>
         <select
           name="quizNumber"
-          class="form-select"
+          class="form-control"
           id="filter-by"
           v-model="selectedQuizId"
         >

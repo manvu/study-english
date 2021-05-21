@@ -5,8 +5,7 @@
         <div class="posts__content">
           <a @click="navigateToThread(t.thread_id)">
             <h3 class="posts__title">
-              <i><img src="./fonts/icons/main/Pinned.svg" alt="Pinned" /></i>
-              {{ t.subject }}
+              {{ displayedSubject }}
             </h3>
           </a>
           <p>
@@ -14,6 +13,7 @@
           </p>
         </div>
       </div>
+      <div class="posts__content">Quiz {{ t.quiz_id }}</div>
     </div>
     <div class="posts__section-right">
       <div class="posts__users js-dropdown">
@@ -78,13 +78,16 @@
 </template>
 
 <script>
-import { truncate, timeSince } from "../shared/helper";
+import { truncate, timeSince } from "../common/helper";
 
 export default {
   props: ["t"],
   computed: {
+    displayedSubject() {
+      return this.truncate(this.t.subject, 80);
+    },
     displayedThreadContent() {
-      return this.truncate(this.t.content, 100);
+      return this.truncate(this.t.content, 80);
     },
     displayedLastActivity() {
       return this.timeSince(new Date(this.t.last_activity));
@@ -99,9 +102,9 @@ export default {
     },
   },
   created() {
-    this.truncate = truncate
-    this.timeSince = timeSince
-  }
+    this.truncate = truncate;
+    this.timeSince = timeSince;
+  },
 };
 </script>
 

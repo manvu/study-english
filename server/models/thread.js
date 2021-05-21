@@ -13,7 +13,8 @@ class ThreadModel {
     (SELECT dp.created_at FROM discussion_post dp WHERE dp.thread_id = dt.thread_id ORDER BY dp.created_at DESC LIMIT 1),
     (SELECT dt.created_at FROM discussion_thread dt1 WHERE dt1.thread_id = dt.thread_id)
     ) as last_activity
-    FROM discussion_thread dt`);
+    FROM discussion_thread dt
+    ORDER BY last_activity desc`);
   }
 
   async findOne(id) {
@@ -29,10 +30,42 @@ class ThreadModel {
     );
   }
 
-  async addOne({ subject, content, userId, quizId }) {
+  async findMany({ subject, quizId, userId, dateCreated }) {
+    const whereClause = [];
+    let formattedWhereClause = ''
+    if (subject) {
+      whereClause.push(`dt.subject LIKE '%${subject}%'`);
+    }
+    if (quizId) {
+      whereClause.push(`dt.quiz_id = ${quizId}`);
+    }
+    if (userId) {
+      whereClause.push(`dt.user_id = ${userId}`);
+    }
+    if (dateCreated) {
+      whereClause.push(`dt.created_at LIKE '${dateCreated}%'`);
+    }
+
+    if (whereClause.length > 0) {
+      formattedWhereClause = 'WHERE ' + whereClause.join(" AND ")
+    }
+
+    return await this.db.executeQuery(
+      `SELECT dt.subject, dt.thread_id, dt.content, dt.quiz_id, dt.user_id as thread_starter, 
+      (SELECT COUNT(*) FROM discussion_post dp WHERE dp.thread_id = dt.thread_id) as replies,
+      COALESCE(
+      (SELECT dp.created_at FROM discussion_post dp WHERE dp.thread_id = dt.thread_id ORDER BY dp.created_at DESC LIMIT 1),
+      (SELECT dt.created_at FROM discussion_thread dt1 WHERE dt1.thread_id = dt.thread_id)
+      ) as last_activity
+      FROM discussion_thread dt
+      ${formattedWhereClause}`
+    );
+  }
+
+  async addOne({ subject, description, userId, selectedRelatedQuizId  }) {
     return await this.db.executeQuery(`
       INSERT INTO discussion_thread(subject, content, user_id, quiz_id) 
-      VALUES ('${subject}', '${content}', '${userId}', '${quizId}');
+      VALUES ('${subject}', '${description}', '${userId}', '${selectedRelatedQuizId}');
       `);
   }
 }

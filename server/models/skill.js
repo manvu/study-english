@@ -6,7 +6,7 @@ class SkillModel {
   }
 
   async findAll() {
-    return await this.db.executeQuery(`SELECT * FROM question_type`);
+    return await this.db.executeQuery(`SELECT * FROM quiz_skill`);
   }
 }
 

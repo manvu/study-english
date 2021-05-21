@@ -6,13 +6,25 @@
           <form action="#">
             <input
               type="search"
-              placeholder="Search all forums"
+              placeholder="Search All Threads"
               class="form-control"
+              v-model="searchEntity.subject"
             />
           </form>
           <div class="create__section">
-            <select class="custom-select form-input" id="category">
-              <option>All Quizzes</option>
+            <select
+              class="custom-select form-input"
+              id="category"
+              v-model="searchEntity.quizId"
+            >
+              <option selected value="">All Quizzes</option>
+              <option
+                v-for="quiz in quizzes"
+                :key="quiz.quiz_id"
+                :value="quiz.quiz_id"
+              >
+                {{ `${quiz.quiz_id} - ${quiz.description}` }}
+              </option>
             </select>
           </div>
         </div>
@@ -20,18 +32,52 @@
           <form action="#">
             <input
               type="search"
-              placeholder="Search all forums"
+              placeholder="Created By"
               class="form-control"
             />
           </form>
+          <div class="create__section">
+            <select
+              class="custom-select form-input"
+              id="category"
+              v-model="searchEntity.userId"
+            >
+              <option selected value="">All Users</option>
+              <option
+                v-for="user in users"
+                :key="user.user_id"
+                :value="user.user_id"
+              >
+                {{ `${user.first_name}, ${user.last_name}` }}
+              </option>
+            </select>
+          </div>
         </div>
-
-        <div class="header__menu">
-          <div class="header__menu-btn" data-dropdown-btn="menu">
-            Latest Topics<i class="icon-Menu_Icon"></i>
+        <div class="header__search">
+          <form action="#">
+            <input
+              type="search"
+              placeholder="Date Created"
+              class="form-control"
+            />
+          </form>
+          <div class="create__section">
+            <input
+              type="date"
+              class="form-control"
+              v-model="searchEntity.dateCreated"
+            />
+          </div>
+        </div>
+        <div class="header__search">
+          <div class="form-inline">
+            <button @click="searchThreads" class="btn btn-primary">
+              <font-awesome-icon :icon="faSearch"></font-awesome-icon>
+            </button>
           </div>
         </div>
       </div>
+
       <div class="header__offset-btn">
         <router-link to="create-thread"
           ><img src="./fonts/icons/main/New_Topic.svg" alt="New Topic"
@@ -44,27 +90,33 @@
     <div class="container">
       <div class="nav">
         <div class="create__section">
-          <select class="custom-select" id="category">
-            <option>All Quizzes</option>
+          <select
+            class="custom-select"
+            id="category"
+            v-model="filterEntity.quizId"
+            @change="filter"
+          >
+            <option selected value="">All Quizzes</option>
+            <option
+              v-for="quiz in quizzes"
+              :key="quiz.quiz_id"
+              :value="quiz.quiz_id"
+            >
+              {{ `${quiz.quiz_id} - ${quiz.description}` }}
+            </option>
           </select>
         </div>
         <div class="nav__menu js-dropdown">
-          <div class="nav__select">
-            <div class="btn-select" data-dropdown-btn="menu">Latest</div>
-            <div class="dropdown dropdown--design-01" data-dropdown-list="menu">
-              <ul class="dropdown__catalog">
-                <li><a href="#">Latest</a></li>
-                <li><a href="#">Unread</a></li>
-                <li><a href="#">Rising</a></li>
-                <li><a href="#">Most Liked</a></li>
-                <li><a href="#">Follow Feed</a></li>
-              </ul>
-            </div>
-          </div>
           <ul>
-            <li class="active"><a href="#">Latest</a></li>
-            <li><a href="#">Oldest</a></li>
-            <li><a href="#">Most Replies</a></li>
+            <li :class="sortByLatest">
+              <a href="#" @click="sort('latest')">Latest</a>
+            </li>
+            <li :class="sortByOldest">
+              <a href="#" @click="sort('oldest')">Oldest</a>
+            </li>
+            <li :class="sortByMostReplies">
+              <a href="#" @click="sort('most-replies')">Most Replies</a>
+            </li>
           </ul>
         </div>
       </div>
@@ -76,8 +128,28 @@
           <div class="posts__replies">Replies</div>
           <div class="posts__activity">Last Activity</div>
         </div>
-        <div class="posts__body" v-for="t in threads" :key="t.thread_id">
-          <discussion-forum-thread-item :t="t"></discussion-forum-thread-item>
+        <div v-if="!isLoading">
+          <div class="posts__body" v-for="t in threads" :key="t.thread_id">
+            <discussion-forum-thread-item :t="t"></discussion-forum-thread-item>
+          </div>
+          <div v-if="pagination.totalPages !== null" class="block-27">
+            <ul>
+              <li><span class="page-number" @click="prevPage()">&lt;</span></li>
+              <li
+                :class="{ active: page === pagination.currentPage }"
+                v-for="page in pagination.totalPages"
+                :key="page"
+              >
+                <span class="page-number" @click="specificPage(page)">{{
+                  page
+                }}</span>
+              </li>
+              <li><span class="page-number" @click="nextPage()">&gt;</span></li>
+            </ul>
+          </div>
+        </div>
+        <div v-else>
+          <h1>Loading data...</h1>
         </div>
       </div>
     </div>
@@ -86,27 +158,203 @@
 
 <script>
 import DiscussionForumThreadItem from "./DiscussionForumThreadItem";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { paginator } from "../common/helper";
+import moment from "moment";
+
 export default {
-  components: { DiscussionForumThreadItem },
+  components: { DiscussionForumThreadItem, FontAwesomeIcon },
   data() {
-    return {};
+    return {
+      searchEntity: {
+        subject: "",
+        userId: "",
+        quizId: "",
+        dateCreated: "",
+      },
+      filterEntity: {
+        isFiltered: false,
+        sortBy: "latest",
+        quizId: "",
+      },
+      pagination: {
+        currentPage: 1,
+        totalPages: null,
+        pagesPerPage: 10,
+        nextPage: null,
+        prevPage: null,
+      },
+      isLoading: true,
+      threads: [],
+      originalThreads: [],
+    };
   },
   computed: {
-    threads() {
-      return this.$store.getters["forumStore/getThreads"];
+    quizzes() {
+      console.log(this.$store.getters["forumStore/getQuizzes"]);
+      return this.$store.getters["forumStore/getQuizzes"];
+    },
+    skills() {
+      return this.$store.getters["forumStore/getSkills"];
+    },
+    users() {
+      return this.$store.getters["forumStore/getUsers"];
+    },
+    faSearch() {
+      return faSearch;
+    },
+    sortByLatest() {
+      return { active: this.filterEntity.sortBy === "latest" ? true : false };
+    },
+    sortByOldest() {
+      return { active: this.filterEntity.sortBy === "oldest" ? true : false };
+    },
+    sortByMostReplies() {
+      return {
+        active: this.filterEntity.sortBy === "most-replies" ? true : false,
+      };
     },
   },
   created() {
     this.$store
       .dispatch("forumStore/getDataForDiscussion", {})
       .then((response) => {
-        this.threads;
+        this.originalThreads = this.$store.getters["forumStore/getThreads"];
+        this.threads = this.$store.getters["forumStore/getThreads"];
+        this.paginate()
+        this.isLoading = false;
       });
+  },
+  methods: {
+    paginate(currentPage, pagesPerPage) {
+      debugger
+      const paginated = paginator(
+        this.threads,
+        currentPage || this.pagination.currentPage,
+        pagesPerPage || this.pagination.pagesPerPage
+      );
+
+      this.threads = paginated.data;
+      this.pagination.totalPages = paginated.total_pages;
+      this.pagination.currentPage = paginated.page;
+      this.pagination.prevPage = paginated.pre_page;
+      this.pagination.nextPage = paginated.next_page;
+    },
+    searchThreads() {
+      const data = {
+        userId: this.searchEntity.userId,
+        quizId: this.searchEntity.quizId,
+        subject: this.searchEntity.subject,
+        dateCreated: this.searchEntity.dateCreated,
+      };
+      this.isLoading = true;
+      this.$store
+        .dispatch("forumStore/searchThreads", data)
+        .then((response) => {
+          this.threads = this.$store.getters["forumStore/getThreads"];
+          this.filterEntity.isFiltered = false;
+          this.filterEntity.quizId = ""
+          this.paginate()
+          this.isLoading = false;
+        });
+    },
+    filter() {
+      if (!this.filterEntity.quizId) {
+        this.filterEntity.isFiltered = false;
+        this.originalThreads = this.$store.getters["forumStore/getThreads"];
+        this.threads = this.originalThreads
+      } else {
+        this.filterEntity.isFiltered = true;
+        this.originalThreads = this.$store.getters["forumStore/getThreads"].filter(
+          (thread) => thread.quiz_id === this.filterEntity.quizId
+        );
+        this.threads = this.originalThreads
+        
+        this.paginate();
+      }
+    },
+    sort(sortBy) {
+      this.filterEntity.sortBy = sortBy;
+      if (sortBy === "latest") {
+        this.threads = this.threads.sort(
+          (a, b) =>
+            moment(b.last_activity).format("YYYYMMDD") -
+            moment(a.last_activity).format("YYYYMMDD")
+        );
+      } else if (sortBy === "oldest") {
+        this.threads = this.threads.sort(
+          (a, b) =>
+            moment(a.last_activity).format("YYYYMMDD") -
+            moment(b.last_activity).format("YYYYMMDD")
+        );
+      } else {
+        this.threads = this.threads.sort((a, b) => b.replies - a.replies);
+      }
+    },
+    prevPage() {
+      if (this.pagination.prevPage !== null) {
+        this.changePage(this.pagination.prevPage);
+      }
+    },
+    nextPage() {
+      if (this.pagination.nextPage !== null) {
+        this.changePage(this.pagination.nextPage);
+      }
+    },
+    specificPage(page) {
+      if (page !== null) {
+        this.changePage(page);
+      }
+    },
+    changePage(changeTo) {
+      const paginated = paginator(
+        this.originalThreads,
+        changeTo,
+        this.pagination.pagesPerPage
+      );
+
+      this.threads = paginated.data;
+      this.pagination.currentPage = paginated.page;
+      this.pagination.prevPage = paginated.pre_page;
+      this.pagination.nextPage = paginated.next_page;
+    },
   },
 };
 </script>
 
 <style scoped>
+.page-number {
+  cursor: pointer;
+}
+
+.block-27 ul {
+  padding: 0;
+  margin: 0;
+}
+.block-27 ul li {
+  display: inline-block;
+  margin-bottom: 4px;
+  font-weight: 400;
+}
+.block-27 ul li a,
+.block-27 ul li span {
+  color: gray;
+  text-align: center;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  border: 1px solid #e6e6e6;
+}
+.block-27 ul li.active a,
+.block-27 ul li.active span {
+  background: #4ba1fa;
+  color: #fff;
+  border: 1px solid transparent;
+}
+
 body {
   font-family: "Nunito Sans", sans-serif;
   font-size: 16px;
@@ -2582,7 +2830,7 @@ select {
 @media only screen and (min-width: 1040px) {
   .header__search {
     position: relative;
-    width: 400px;
+    /* width: 400px; */
     padding-left: 30px;
     padding-right: 30px;
     border-right: solid 1px #e9ecee;

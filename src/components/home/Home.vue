@@ -23,6 +23,8 @@
 
 <script>
 import QuizListItem from "./UI/QuizListItem.vue";
+import {paginator} from "../common/helper"
+
 export default {
   components: { QuizListItem },
   computed: {
@@ -33,6 +35,8 @@ export default {
   },
   created() {
     this.$store.dispatch("homeStore/getDataForHome").then(response => {
+      
+
       this.quizzes
     })
   },

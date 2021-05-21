@@ -15,7 +15,7 @@
             class="form-control"
             id="title"
             placeholder="Please add thread subject"
-            v-model="threadTitle"
+            v-model="subject"
             required
           />
         </div>
@@ -33,7 +33,7 @@
               >
                 <option value="none">Please choose a related quiz</option>
                 <option v-for="q in quizzes" :key="q.quiz_id" :value="q.quiz_id">
-                  Quiz {{ q.quiz_id }}
+                  Quiz {{ q.quiz_id }} - {{q.description}}
                 </option>
               </select>
             </div>
@@ -70,11 +70,13 @@
 export default {
   data() {
     return {
-      threadTitle: "",
+      subject: "",
       selectedRelatedQuiz: "none",
       description: "",
       errorMessage: "",
       error: false,
+      isLoading: true,
+      quizzes: []
     };
   },
   methods: {
@@ -88,7 +90,7 @@ export default {
         return;
       }
 
-      if (this.threadTitle.length < 10) {
+      if (this.subject.length < 10) {
         this.error = true;
         this.errorMessage =
           "Thread subject should be longer than 10 characters";
@@ -104,8 +106,9 @@ export default {
       this.error = false;
       this.errorMessage = "";
 
+debugger
       this.$store.dispatch("forumStore/createThread", {
-        threadTitle: this.threadTitle,
+        subject: this.subject,
         selectedRelatedQuizId: this.selectedRelatedQuiz,
         description: this.description
       }).then((response) => {
@@ -118,13 +121,11 @@ export default {
     },
   },
   computed: {
-    quizzes() {
-      return this.$store.getters["quizStore/getQuizList"];
-    },
   },
   created() {
-    this.$store.dispatch("quizStore/getDataForHome").then((response) => {
-      this.quizzes;
+    this.$store.dispatch("forumStore/getDataForDiscussion").then((response) => {
+      this.isLoading = false;
+      this.quizzes = this.$store.getters["forumStore/getQuizzes"];
     });
   },
 };

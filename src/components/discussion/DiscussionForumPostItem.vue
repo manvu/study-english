@@ -49,7 +49,7 @@ import {
   truncate,
   timeSince,
   convertISOToReadableFormat,
-} from "../shared/helper";
+} from "../common/helper";
 
 export default {
   props: ["p"],

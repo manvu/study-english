@@ -6,7 +6,11 @@ class UserModel {
   }
 
   async findAll() {
-    return await this.db.executeQuery("SELECT * FROM user");
+    return await this.db.executeQuery("SELECT user_id, first_name, last_name, CONCAT(first_name, ' ', last_name) as full_name FROM user");
+  }
+
+  async findAllTeachers() {
+    return await this.db.executeQuery("SELECT * FROM user WHERE role_id = 1");
   }
 
   async findAllStudents() {

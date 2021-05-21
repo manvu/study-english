@@ -6,7 +6,7 @@ class QuizModel {
   }
 
   async findAll() {
-    return await this.db.executeQuery("SELECT * FROM discussion_post");
+    return await this.db.executeQuery("SELECT * FROM quiz");
   }
 
   async findDetailed(quizId) {
