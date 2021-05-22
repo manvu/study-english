@@ -88,10 +88,11 @@ const teacherStore = {
     getQuizForEdit(context, payload) {
       const quizId = payload.quizId;
 
-      return axios(API_LIST.getQuizById(quizId))
+      return axios(API_LIST.getQuizForEdit(quizId))
         .then((response) => {
           if (!response.data.error) {
-            let questions = response.data.questions;
+            
+            const questions = response.data.response;
             payload.questions = questions;
             context.commit("getQuizForEdit", payload);
           }
@@ -143,10 +144,10 @@ const teacherStore = {
         });
     },
     getQuestionForEdit(context, payload) {
-      return axios(API_LIST.getQuestionById(payload.questionId))
+      return axios(API_LIST.getQuestionForEdit(payload.questionId))
         .then((response) => {
           if (!response.data.error) {
-            let question = response.data.question;
+            let question = response.data.response;
             payload.question = question;
             context.commit("getQuestionForEdit", payload);
           }

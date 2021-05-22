@@ -5,16 +5,17 @@ const STRINGS = {
     REGISTERING_USER_FAILED: "Registering user failed.",
     YOUR_EMAIL_ALREADY_EXISTS: "Your email is already taken.",
     NO_SUCH_USER_EXISTS: "No such user exists.",
-    PLEASE_CHECK_YOUR_PASSWORD: "Please check your password.",
+    PLEASE_CHECK_YOUR_PASSWORD: "Incorrect password. Please check your password.",
     PASSWORD_MUST_BE_AT_LEAST: (characters = 8) => `password must be at least ${characters} characters.`,
-    PLEASE_CHECK_YOUR_EMAIL: "Please check your email.",
+    PLEASE_CHECK_YOUR_EMAIL: "Email is not associated with any user. Please check your email.",
+    EMAIL_IS_NOT_IN_CORRECT_FORMAT: "Email is not in correct format. Please check your email.",
     REGISTERING_USER_SUCCEEDED: "Registering user succeeded.",
     ACCESS_DENIED: "Access denied.",
     ACCESS_GRANTED: "Access granted.",
     UNKNOWN_PERMISSION: "Unknown permission.",
     ACCESS_DENIED_MESSAGE: "You do not have the privilege to perform this action.",
     ERROR_OCCURRED: "Error occurred.",
-    CANNOT_REGISTER_USER_WITH_EMAIL: (email = "$email") => `Cannot register user with email ${email}`,
+    CANNOT_REGISTER_USER_WITH_EMAIL: (email = "$email") => `Email address is already taken - cannot register user with email ${email}`,
     THREAD_TITLE_MUST_BE_AT_LEAST_20_CHARACTERS: "Thread title must be at least 20 characters.",
     CONTENT_MUST_BE_AT_LEAST_30_CHARACTERS: "Content must be at least 30 characters.",
     THREAD_DESCRIPTION_CANNOT_BE_LEFT_BLANK: "Thread description cannot be left blank.",
@@ -38,7 +39,9 @@ const STRINGS = {
     CANNOT_UPDATE_RATING: "Cannot update rating.",
     POST_CONTENT_CANNOT_BE_LEFT_BLANK: "Post content cannot be left blank.",
     CANNOT_SAVE_USER_INFO: "Cannot save user info.",
-    ERROR_LOADING_TEACHER_PAGE: "Error loading teacher page."
+    ERROR_LOADING_TEACHER_PAGE: "Error loading teacher page.",
+    PLEASE_CHECK_YOUR_FIRST_NAME: "Please check your first name.",
+    PLEASE_CHECK_YOUR_LAST_NAME: "Please check your last name.",
 }
 
 module.exports = STRINGS

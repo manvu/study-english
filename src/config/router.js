@@ -1,18 +1,18 @@
 import { createRouter, createWebHistory } from "vue-router";
-import NotFound from "./components/nav/NotFound.vue";
-import Home from "./components/home/Home";
-import LoginPage from "./components/auth/LoginPage";
-import ForgotPassword from "./components/auth/ForgotPassword";
-import LogoutPage from "./components/auth/LogoutPage";
-import RegisterPage from "./components/auth/RegisterPage";
-import QuizPage from "./components/quiz/QuizPage";
-import QuizResult from "./components/quiz/QuizResult";
-import DiscussionForum from "./components/discussion/DiscussionForum";
-import ThreadView from "./components/discussion/ThreadView";
-import CreateThread from "./components/discussion/CreateThread";
-import TeacherPage from "./components/teacher/TeacherPage";
-import StudentStatistics from "./components/statistics/StudentStatistics";
-import AccountSettings from "./components/settings/AccountSettings";
+import NotFound from "../components/nav/NotFound.vue";
+import Home from "../components/home/Home";
+import LoginPage from "../components/auth/LoginPage";
+import ForgotPassword from "../components/auth/ForgotPassword";
+import LogoutPage from "../components/auth/LogoutPage";
+import RegisterPage from "../components/auth/RegisterPage";
+import QuizPage from "../components/quiz/QuizPage";
+import QuizResult from "../components/quiz/QuizResult";
+import DiscussionForum from "../components/discussion/DiscussionForum";
+import ThreadView from "../components/discussion/ThreadView";
+import CreateThread from "../components/discussion/CreateThread";
+import TeacherPage from "../components/teacher/TeacherPage";
+import StudentStatistics from "../components/statistics/StudentStatistics";
+import AccountSettings from "../components/settings/AccountSettings";
 
 const router = createRouter({
   mode: "history",

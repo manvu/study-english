@@ -12,7 +12,7 @@ const UserAnswerModel = new (require("../../models/user_answer"))();
 const CorrectAnswerModel = new (require("../../models/correct_answer"))();
 
 async function markFavorite({ quizId, userId }) {
-  let favorite = await FavoriteModel.addOne(quizId, userId);
+  const favorite = await FavoriteModel.addOne(quizId, userId);
 
   if (!favorite.error && favorite.response.affectedRows === 1) {
     return sendSuccess(null);
@@ -154,9 +154,9 @@ module.exports = {
     let status = await FavoriteModel.findOne(quizId, userId);
 
     if (!status.error) {
-      if (status.response[0].favorite == 1) {
+      if (status.response[0].favorite === 0) {
         return markFavorite(data);
-      } else if (status.response[0].favorite == 0) {
+      } else if (status.response[0].favorite === 1) {
         return unmarkFavorite(data);
       }
     } else {
@@ -169,11 +169,11 @@ module.exports = {
       return sendFailure(STRINGS.INVALID_QUIZ_ID);
     }
 
-    let rating = await RatingModel.findOne(quizId, userId);
+    const ratingFound = await RatingModel.findOne(quizId, userId);
 
-    if (!rating.error) {
+    if (!ratingFound.error) {
       const data = { quizId, userId, ratingGiven };
-      if (rating.response.length === 0) {
+      if (ratingFound.response.length === 0) {
         const rating = await RatingModel.addOne(data);
 
         if (!rating.error && rating.response.affectedRows === 1) {

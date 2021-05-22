@@ -228,7 +228,7 @@ export default {
   },
   methods: {
     paginate(currentPage, pagesPerPage) {
-      debugger
+      
       const paginated = paginator(
         this.threads,
         currentPage || this.pagination.currentPage,

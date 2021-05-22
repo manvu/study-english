@@ -8,16 +8,20 @@ router.post("/register", async (req, res) => {
   const gender = req.body.gender || "U";
   const profilePictureId = req.body.profilePictureId || 1;
   const roleId = "2";
+  const firstName = req.body.firstName
+  const lastName = req.body.lastName
 
   const registerEntity = await authController.register({
     email,
     password,
     gender,
     profilePictureId,
-    roleId
+    roleId,
+    firstName,
+    lastName
   });
 
-  res.json(registerEntity)
+  res.status(200).json(registerEntity);
 });
 
 router.post("/login", async (req, res) => {
@@ -29,7 +33,15 @@ router.post("/login", async (req, res) => {
     password,
   });
 
-  res.json(loginEntity);
+  res.status(200).json(loginEntity);
+});
+
+router.post("/forgotpassword", async (req, res) => {
+  const email = req.body.email;
+
+  const passwordReset = await authController.passwordReset({ email });
+
+  res.status(200).json(passwordReset);
 });
 
 module.exports = router;

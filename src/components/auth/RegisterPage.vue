@@ -1,40 +1,48 @@
 <template>
   <div id="bg">
     <div class="module">
-      <!-- <ul>
-        <li class="tab activeTab">
-          <img src="https://i.imgur.com/Fk1Urva.png" alt="" class="icon" />
-        </li>
-        <li class="tab">
-          <img src="https://i.imgur.com/ZsRgIDD.png" alt="" class="icon" />
-        </li>
-        <li class="tab">
-          <img src="https://i.imgur.com/34Q50wo.png" alt="" class="icon" />
-        </li>
-        <li class="tab">
-          <img src="https://i.imgur.com/LCCJ06E.png" alt="" class="icon" />
-        </li>
-      </ul> -->
-
       <form @submit.prevent="register" class="form" autocomplete="on">
         <h2 class="title">REGISTER YOUR ACCOUNT</h2>
-        <input
+          <p class="mb-3" v-if="error">
+            <b>Please correct the following error(s):</b>
+            <ul>
+              <li class="error-message">{{ error }}</li>
+            </ul>
+          </p>
+          <input
           type="text"
+          placeholder="First Name"
+          class="textbox"
+          v-model="firstName"
+          autocomplete="on"
+        />
+         <input
+          type="text"
+          placeholder="Last Name"
+          class="textbox"
+          v-model="lastName"
+          autocomplete="on"
+        />
+        <input
+          type="email"
           placeholder="Email Address"
           class="textbox"
           v-model="email"
+          autocomplete="on"
         />
         <input
           type="password"
           placeholder="Password"
           class="textbox"
           v-model="password"
+          autocomplete="on"
         />
         <input
           type="password"
           placeholder="Confirm Password"
           class="textbox"
           v-model="confirmPassword"
+          autocomplete="off"
         />
         <input type="submit" value="Register" class="button" />
         <router-link to="/login">Already signed up? Log in</router-link>
@@ -48,8 +56,11 @@ export default {
   data() {
     return {
       email: "",
+      firstName: "",
+      lastName: "",
       password: "",
       confirmPassword: "",
+      error: "",
     };
   },
   setup() {
@@ -57,22 +68,31 @@ export default {
   },
   methods: {
     register() {
-      this.$store.dispatch("authStore/register", {
-        email: this.email,
-        password: this.password,
-      });
-
-      const isAuthenticated = this.$store.getters['authStore/isAuthenticated']
-
-      if (isAuthenticated) {
-        this.$router.push({ name: "settings" });
-      }
+      this.$store
+        .dispatch("authStore/register", {
+          email: this.email,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          password: this.password,
+        })
+        .then((response) => {
+          if (response === "OK") {
+            this.$router.push({ name: "home" });
+            window.location.reload();
+          } else {
+            this.error = response;
+          }
+        });
     },
   },
 };
 </script>
 
 <style scoped>
+.error-message {
+  color: red;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -95,7 +115,7 @@ a {
 #bg {
   position: relative;
   top: 20px;
-  height: 650px;
+  height: 900px;
   width: 650px;
   /* background: url("https://i.imgur.com/3eP9Z4O.png") center no-repeat; */
   background-size: cover;

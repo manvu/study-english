@@ -30,6 +30,10 @@ const quizStore = {
     },
     searchThreads(state, payload) {
       state.threads = payload
+    }, 
+    deletePost(state, payload) {
+      const f = state.currentThread.posts.filter(p => p.post_id !== payload.post_id)
+      state.currentThread.posts = f
     }
   },
   actions: {
@@ -73,7 +77,6 @@ const quizStore = {
     createThread(context, payload) {
       return axios(API_LIST.createThread(payload))
         .then((response) => {
-          debugger
           if (!response.data.error) {
             let newThreadId = response.data.response.newThreadId;
             payload.newThreadId = newThreadId;
@@ -126,6 +129,23 @@ const quizStore = {
         this.loading = false;
       });
     },
+    deletePost(context, payload) {
+      return axios(API_LIST.deletePost(payload.post_id))
+      .then((response) => {
+        if (!response.data.error) {
+          context.commit("deletePost", payload);
+        }
+
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.errored = true;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+    }
   },
   getters: {
     // getDataForDiscussion(state) {

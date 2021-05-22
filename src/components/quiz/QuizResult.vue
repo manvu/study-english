@@ -39,7 +39,7 @@ import QuizResultItem from './QuizResultItem'
 export default {
   components: {QuizResultItem},
   created() {
-    debugger
+    
     this.result = this.$store.getters["quizStore/getQuizResult"];
   },
 };

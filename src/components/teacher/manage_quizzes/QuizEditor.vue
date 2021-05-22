@@ -137,7 +137,7 @@ export default {
       quizId: this.mode === "create" ? " New " : this.quiz.quiz_id,
       courseName: this.mode === "create" ? "" : this.quiz.course_name,
       isActive:
-        this.mode === "create" ? "yes" : this.quiz.is_active ? "yes" : no,
+        this.mode === "create" ? "yes" : this.quiz.is_active ? "yes" : "no",
       timeAllowed: this.mode === "create" ? 30 : this.quiz.time_allowed,
       description: this.mode === "create" ? '' : this.quiz.description,
       questions: this.mode === "create" ? [] : this.quiz.questions,
@@ -164,6 +164,7 @@ export default {
           .dispatch("teacherStore/getQuestionForEdit", { questionId })
           .then((response) => {
             this.showQuestionEditor = true;
+            
             this.editQuestion;
           });
       } else {
@@ -199,6 +200,7 @@ export default {
     },
   },
   created() {
+    
     this.allSkills = this.$store.getters["teacherStore/getAllSkills"];
   },
 };

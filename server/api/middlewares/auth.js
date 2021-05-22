@@ -15,13 +15,13 @@ module.exports = (req, res, next) => {
       
       if (err) {
         if (err.name === "TokenExpiredError") {
-          return res.sendStatus(403, "TokenExpiredError");
+          return res.status(403).send({ error: err.name });
         }
         if (guestAccessibleURLs[req.originalUrl]) {
           next()
           return
         } 
-        return res.sendStatus(403);
+        return res.status(403).send({ error: err.name });
       }
 
       req.user = { id: decoded.id, isTeacher: decoded.isTeacher };

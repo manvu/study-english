@@ -53,6 +53,8 @@ router.put("/:id/favorite", authMiddleware, async (req, res) => {
   let quizId = req.params.id;
   const userId = req.user.id;
 
+  debugger;
+
   const rating = await quizzesController.toggleFavorite({ quizId, userId });
 
   res.status(200).json(rating);

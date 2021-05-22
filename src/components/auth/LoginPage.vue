@@ -3,21 +3,27 @@
     <div class="module">
       <form @submit.prevent="authenticate" class="form" autocomplete="on">
         <h2 class="title">LOG IN YOUR ACCOUNT</h2>
+          <p class="mb-3" v-if="error">
+            <b>Please correct the following error(s):</b>
+            <ul>
+              <li class="error-message">{{ error }}</li>
+            </ul>
+          </p>
         <input
           type="text"
           placeholder="Email Address"
           class="textbox"
           v-model="email"
+          required
         />
         <input
           type="password"
           placeholder="Password"
           class="textbox"
           v-model="password"
+          required
         />
         <input type="submit" value="Login" class="button green-button" />
-        <!-- <input type="checkbox" name="remember-password"/> 
-        <label for="remember-password">Remember passwored</label> -->
         <router-link to="/forgotPassword">
           <input
             type="button"
@@ -37,6 +43,7 @@ export default {
     return {
       email: "",
       password: "",
+      error: "",
     };
   },
   setup() {
@@ -48,22 +55,40 @@ export default {
       return re.test(String(email).toLowerCase());
     },
     authenticate() {
-      console.log(`Email is ${this.email} and password is ${this.password}`);
+      const validated = this.validateEmail(this.email);
 
-      this.$store.dispatch("authStore/login", {
-        email: this.email,
-        password: this.password,
-      }).then(response => {
-        this.$router.push({ name: "home" });
-      })
+      if (!validated) {
+        this.error = "Invalid email.";
+        return;
+      }
 
-      
+      if (!this.password || this.password.length < 8) {
+        this.error = "Password must be at least 8 characters.";
+        return;
+      }
+
+      this.$store
+        .dispatch("authStore/login", {
+          email: this.email,
+          password: this.password,
+        })
+        .then((response) => {
+          if (response === "OK") {
+            this.$router.push({ name: "home" });
+          } else {
+            this.error = response;
+          }
+        });
     },
   },
 };
 </script>
 
 <style scoped>
+.error-message {
+  color: red;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -86,13 +111,11 @@ a {
 #bg {
   position: relative;
   top: 20px;
-  height: 600px;
+  height: 700px;
   width: 800px;
-  /* background: url("https://i.imgur.com/3eP9Z4O.png") center no-repeat; */
   background-size: cover;
   margin-left: auto;
   margin-right: auto;
-  /* border: #fff 15px solid; */
 }
 
 .module {

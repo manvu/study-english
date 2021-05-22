@@ -44,4 +44,18 @@ module.exports = {
       return sendFailure(STRINGS.CANNOT_LOAD_POST);
     }
   },
+
+  deletePost: async (id) => {
+    if (!id || id < 1) {
+      return sendFailure(STRINGS.INVALID_POST_ID)
+    }
+
+    let post = await PostModel.deleteOne(id);
+
+    if (!post.error) {
+      return sendSuccess(post.response);
+    } else {
+      return sendFailure(STRINGS.CANNOT_LOAD_POST);
+    }
+  },
 };

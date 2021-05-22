@@ -35,4 +35,11 @@ module.exports = {
     }
     return true;
   },
+  validateName: function(name) {
+    if (name) {
+      return true
+    } else {
+      return false
+    }
+  }
 };

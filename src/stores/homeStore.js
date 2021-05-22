@@ -70,7 +70,7 @@ const quizStore = {
         });
     },
     updateRating(context, payload) {
-      return axios(API_LIST.updateRating(payload.id))
+      return axios(API_LIST.updateRating(payload.id, payload))
         .then((response) => {
           if (!response.data.error) {
             payload.ratingGiven = payload.updateRating

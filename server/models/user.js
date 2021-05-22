@@ -30,10 +30,10 @@ class UserModel {
     );
   }
 
-  async addOne(email, passwordHash, passwordSalt, gender, roleId, profilePictureId ) {
+  async addOne(email, passwordHash, passwordSalt, gender, roleId, profilePictureId, firstName, lastName) {
     return await this.db
-      .executeQuery(`INSERT INTO user(email, password_hash, password_salt, gender, role_id, profile_picture_id)  
-    VALUES('${email}', '${passwordHash}', '${passwordSalt}', '${gender}', '${roleId}', '${profilePictureId}')`);
+      .executeQuery(`INSERT INTO user(email, password_hash, password_salt, gender, role_id, profile_picture_id, first_name, last_name)  
+    VALUES('${email}', '${passwordHash}', '${passwordSalt}', '${gender}', '${roleId}', '${profilePictureId}', '${firstName}', '${lastName}')`);
   }
 
   async saveOne(userId, email, firstName, lastName, passwordHash, passwordSalt) {

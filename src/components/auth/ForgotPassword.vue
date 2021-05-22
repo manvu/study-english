@@ -10,8 +10,6 @@
           v-model="email"
         />
         <input type="submit" value="Resend Email" class="button green-button" />
-        <!-- <input type="checkbox" name="remember-password"/> 
-        <label for="remember-password">Remember passwored</label> -->
       </form>
     </div>
   </div>
@@ -22,7 +20,6 @@ export default {
   data() {
     return {
       email: "",
-      password: "",
     };
   },
   setup() {
@@ -34,8 +31,12 @@ export default {
       return re.test(String(email).toLowerCase());
     },
     forgotPassword() {
-      let isEmailValid = this.validateEmail(this.email)
-      console.log(isEmailValid)
+      const validated = this.validateEmail(this.email)
+      if (validated === true) {
+        this.$store.dispatch("authStore/forgotPassword", { email: this.email}).then(response => {
+
+        })
+      }
     },
   },
 };

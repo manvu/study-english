@@ -29,7 +29,8 @@
           <h2>{{ description }}</h2>
           <a href="" class="discussion-title">Discussion</a>
           <button @click="navigateToQuiz" v-if="completedChallenges > 0" class="btn">Continue</button>
-          <button @click="navigateToQuiz" v-else class="btn">Start</button>
+          <button @click="navigateToQuiz" v-if="numberOfQuestions > 0 && completedChallenges === 0" class="btn">Start</button>
+          <button @click="navigateToQuiz" v-else class="btn" disabled>Start</button>
         </div>
       </div>
     </div>

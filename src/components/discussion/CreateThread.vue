@@ -106,7 +106,7 @@ export default {
       this.error = false;
       this.errorMessage = "";
 
-debugger
+
       this.$store.dispatch("forumStore/createThread", {
         subject: this.subject,
         selectedRelatedQuizId: this.selectedRelatedQuiz,

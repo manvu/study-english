@@ -52,6 +52,7 @@ export default {
       return str.length > n ? str.substr(0, n - 1) + "&hellip;" : str;
     },
     editQuestion: function (questionId) {
+      debugger
       this.openQuestionEditorModal(questionId, "edit");
     },
   },

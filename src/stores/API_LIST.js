@@ -2,6 +2,7 @@ const baseURL = process.env.VUE_APP_SERVER_ENDPOINT;
 
 export default {
   login: (body) => ({ method: "post", url: "auth/login", baseURL, data: body }),
+  forgotPassword: (body) => ({ method: "post", url: "auth/forgotpassword", baseURL, data: body }),
   register: (body) => ({
     method: "post",
     url: "auth/register",
@@ -22,6 +23,7 @@ export default {
     data: body,
   }),
   createPost: (body) => ({ method: "post", url: "posts", baseURL, data: body }),
+  deletePost: (id) => ({ method: "delete", url: `posts/${id}`, baseURL}),
   createQuiz: (body) => ({
     method: "post",
     url: "quizzes",
@@ -68,6 +70,18 @@ export default {
   getQuizById: (quizId) => ({
     method: "post",
     url: `quizzes/start/${quizId}`,
+    baseURL,
+  }),
+
+  getQuizForEdit: (quizId) => ({
+    method: "get",
+    url: `teacher/quizzes/${quizId}`,
+    baseURL,
+  }),
+
+  getQuestionForEdit: (questionId) => ({
+    method: "get",
+    url: `teacher/questions/${questionId}`,
     baseURL,
   }),
 

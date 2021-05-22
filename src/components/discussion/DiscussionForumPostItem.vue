@@ -37,6 +37,9 @@
             <button type="button" class="btn btn-primary">
               <i class="ion ion-md-create"></i>&nbsp; Reply
             </button>
+            <button @click="deletePost" v-if="isTeacher" type="button" class="btn btn-danger">
+              <i class="ion ion-md-create"></i>&nbsp; Delete
+            </button>
           </div>
         </div>
       </div>
@@ -63,11 +66,24 @@ export default {
     displayedPostPostedAt() {
       return this.timeSince(new Date(this.p.posted_at));
     },
+    isTeacher() {
+      return this.$store.getters["authStore/isTeacher"];
+    },
   },
   created() {
     this.truncate = truncate;
     this.timeSince = timeSince;
     this.convertISOToReadableFormat = convertISOToReadableFormat;
+  },
+  methods: {
+    deletePost() {
+      debugger
+      this.$store
+        .dispatch("forumStore/deletePost", { post_id: this.p.post_id })
+        .then((response) => {
+
+        });
+    },
   },
 };
 </script>

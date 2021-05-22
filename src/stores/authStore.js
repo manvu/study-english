@@ -6,15 +6,21 @@ const authStore = {
   state() {
     return {
       isAuthenticated: !!localStorage.getItem("token"),
-      isTeacher: !!localStorage.getItem("isTeacher"),
-      authenticatedUser: localStorage.getItem("firstName") !== "null" ? localStorage.getItem("firstName") : localStorage.getItem("email"),
+      isTeacher: localStorage.getItem("isTeacher") === "true",
+      authenticatedUser:
+        localStorage.getItem("firstName") !== "null"
+          ? localStorage.getItem("firstName")
+          : localStorage.getItem("email"),
     };
   },
   mutations: {
     login(state, payload) {
       state.isAuthenticated = !!localStorage.getItem("token");
-      state.isTeacher = !!localStorage.getItem("isTeacher");
-      state.authenticatedUser = localStorage.getItem("firstName") || localStorage.getItem("email");
+      state.isTeacher = localStorage.getItem("isTeacher") === "true";
+      state.authenticatedUser =
+        localStorage.getItem("firstName") !== "null"
+          ? localStorage.getItem("firstName")
+          : localStorage.getItem("email");
     },
     register(state, payload) {},
     signOut(state, payload) {
@@ -27,17 +33,24 @@ const authStore = {
     login(context, payload) {
       return axios(API_LIST.login(payload))
         .then((response) => {
-          debugger
-          const {token, email, firstName, lastName, isTeacher} = response.data.response 
           if (!response.data.error) {
+            const {
+              token,
+              email,
+              firstName,
+              lastName,
+              isTeacher,
+            } = response.data.response;
+
             localStorage.setItem("token", token);
             localStorage.setItem("email", email);
             localStorage.setItem("firstName", firstName);
             localStorage.setItem("lastName", lastName);
             localStorage.setItem("isTeacher", isTeacher);
+            return "OK";
+          } else {
+            return response.data.error;
           }
-
-          console.log(response);
         })
         .catch((error) => {
           console.log(error);
@@ -49,26 +62,56 @@ const authStore = {
         });
     },
     register(context, payload) {
-      axios(API_LIST.register(payload)).then((response) => {
-        
-        if (!response.data.error) {
-          localStorage.setItem("email", payload.email);
-        }
+      return axios(API_LIST.register(payload))
+        .then((response) => {
+          if (!response.data.error) {
+            const {
+              token,
+              email,
+              firstName,
+              lastName,
+              isTeacher,
+            } = response.data.response;
 
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-        this.errored = true;
-      })
-      .finally(() => {
-        this.loading = false;
-        context.commit("register", payload);
-      });
+            localStorage.setItem("token", token);
+            localStorage.setItem("email", email);
+            localStorage.setItem("firstName", firstName);
+            localStorage.setItem("lastName", lastName);
+            localStorage.setItem("isTeacher", isTeacher);
+
+            return "OK";
+          } else {
+            return response.data.error;
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+          context.commit("register", payload);
+        });
     },
     signOut(context, payload) {
       localStorage.clear();
       context.commit("signOut", payload);
+    },
+    forgotPassword(context, payload) {
+      return axios(API_LIST.forgotPassword(payload))
+        .then((response) => {
+          if (!response.data.error) {
+          }
+
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.isLoading = false;
+        });
     },
   },
   getters: {
