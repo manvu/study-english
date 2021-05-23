@@ -69,11 +69,19 @@ export default {
   },
   methods: {
     vote(starScore) {
-      this.$store
-        .dispatch("homeStore/updateRating", { id: this.id, ratingGiven: starScore })
-        .then((response) => {
-          this.voted = true;
-        });
+      const isAuthenticated = this.$store.getters["authStore/isAuthenticated"];
+      if (isAuthenticated) {
+        this.$store
+          .dispatch("homeStore/updateRating", {
+            id: this.id,
+            ratingGiven: starScore,
+          })
+          .then((response) => {
+            this.voted = true;
+          });
+      } else {
+        
+      }
     },
   },
 };

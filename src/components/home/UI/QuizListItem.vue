@@ -25,12 +25,35 @@
               {{ completedChallenges + "/" + numberOfQuestions }} Challenges
             </span>
           </div>
-          <h6>{{ skill_description }}</h6>
-          <h2>{{ description }}</h2>
-          <a href="" class="discussion-title">Discussion</a>
-          <button @click="navigateToQuiz" v-if="completedChallenges > 0" class="btn">Continue</button>
-          <button @click="navigateToQuiz" v-if="numberOfQuestions > 0 && completedChallenges === 0" class="btn">Start</button>
-          <button @click="navigateToQuiz" v-else class="btn" disabled>Start</button>
+
+          <h5>
+            <span
+              class="badge badge-pill"
+              :class="badgeClass"
+              >{{ skill_description }}</span
+            >
+          </h5>
+          <h4>{{ description }}</h4>
+          <a @click="navigateToDiscussion" href="" class="discussion-title"
+            >Discussion</a
+          >
+          <button
+            @click="navigateToQuiz"
+            v-if="completedChallenges > 0"
+            class="btn"
+          >
+            Continue
+          </button>
+          <button
+            @click="navigateToQuiz"
+            v-if="numberOfQuestions > 0 && completedChallenges === 0"
+            class="btn"
+          >
+            Start
+          </button>
+          <button @click="navigateToQuiz" v-else class="btn" disabled>
+            Start
+          </button>
         </div>
       </div>
     </div>
@@ -56,10 +79,22 @@ export default {
     "averageRating",
     "ratingCount",
     "completedChallenges",
-    "favorite"
+    "favorite",
   ],
   components: { QuizListItemRating, QuizListItemFavorite },
   computed: {
+    badgeClass() {
+      const badges = {
+        1: "secondary",
+        2: "primary",
+        3: "success",
+        4: "danger",
+        5: "warning",
+        6: "info",
+      };
+      
+      return `badge-${badges[this.skill_id]}`
+    },
     progressBar() {
       return {
         width: (this.completedChallenges / this.numberOfQuestions) * 100 + "%",
@@ -73,9 +108,18 @@ export default {
   },
   methods: {
     navigateToQuiz() {
-      this.$router.push({name: 'quizzes.index', params: { id: this.quiz_id }})
-    }
-  }
+      this.$router.push({
+        name: "quizzes.index",
+        params: { id: this.quiz_id },
+      });
+    },
+    navigateToDiscussion() {
+      this.$router.push({
+        name: "discussion.index",
+        query: { quizid: this.quiz_id },
+      });
+    },
+  },
 };
 </script>
 

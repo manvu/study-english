@@ -46,14 +46,66 @@
         </div>
       </div>
     </div>
-
+    <div v-if="pagination.totalPages !== null && thread.posts.length > 0" class="block-27 text-right">
+      <ul>
+        <li><span class="page-number" @click="prevPage()">&lt;</span></li>
+        <li
+          :class="{ active: page === pagination.currentPage }"
+          v-for="page in pagination.totalPages"
+          :key="page"
+        >
+          <span class="page-number" @click="specificPage(page)">{{
+            page
+          }}</span>
+        </li>
+        <li><span class="page-number" @click="nextPage()">&gt;</span></li>
+      </ul>
+      <p class="font-italic pagination-caption">
+        Showing
+        <span class="badge badge-pill badge-secondary">{{
+          thread.posts.length
+        }}</span>
+        out of
+        <span class="badge badge-pill badge-secondary">{{
+          thread.originalPosts.length
+        }}</span>
+        posts in total
+      </p>
+    </div>
     <discussion-forum-post-item
       v-for="p in thread.posts"
       :key="p.post_id"
       :p="p"
     >
     </discussion-forum-post-item>
+    <div v-if="pagination.totalPages !== null && thread.posts.length > 0" class="block-27 text-right">
+      <ul>
+        <li><span class="page-number" @click="prevPage()">&lt;</span></li>
+        <li
+          :class="{ active: page === pagination.currentPage }"
+          v-for="page in pagination.totalPages"
+          :key="page"
+        >
+          <span class="page-number" @click="specificPage(page)">{{
+            page
+          }}</span>
+        </li>
+        <li><span class="page-number" @click="nextPage()">&gt;</span></li>
+      </ul>
+      <p class="font-italic pagination-caption">
+        Showing
+        <span class="badge badge-pill badge-secondary">{{
+          thread.posts.length
+        }}</span>
+        out of
+        <span class="badge badge-pill badge-secondary">{{
+          thread.originalPosts.length
+        }}</span>
+        posts in total
+      </p>
+    </div>
   </div>
+
   <post-reply :threadId="thread.thread_id"></post-reply>
 </template>
 
@@ -65,13 +117,25 @@ import {
   timeSince,
   convertISOToReadableFormat,
 } from "../common/helper";
+import { paginator } from "../common/helper";
 
 export default {
   components: { PostReply, DiscussionForumPostItem },
+  data() {
+    return {
+      thread: {
+        originalPosts: [],
+      },
+      pagination: {
+        currentPage: 1,
+        totalPages: null,
+        pagesPerPage: 10,
+        nextPage: null,
+        prevPage: null,
+      },
+    };
+  },
   computed: {
-    thread() {
-      return this.$store.getters["forumStore/getCurrentThread"];
-    },
     displayedMemberSince() {
       if (this.thread.member_since) {
         return this.convertISOToReadableFormat(
@@ -94,13 +158,88 @@ export default {
     this.$store
       .dispatch("forumStore/getDataForDiscussionThread", { threadId })
       .then((response) => {
-        this.thread;
+        this.thread = this.$store.getters["forumStore/getCurrentThread"];
+        this.thread.originalPosts = this.thread.posts;
+        this.paginate();
       });
+  },
+  methods: {
+    paginate(currentPage, pagesPerPage) {
+      const paginated = paginator(
+        this.thread.posts,
+        currentPage || this.pagination.currentPage,
+        pagesPerPage || this.pagination.pagesPerPage
+      );
+
+      this.thread.posts = paginated.data;
+      this.pagination.totalPages = paginated.total_pages;
+      this.pagination.currentPage = paginated.page;
+      this.pagination.prevPage = paginated.pre_page;
+      this.pagination.nextPage = paginated.next_page;
+    },
+    prevPage() {
+      if (this.pagination.prevPage !== null) {
+        this.changePage(this.pagination.prevPage);
+      }
+    },
+    nextPage() {
+      if (this.pagination.nextPage !== null) {
+        this.changePage(this.pagination.nextPage);
+      }
+    },
+    specificPage(page) {
+      if (page !== null) {
+        this.changePage(page);
+      }
+    },
+    changePage(changeTo) {
+      const paginated = paginator(
+        this.thread.originalPosts,
+        changeTo,
+        this.pagination.pagesPerPage
+      );
+
+      this.thread.posts = paginated.data;
+      this.pagination.currentPage = paginated.page;
+      this.pagination.prevPage = paginated.pre_page;
+      this.pagination.nextPage = paginated.next_page;
+    },
   },
 };
 </script>
 
 <style scoped>
+.page-number {
+  cursor: pointer;
+}
+
+.block-27 ul {
+  padding: 0;
+  margin: 0;
+}
+.block-27 ul li {
+  display: inline-block;
+  margin-bottom: 4px;
+  font-weight: 400;
+}
+.block-27 ul li a,
+.block-27 ul li span {
+  color: gray;
+  text-align: center;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  border: 1px solid #e6e6e6;
+}
+.block-27 ul li.active a,
+.block-27 ul li.active span {
+  background: #2a265f;
+  color: #fff;
+  border: 1px solid transparent;
+}
+
 .mt-100 {
   margin-top: 100px;
 }

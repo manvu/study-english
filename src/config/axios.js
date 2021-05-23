@@ -11,7 +11,7 @@ axios.interceptors.response.use(
     return response;
   },
   function(error) {
-    debugger;
+    ;
     if (
       error.response.status === 403 &&
       error.response.data.error === "TokenExpiredError"

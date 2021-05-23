@@ -132,7 +132,10 @@
           <div class="posts__body" v-for="t in threads" :key="t.thread_id">
             <discussion-forum-thread-item :t="t"></discussion-forum-thread-item>
           </div>
-          <div v-if="pagination.totalPages !== null" class="block-27">
+          <div
+            v-if="pagination.totalPages !== null"
+            class="block-27 text-center"
+          >
             <ul>
               <li><span class="page-number" @click="prevPage()">&lt;</span></li>
               <li
@@ -146,6 +149,17 @@
               </li>
               <li><span class="page-number" @click="nextPage()">&gt;</span></li>
             </ul>
+            <p class="font-italic pagination-caption">
+              Showing
+              <span class="badge badge-pill badge-secondary">{{
+                threads.length
+              }}</span>
+              out of
+              <span class="badge badge-pill badge-secondary">{{
+                originalThreads.length
+              }}</span>
+              threads in total
+            </p>
           </div>
         </div>
         <div v-else>
@@ -222,13 +236,22 @@ export default {
       .then((response) => {
         this.originalThreads = this.$store.getters["forumStore/getThreads"];
         this.threads = this.$store.getters["forumStore/getThreads"];
-        this.paginate()
+
+        const filteredByQuizId = this.$route.query.quizid;
+
+        if (filteredByQuizId) {
+          this.filterEntity.isFiltered = true;
+          this.filterEntity.quizId = parseInt(filteredByQuizId);
+          this.filter();
+        } else {
+          this.paginate();
+        }
+
         this.isLoading = false;
       });
   },
   methods: {
     paginate(currentPage, pagesPerPage) {
-      
       const paginated = paginator(
         this.threads,
         currentPage || this.pagination.currentPage,
@@ -254,8 +277,8 @@ export default {
         .then((response) => {
           this.threads = this.$store.getters["forumStore/getThreads"];
           this.filterEntity.isFiltered = false;
-          this.filterEntity.quizId = ""
-          this.paginate()
+          this.filterEntity.quizId = "";
+          this.paginate();
           this.isLoading = false;
         });
     },
@@ -263,14 +286,14 @@ export default {
       if (!this.filterEntity.quizId) {
         this.filterEntity.isFiltered = false;
         this.originalThreads = this.$store.getters["forumStore/getThreads"];
-        this.threads = this.originalThreads
+        this.threads = this.originalThreads;
       } else {
         this.filterEntity.isFiltered = true;
-        this.originalThreads = this.$store.getters["forumStore/getThreads"].filter(
-          (thread) => thread.quiz_id === this.filterEntity.quizId
-        );
-        this.threads = this.originalThreads
-        
+        this.originalThreads = this.$store.getters[
+          "forumStore/getThreads"
+        ].filter((thread) => thread.quiz_id === this.filterEntity.quizId);
+        this.threads = this.originalThreads;
+
         this.paginate();
       }
     },

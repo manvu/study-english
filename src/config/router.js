@@ -71,6 +71,14 @@ const router = createRouter({
       },
     },
     {
+      path: "/discussion/filter",
+      name: "discussion.index",
+      component: DiscussionForum,
+      meta: {
+        requiresAuth: false,
+      },
+    },
+    {
       path: "/create-thread",
       name: "threads.create",
       component: CreateThread,

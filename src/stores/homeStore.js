@@ -55,6 +55,7 @@ const quizStore = {
       return axios(API_LIST.getDataForHome)
         .then((response) => {
           const quizzes = response.data.response;
+          
           if (!response.data.error) {
             context.commit("getDataForHome", { quizzes });
           }

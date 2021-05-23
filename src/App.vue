@@ -10,7 +10,7 @@
 
 <script>
 import TheNavigation from "./components/nav/TheNavigation.vue";
-import TheFooter from './footer/TheFooter.vue';
+import TheFooter from "./components/footer/TheFooter"
 
 // Tried to put this port number in .env file for recommended security tweaks
 

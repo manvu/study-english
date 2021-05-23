@@ -1,6 +1,7 @@
 <template>
   <div>
     <font-awesome-icon
+    v-if="isAuthenticated"
       class="favorite"
       :icon="star"
       @click="toggleFavorite()"
@@ -23,6 +24,9 @@ export default {
     faStarRegular() {
       return faStarRegular;
     },
+    isAuthenticated() {
+      return this.$store.getters["authStore/isAuthenticated"];
+    },
   },
   data() {
     return {
@@ -31,12 +35,16 @@ export default {
   },
   methods: {
     toggleFavorite: function () {
-      
-      this.$store.dispatch("homeStore/toggleFavorite", {
-        id: this.id,
-      });
-
-      this.star =  faStarSolid 
+      if (this.isAuthenticated) {
+        this.$store
+          .dispatch("homeStore/toggleFavorite", {
+            id: this.id,
+          })
+          .then((response) => {
+            this.star = faStarSolid;
+          });
+      } else {
+      }
     },
   },
 };

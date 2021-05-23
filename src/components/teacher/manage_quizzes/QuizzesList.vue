@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!isLoading">
     <div class="header d-flex">
       <h2>Quiz List</h2>
       <button type="button" @click="createQuiz" class="mb-2 btn btn-primary">
@@ -25,7 +25,9 @@
           {{ quiz.number_of_questions }}
         </div>
         <div class="cell" data-title="Attempts">{{ quiz.attempts }}</div>
-        <div class="cell" data-title="Time Allowed">{{ quiz.time_allowed }}</div>
+        <div class="cell" data-title="Time Allowed">
+          {{ quiz.time_allowed }}
+        </div>
         <div class="cell" data-title="Action">
           <font-awesome-icon
             class="button-item"
@@ -41,6 +43,9 @@
       </div>
     </div>
   </div>
+  <div v-else>
+    <h1>Loading data...</h1>
+  </div>
 </template>
 
 <script>
@@ -50,6 +55,11 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 export default {
   components: { FontAwesomeIcon },
+  data() {
+    return {
+      isLoading: true,
+    };
+  },
   computed: {
     quizzes() {
       return this.$store.getters["teacherStore/getQuizList"];
@@ -64,18 +74,17 @@ export default {
   created() {
     this.$store.dispatch("teacherStore/getDataForTeacher").then((response) => {
       this.quizzes;
+      this.isLoading = false;
     });
   },
   methods: {
     createQuiz() {
-      this.$emit("toggleShowQuizEditor", {mode: "create"});
+      this.$emit("toggleShowQuizEditor", { mode: "create" });
     },
     editQuiz(quizId) {
-      this.$emit("toggleShowQuizEditor", {mode: "edit", quizId});
+      this.$emit("toggleShowQuizEditor", { mode: "edit", quizId });
     },
-    removeQuiz(quizId) {
-
-    },
+    removeQuiz(quizId) {},
   },
 };
 </script>

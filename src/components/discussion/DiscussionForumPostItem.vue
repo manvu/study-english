@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     deletePost() {
-      debugger
+      
       this.$store
         .dispatch("forumStore/deletePost", { post_id: this.p.post_id })
         .then((response) => {

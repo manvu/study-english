@@ -1,6 +1,6 @@
 <template>
   <header>
-    <div id="filter" class="form-row details-wrapper">
+    <div id="filter" class="form-row details-wrapper bg-light">
       <div class="form-inline">
         <label>Filter by</label>
         <select
@@ -17,7 +17,7 @@
       </div>
       <div v-if="filterBy === 'student'" class="form-inline">
         <label>Student Name</label>
-                <select
+        <select
           name="quizNumber"
           class="form-control"
           id="filter-by"
@@ -68,10 +68,14 @@
       </div>
     </div>
   </header>
-  <student-statistics
-    v-if="statisticsLoadedBy === 'student'"
-  ></student-statistics>
-  <quiz-statistics v-else-if="statisticsLoadedBy === 'quiz'"></quiz-statistics>
+  <div class="mt-5">
+    <student-statistics
+      v-if="statisticsLoadedBy === 'student'"
+    ></student-statistics>
+    <quiz-statistics
+      v-else-if="statisticsLoadedBy === 'quiz'"
+    ></quiz-statistics>
+  </div>
 </template>
 
 <script>
@@ -87,10 +91,10 @@ export default {
     QuizStatistics,
     FontAwesomeIcon,
   },
-  created(){
+  created() {
     this.$store.dispatch("teacherStore/getAllStudents").then(() => {
-      this.students = this.$store.getters["teacherStore/getAllStudents"]
-    })
+      this.students = this.$store.getters["teacherStore/getAllStudents"];
+    });
   },
   computed: {
     faSearch() {
@@ -109,7 +113,7 @@ export default {
       dateTo: moment().format("YYYY-MM-DD"),
       selectedStudentId: "",
       selectedQuizId: "",
-      students: []
+      students: [],
     };
   },
   methods: {
@@ -117,8 +121,12 @@ export default {
       if (this.filterBy === "quiz") {
         this.$store
           .dispatch("teacherStore/getBoardStatisticsByQuiz", {
-            dateFrom: moment(this.dateFrom).startOf('day').format(process.env.VUE_APP_DATETIME_FORMAT),
-            dateTo: moment(this.dateTo).endOf('day').format(process.env.VUE_APP_DATETIME_FORMAT),
+            dateFrom: moment(this.dateFrom)
+              .startOf("day")
+              .format(process.env.VUE_APP_DATETIME_FORMAT),
+            dateTo: moment(this.dateTo)
+              .endOf("day")
+              .format(process.env.VUE_APP_DATETIME_FORMAT),
             quizId: this.selectedQuizId,
           })
           .then(() => {
@@ -127,8 +135,12 @@ export default {
       } else {
         this.$store
           .dispatch("teacherStore/getBoardStatisticsByStudent", {
-            dateFrom: moment(this.dateFrom).startOf('day').format(process.env.VUE_APP_DATETIME_FORMAT),
-            dateTo: moment(this.dateTo).endOf('day').format(process.env.VUE_APP_DATETIME_FORMAT),
+            dateFrom: moment(this.dateFrom)
+              .startOf("day")
+              .format(process.env.VUE_APP_DATETIME_FORMAT),
+            dateTo: moment(this.dateTo)
+              .endOf("day")
+              .format(process.env.VUE_APP_DATETIME_FORMAT),
             userId: this.selectedStudentId,
           })
           .then(() => {
@@ -168,6 +180,12 @@ export default {
 .details-wrapper p {
   font-size: 16px;
   color: #000;
+}
+
+#filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #filter label {

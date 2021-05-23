@@ -122,6 +122,7 @@ const authStore = {
       return state.isTeacher;
     },
     getAuthenticatedUser(state) {
+      
       return state.authenticatedUser;
     },
   },

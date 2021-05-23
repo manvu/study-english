@@ -34,7 +34,7 @@ const questionStore = {
         });
     },
     answerQuestion(context, payload) {
-      debugger
+      
       return axios(API_LIST.answerQuestion(payload.questionId, payload))
         .then((response) => {
           if (!response.data.error) {

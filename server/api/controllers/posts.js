@@ -22,7 +22,7 @@ module.exports = {
       let posts = await PostModel.findDetailed(newId);
 
       if (!posts.error) {
-        return sendSuccess(201, posts.response[0]);
+        return sendSuccess(201, { ...posts.response[0], post_id: newPost.response.insertId});
       } else {
         return sendFailure(STRINGS.CANNOT_CREATE_POST);
       }

@@ -94,10 +94,11 @@ const quizStore = {
         });
     },
     createPost(context, payload) {
+      
       return axios(API_LIST.createPost(payload))
         .then((response) => {
           if (!response.data.error) {
-            payload.post = response.data.post;
+            payload.post = response.data.response;
             context.commit("createPost", payload);
           }
 

@@ -23,15 +23,14 @@ export default {
   methods: {
     toggleShowQuizEditor(data) {
       if (data.mode === "create") {
-        this.mode = "create"
+        this.mode = "create";
         this.showQuizEditor = !this.showQuizEditor;
-        
       } else {
         this.$store
           .dispatch("teacherStore/getQuizForEdit", { quizId: data.quizId })
           .then((response) => {
             this.quiz;
-            this.mode = "edit"
+            this.mode = "edit";
             this.showQuizEditor = !this.showQuizEditor;
           });
       }

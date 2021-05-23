@@ -24,7 +24,7 @@ const quizStore = {
     submitQuiz(context, payload) {
       return axios(API_LIST.submitQuiz(payload))
       .then((response) => {
-        debugger
+        
         if (!response.data.error) {
           const {marked, attempt_id, quiz_id, accuracy} = response.data.response
           payload.marked = marked;
