@@ -293,11 +293,11 @@ FROM discussion_thread dt`;
       description,
       isActive,
       timeAllowed,
-      selectedSkillId,
+      skillId,
       userId,
     }) {
       let query = `INSERT INTO quiz (course_name, description, is_active, time_allowed, skill_id, created_by) 
-      VALUES ('${courseName}', '${description}', '${isActive}', '${timeAllowed}', '${selectedSkillId}', '${userId}')`;
+      VALUES ('${courseName}', '${description}', '${isActive}', '${timeAllowed}', '${skillId}', '${userId}')`;
 
       return this.executeQuery(query);
     };
@@ -308,7 +308,7 @@ FROM discussion_thread dt`;
       description,
       isActive,
       timeAllowed,
-      selectedSkillId,
+      skillId,
       userId,
     }) {
       let query = `UPDATE quiz 
@@ -316,7 +316,7 @@ FROM discussion_thread dt`;
                       description = '${description}', 
                       is_active = '${isActive}', 
                       time_allowed = '${timeAllowed}', 
-                      skill_id = '${selectedSkillId}', 
+                      skill_id = '${skillId}', 
                       created_by = '${userId}'
                   WHERE quiz_id = '${quizId}'
 `;

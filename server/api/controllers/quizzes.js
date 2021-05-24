@@ -10,6 +10,7 @@ const QuestionModel = new (require("../../models/question"))();
 const AttemptModel = new (require("../../models/attempt"))();
 const UserAnswerModel = new (require("../../models/user_answer"))();
 const CorrectAnswerModel = new (require("../../models/correct_answer"))();
+const validator = require("../validators/validator");
 
 async function markFavorite({ quizId, userId }) {
   const favorite = await FavoriteModel.addOne(quizId, userId);
@@ -120,7 +121,15 @@ module.exports = {
     }
   },
   createQuiz: async (data) => {
-    let quiz = await QuizModel.addOne(data);
+    const {  } = data;
+    
+    if (!validator.validateIsActiveQuestion(data.isActive)) {
+      return sendFailure(STRINGS.INVALID_IS_ACTIVE_VALUE);
+    }
+
+    const isActive = data.isActive === true ? 1 : 0;
+
+    let quiz = await QuizModel.addOne({...data, isActive});
 
     if (!quiz.error && quiz.response.affectedRows === 1) {
       const newQuizId = quiz.response.insertId;
@@ -135,13 +144,18 @@ module.exports = {
       quizId,
       courseName,
       description,
-      isActive,
       timeAllowed,
-      selectedSkillId,
+      skillId,
       userId,
     } = data;
 
-    const quiz = await QuizModel.saveOne(data);
+    if (!validator.validateIsActiveQuestion(data.isActive)) {
+      return sendFailure(STRINGS.INVALID_IS_ACTIVE_VALUE);
+    }
+
+    const isActive = data.isActive === true ? 1 : 0;
+
+    const quiz = await QuizModel.saveOne({...data, isActive});
 
     if (!quiz.error && quiz.response.affectedRows === 1) {
       return module.exports.getQuiz(quizId);

@@ -28,6 +28,11 @@ class RatingModel {
     return await this.db.executeQuery(`DELETE FROM user_rating 
     WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId}`)
   }
+
+  async deleteAll(quizId) {
+    return await this.db.executeQuery(`DELETE FROM user_rating 
+    WHERE user_rating.quiz_id = ${quizId}`)
+  }
 }
 
 module.exports = RatingModel;

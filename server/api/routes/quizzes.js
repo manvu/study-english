@@ -18,33 +18,33 @@ router.get("/:id", authMiddleware, async (req, res) => {
   res.status(200).json(quiz);
 });
 
-router.post("/", authTeacherMiddleware, async (req, res) => {
+router.post("/", [authMiddleware, authTeacherMiddleware], async (req, res) => {
   const data = {
     courseName: req.body.courseName,
     description: req.body.description,
     isActive: req.body.isActive,
     timeAllowed: req.body.timeAllowed,
-    selectedSkillId: req.body.selectedSkillId,
-    id: req.user.id,
+    skillId: req.body.skillId,
+    userId: req.user.id,
   };
 
-  const quiz = quizzesController.createQuiz(data);
+  const quiz = await quizzesController.createQuiz(data);
 
   res.json(quiz);
 });
 
-router.put("/:id", authTeacherMiddleware, async (req, res) => {
+router.put("/:id", [authMiddleware, authTeacherMiddleware], async (req, res) => {
   const data = {
     quizId: req.params.id,
     courseName: req.body.courseName,
     description: req.body.description,
     isActive: req.body.isActive,
     timeAllowed: req.body.timeAllowed,
-    selectedSkillId: req.body.selectedSkillId,
+    skillId: req.body.skillId,
     userId: req.user.id,
   };
 
-  const quiz = await quizzesController.submitAndMark(data);
+  const quiz = await quizzesController.updateQuiz(data);
 
   res.status(200).json(quiz);
 });

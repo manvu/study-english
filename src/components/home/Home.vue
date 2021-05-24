@@ -251,24 +251,6 @@ export default {
   font-size: 18px;
 }
 
-.details-wrapper div {
-  /* flex: 1; */
-  padding: 1em; /* add some padding ?*/
-  /* text-align: center; */
-  /* border: 1px solid #000; */
-}
-
-#sort-and-filter {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#sort-and-filter label {
-  font-weight: bold;
-  padding-right: 20px;
-}
-
 .page-number {
   cursor: pointer;
 }
@@ -299,6 +281,27 @@ export default {
   color: #fff;
   border: 1px solid transparent;
 }
+
+.details-wrapper div {
+  /* flex: 1; */
+  padding: 1em; /* add some padding ?*/
+  /* text-align: center; */
+  /* border: 1px solid #000; */
+}
+
+#sort-and-filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#sort-and-filter label {
+  font-weight: bold;
+  padding-right: 20px;
+}
+
+
+
 .quizzes-list-container {
   /* background-image: linear-gradient(45deg, #7175da, #9790F2); */
   font-family: "Muli", sans-serif;

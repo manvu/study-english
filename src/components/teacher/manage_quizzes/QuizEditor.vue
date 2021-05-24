@@ -1,6 +1,6 @@
 <template>
-  <div class="col-md-10">
-    <h2>Selected Quiz: {{ quizId }}</h2>
+  <div v-if="quiz" class="col-md-10">
+    <h2>Selected Quiz: {{ quiz.quizId }}</h2>
     <div class="contact-form">
       <div class="form-group">
         <label class="control-label col-sm-6" for="courseName"
@@ -13,11 +13,11 @@
             id="courseName"
             placeholder="Enter Course Name"
             name="courseName"
-            v-model="courseName"
+            v-model="quiz.courseName"
           />
         </div>
       </div>
-            <div class="form-group">
+      <div class="form-group">
         <label class="control-label col-sm-6" for="type">Description</label>
         <div class="form-row col-sm-10">
           <textarea
@@ -27,33 +27,19 @@
             placeholder="Add description for the quiz"
             rows="3"
             cols="80"
-            v-model="description"
+            v-model="quiz.description"
           ></textarea>
         </div>
       </div>
       <div class="form-group">
-        <label class="control-label col-sm-2" for="active">Active:</label>
-        <div class="col-sm-10">
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="active"
-              value="yes"
-              v-model="isActive"
-            />
-            <label class="form-check-label" for="active">Yes</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="active"
-              value="no"
-              v-model="isActive"
-            />
-            <label class="form-check-label" for="active">No</label>
-          </div>
+        <div class="ml-2 form-check form-check-inline">
+          <label class="form-check-label mr-2" for="active">Is active?</label>
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="active"
+            v-model="quiz.isActive"
+          />
         </div>
       </div>
       <div class="form-group">
@@ -66,7 +52,7 @@
                 class="form-control"
                 id="timeAllowedInput"
                 placeholder="30"
-                v-model="timeAllowed"
+                v-model="quiz.timeAllowed"
               />
             </div>
             <div class="form-check">
@@ -78,23 +64,33 @@
       <div class="form-group">
         <label class="control-label col-sm-6" for="type">Skill</label>
         <div class="form-row col-sm-10">
-          <select name="type" class="col-4 form-control" id="question-type" v-model="selectedSkillId" >
-            <option v-for="s in allSkills" :key="s.skill_id" class="dropdown-item" href="#" :value="s.skill_id"
+          <select
+            name="type"
+            class="col-4 form-control"
+            id="question-type"
+            v-model="quiz.skillId"
+          >
+            <option
+              v-for="s in allSkills"
+              :key="s.skill_id"
+              class="dropdown-item"
+              href="#"
+              :value="s.skill_id"
             >
               {{ s.skill_description }}
             </option>
           </select>
         </div>
       </div>
-      <questions-list v-if="questions.length > 0" :questions="questions" ></questions-list>
-            <div class="mt-2 mb-2" v-else>
+      <questions-list
+        v-if="quiz.questions.length > 0"
+        :questions="quiz.questions"
+      ></questions-list>
+      <div class="mt-2 mb-2" v-else>
         There is no question created for this quiz yet
       </div>
-      <questions-list v-if="questionsList.length > 0" :questions="questionsList" ></questions-list>
-      <div class="mt-2 mb-2" v-else>
-        There is no incoming question created for this quiz yet
-      </div>
       <button
+        :disabled="mode === 'create'"
         @click="openQuestionEditorModal(null, 'create')"
         class="mb-3 btn btn-primary"
       >
@@ -113,18 +109,18 @@
   <question-editor-modal
     v-if="showQuestionEditor"
     @close="openQuestionEditorModal"
-    :question="editQuestion"
     :mode="questionEditorOpenMode"
-    :quizId=quiz.quid_id
+    :quizId="quiz.quiz_id"
   ></question-editor-modal>
 </template>
 
 <script>
 import QuestionEditorModal from "./QuestionEditorModal.vue";
 import QuestionsList from "./QuestionsList.vue";
+import CaseConverter from 'js-convert-case';
 
 export default {
-  props: ["quiz", "mode"],
+  props: ["mode"],
   provide() {
     return {
       openQuestionEditorModal: this.openQuestionEditorModal,
@@ -134,26 +130,19 @@ export default {
   components: { QuestionsList, QuestionEditorModal },
   data() {
     return {
-      quizId: this.mode === "create" ? " New " : this.quiz.quiz_id,
-      courseName: this.mode === "create" ? "" : this.quiz.course_name,
-      isActive:
-        this.mode === "create" ? "yes" : this.quiz.is_active ? "yes" : "no",
-      timeAllowed: this.mode === "create" ? 30 : this.quiz.time_allowed,
-      description: this.mode === "create" ? '' : this.quiz.description,
-      questions: this.mode === "create" ? [] : this.quiz.questions,
-      selectedSkillId: this.mode === "create" ? 1 : this.quiz.skill_id,
+      quiz: {
+        quizId: " New ",
+        courseName: "",
+        isActive: true,
+        timeAllowed: 30,
+        description: "",
+        questions: [],
+        skillId: 1,
+      },
+      allSkills: [],
       showQuestionEditor: false,
       questionEditorOpenMode: null,
     };
-  },
-  computed: {
-    editQuestion() {
-      return this.$store.getters["teacherStore/getEditQuestion"];
-    },
-    questionsList() {
-      let questionList = this.$store.getters["teacherStore/getQuestionList"] 
-      return questionList
-    }
   },
   methods: {
     openQuestionEditorModal(questionId, mode) {
@@ -164,8 +153,6 @@ export default {
           .dispatch("teacherStore/getQuestionForEdit", { questionId })
           .then((response) => {
             this.showQuestionEditor = true;
-            
-            this.editQuestion;
           });
       } else {
         this.showQuestionEditor = true;
@@ -179,28 +166,20 @@ export default {
     },
     handleSave() {
       if (this.mode === "create") {
-        this.$store.dispatch("teacherStore/createQuiz", {
-          quizId: this.quizId,
-          courseName: this.courseName,
-          description: this.description,
-          isActive: this.isActive === "yes" ? 1 : 0,
-          timeAllowed: this.timeAllowed,
-          selectedSkillId: this.selectedSkillId,
-        });
+        this.$store.dispatch("teacherStore/createQuiz", this.quiz);
       } else if (this.mode === "edit") {
-        this.$store.dispatch("teacherStore/updateQuiz", {
-          quizId: this.quizId,
-          courseName: this.courseName,
-          description: this.description,
-          isActive: this.isActive === "yes" ? 1 : 0,
-          timeAllowed: this.timeAllowed,
-          selectedSkillId: this.selectedSkillId,
-        });
+        this.$store.dispatch("teacherStore/updateQuiz", this.quiz);
       }
     },
   },
   created() {
-    
+    if (this.mode === "edit") {
+      const quiz = this.$store.getters["teacherStore/getEditQuiz"];
+      const convertedQuiz = CaseConverter.camelKeys(quiz)
+      this.quiz = convertedQuiz
+      this.quiz.isActive = this.quiz.isActive === 1 ? true : false;
+    }
+
     this.allSkills = this.$store.getters["teacherStore/getAllSkills"];
   },
 };

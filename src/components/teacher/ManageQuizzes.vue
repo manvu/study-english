@@ -1,6 +1,6 @@
 <template>
   <quizzes-list @toggleShowQuizEditor="toggleShowQuizEditor"></quizzes-list>
-  <quiz-editor v-if="showQuizEditor" :mode="mode" :quiz="quiz"></quiz-editor>
+  <quiz-editor v-if="showQuizEditor" :mode="mode"></quiz-editor>
 </template>
 
 <script>
@@ -14,11 +14,6 @@ export default {
       mode: null
     };
   },
-  computed: {
-    quiz() {
-      return this.$store.getters["teacherStore/getEditQuiz"];
-    },
-  },
   components: { QuizzesList, QuizEditor },
   methods: {
     toggleShowQuizEditor(data) {
@@ -29,7 +24,6 @@ export default {
         this.$store
           .dispatch("teacherStore/getQuizForEdit", { quizId: data.quizId })
           .then((response) => {
-            this.quiz;
             this.mode = "edit";
             this.showQuizEditor = !this.showQuizEditor;
           });

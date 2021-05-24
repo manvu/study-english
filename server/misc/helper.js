@@ -198,6 +198,13 @@ function correctAnswerstoObject(response) {
   return correctAnswers;
 }
 
+function imageFilter(req, file, cb) {
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+      return cb(new Error('Only image files are allowed!'), false);
+  }
+  cb(null, true);
+};
+
 module.exports = {
   checkPassword,
   hashPasswordAsync,
@@ -206,4 +213,5 @@ module.exports = {
   mark,
   userAnswersToObject,
   correctAnswerstoObject,
+  imageFilter
 };

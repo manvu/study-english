@@ -27,7 +27,10 @@ const STRINGS = {
     CANNOT_LOAD_POST: "Cannot load post.",
     CANNOT_CREATE_INSTRUCTION: "Cannot create instruction.",
     CANNOT_CREATE_POST: "Cannot create post.",
+    CANNOT_CREATE_BLANK_QUESTION: "Cannot create blank question.",
+    CANNOT_CREATE_QUESTION: "Cannot create question.",
     CANNOT_LOAD_STATISTICS: "Cannot load statistics.",
+    INVALID_QUESTION_TYPE_ID: "Invalid question type id.",
     INVALID_QUESTION_ID: "Invalid question id.",
     INVALID_THREAD_ID: "Invalid thread id.",
     INVALID_POST_ID: "Invalid post id.",
@@ -42,6 +45,21 @@ const STRINGS = {
     ERROR_LOADING_TEACHER_PAGE: "Error loading teacher page.",
     PLEASE_CHECK_YOUR_FIRST_NAME: "Please check your first name.",
     PLEASE_CHECK_YOUR_LAST_NAME: "Please check your last name.",
+    NEW_PASSWORD_MUST_BE_DIFFERENT_FROM_OLD_PASSWORD_AND_AT_LEAST_8_CHARACTERS: "New password must be different from old password and at least 8 characters.",
+    CANNOT_SAVE_NEW_PASSWORD: "Cannot save new password.",
+    QUESTION_ITEMS_VALIDATION_ERROR: (questionTypeId) => {
+        if (questionTypeId === 1) {
+            return module.exports.MULTIPLE_CHOICE_MUST_HAVE_AT_LEAST_2_CHOICES
+        } else if (questionTypeId === 2) {
+            return module.exports.GAP_FILLING_QUESTION_MUST_HAVE_AT_LEAST_1_GAP
+        } else if (questionTypeId === 3) {
+            return module.exports.MATCHING_QUESTION_MUST_HAVE_AT_LEAST_2_OPTIONS_ON_BOTH_SIDES
+        }
+    },
+    MULTIPLE_CHOICE_MUST_HAVE_AT_LEAST_2_CHOICES: "Multiple choice question must have at least 2 choices",
+    GAP_FILLING_QUESTION_MUST_HAVE_AT_LEAST_1_GAP: "Gap filling question must have at least 1 gap",
+    MATCHING_QUESTION_MUST_HAVE_AT_LEAST_2_OPTIONS_ON_BOTH_SIDES: "Matching question must have at least 2 options on both sides",
+    INVALID_IS_ACTIVE_VALUE: "Invalid is active value."
 }
 
 module.exports = STRINGS

@@ -72,11 +72,14 @@ function paginator(items, current_page, per_page_items) {
 	};
 }
 
+
+
 module.exports = {
   characters,
   truncate,
   timeSince,
   convertISOToReadableFormat,
-  paginator
+  paginator,
+  
 };
 

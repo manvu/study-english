@@ -19,7 +19,7 @@ class UserModel {
 
   async findOneById(id) {
     return await this.db.executeQuery(
-      `SELECT user.email, user.first_name, user.last_name 
+      `SELECT user.email, user.first_name, user.last_name, user.gender 
       FROM user WHERE user_id = ${id}`
     );
   }
@@ -36,16 +36,22 @@ class UserModel {
     VALUES('${email}', '${passwordHash}', '${passwordSalt}', '${gender}', '${roleId}', '${profilePictureId}', '${firstName}', '${lastName}')`);
   }
 
-  async saveOne(userId, email, firstName, lastName, passwordHash, passwordSalt) {
-    if (passwordHash) {
-        return this.db.executeQuery(`UPDATE user
-        SET email = '${email}', first_name = '${firstName}', last_name = '${lastName}', password_salt = '${passwordSalt}', password_hash = '${passwordHash}'
-        WHERE user_id = ${userId}`);
-      } else {
-        return this.db.executeQuery(`UPDATE user
-        SET email = '${email}', first_name = '${firstName}', last_name = '${lastName}'
-        WHERE user_id = ${userId}`);
-      }
+  async saveOne(userId, email, firstName, lastName, gender) {
+    return this.db.executeQuery(`UPDATE user
+    SET email = '${email}', first_name = '${firstName}', last_name = '${lastName}', gender = '${gender}'
+    WHERE user_id = ${userId}`);
+  }
+
+  async savePassword({userId, passwordHash, passwordSalt}) {
+    return this.db.executeQuery(`UPDATE user
+    SET password_salt = '${passwordSalt}', password_hash = '${passwordHash}'
+    WHERE user_id = ${userId}`);
+  }
+
+  async saveProfilePicture({ userId, mimeId}) {
+    return this.db.executeQuery(`UPDATE user
+    SET profile_picture_id = '${mimeId}'
+    WHERE user_id = ${userId}`);
   }
 }
 

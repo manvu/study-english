@@ -1,17 +1,5 @@
 <template>
   <div class="form-group">
-    <label class="control-label" for="instruction">Instruction</label>
-    <div class="">
-      <textarea
-        name="instruction"
-        id="instruction"
-        rows="3"
-        placeholder="Choose the most suitable option to fill in the blank"
-        v-model="instruction"
-      ></textarea>
-    </div>
-  </div>
-  <div class="form-group">
     <label class="control-label" for="question">Question</label>
     <div class="">
       <textarea
@@ -20,31 +8,6 @@
         rows="3"
         v-model="question"
       ></textarea>
-    </div>
-  </div>
-  <div class="form-group">
-    <label class="control-label" for="active">Active</label>
-    <div class="">
-      <div class="form-check form-check-inline">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="active"
-          value="yes"
-          v-model="isActive"
-        />
-        <label class="form-check-label" for="active">Yes</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input
-          class="form-check-input"
-          type="radio"
-          name="active"
-          value="no"
-          v-model="isActive"
-        />
-        <label class="form-check-label" for="active">No</label>
-      </div>
     </div>
   </div>
   <div class="form-group">
@@ -62,7 +25,11 @@
     <div v-else>There is no choice created for this question</div>
   </div>
   <button @click="addChoice" class="mb-3 btn btn-primary">Add Choice</button>
-  <div class="form-group"> <button type="button" @click="closeQuestionEditorModal()" class="btn btn-dark"
+  <div class="form-group">
+    <button
+      type="button"
+      @click="closeQuestionEditorModal()"
+      class="btn btn-dark"
     >
       Cancel
     </button>
@@ -76,17 +43,14 @@
 import MultipleChoiceItem from "./question_editor_item/MultipleChoiceItem";
 export default {
   components: { MultipleChoiceItem },
-  inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
-  props: ["item", "mode"],
+  emits: ["handleSave"],
+  props: ["mode"],
   data() {
     return {
-      items: this.mode === "create" ? [] : this.item.content,
+      items: [],
       currentAlphabeticCharacter: "@",
       currentChoiceId: 0,
-      question: this.mode === "create" ? "" : this.item.question,
-      instruction: this.mode === "create" ? "" : this.item.instruction,
-      isActive:
-        this.mode === "create" ? "" : this.item.is_active === 1 ? "yes" : "no",
+      question: "Test question",
     };
   },
   methods: {
@@ -98,8 +62,8 @@ export default {
     },
     addChoice() {
       let index = this.nextChar();
-      let currentId = ++this.currentChoiceId
-      
+      let currentId = ++this.currentChoiceId;
+
       this.items.push({
         choice_id: currentId,
         choice_order: index,
@@ -109,34 +73,18 @@ export default {
     },
     updateItem(item) {
       let choiceItem = this.items.find((i) => i.choice_id === item.choice_id);
-      choiceItem.choice_text = item.choice_text
-      choiceItem.is_correct_choice = item.is_correct_choice === true ? 1 : 0
+      choiceItem.choice_text = item.choice_text;
+      choiceItem.is_correct_choice = item.is_correct_choice === true ? 1 : 0;
     },
     save() {
-      if (this.mode === "create") {
-        this.$store.dispatch("teacherStore/createQuestion", {
-          typeId: 1,
-          items: this.items,
-          question: this.question,
-          instruction: this.instruction,
-          isActive: this.isActive === "yes" ? 1 : 0,
-        }).then(response => {
-          this.closeQuestionEditorModal()
-        });
-      } else if (this.mode === "edit") {
-        this.$store.dispatch("teacherStore/updateQuestion", {
-          items: this.items,
-          question: this.question,
-          instruction: this.instruction,
-          isActive: this.isActive === "yes" ? 1 : 0,
-        }).then(response => {
-          this.closeQuestionEditorModal()
-        });
-      }
+      this.$emit("handleSave", { typeId: 1, items: this.items, question: this.question, });
     },
   },
   created() {
-    console.log(this.item);
+    if (this.mode === "edit") {
+      const question = this.$store.getters["teacherStore/getEditQuestion"];
+      this.items = question.items
+    }
   },
 };
 </script>

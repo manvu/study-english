@@ -1,3 +1,5 @@
+const STRINGS = require("../../config/strings");
+
 module.exports = {
   validateEmail: function(email) {
     if (!email) {
@@ -37,9 +39,81 @@ module.exports = {
   },
   validateName: function(name) {
     if (name) {
-      return true
+      return true;
     } else {
+      return false;
+    }
+  },
+  validateNewPassword: function(current, newPassword) {
+    if (!current || !newPassword) {
+      return false;
+    }
+
+    if (current === newPassword) {
+      return false;
+    }
+
+    if (newPassword.length < 8) {
+      return false;
+    }
+
+    return true;
+  },
+  validateQuizId: function(quizId) {
+    if (!quizId || quizId < 0) {
       return false
     }
+
+    return true;
+  },
+  validateQuestionTypeId: function(questionId) {
+    if (!questionId) {
+      return false;
+    } 
+
+    if (questionId != 1 && questionId != 2 && questionId != 3) {
+      return false
+    }
+
+    return true
+  },
+  validateQuestion: function(question) {
+    if (!question) {
+      return false
+    }
+
+    return true;
+  },
+  validateQuestionItems: function(typeId, items) {
+    if (!items) {
+      return false
+    }
+
+    if (typeId === 1) {
+      if (items.length < 2) {
+        return false
+      }
+    } else if (typeId === 2) {
+      if (items.length < 1) {
+        return false
+      }
+    } else if (typeId === 3) {
+      if (items.leftItems.length < 2 || items.rightItems.length < 2) {
+        return false
+      } 
+    }
+    
+    return true
+  },
+  validateIsActiveQuestion: function(isActive) {
+    if (isActive === undefined || isActive === null) {
+      return false
+    } 
+
+    if (isActive === true || isActive === false || isActive == 1 || isActive === 0) {
+      return true
+    }
+
+    return false
   }
 };

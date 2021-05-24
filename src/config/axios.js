@@ -17,6 +17,7 @@ axios.interceptors.response.use(
       error.response.data.error === "TokenExpiredError"
     ) {
       alert("Your session has expired. Please sign-in again!")
+      
       localStorage.clear();
       window.location.reload();
     } else {

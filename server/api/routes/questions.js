@@ -25,6 +25,7 @@ router.post("/", authMiddleware, async (req, res) => {
     paragraphTitle: !!req.body.paragraphTitle ? null : req.body.paragraphTitle,
     correctAnswers: req.body.correctAnswers,
     shuffleAnswers: req.body.shuffleAnswers ? req.body.shuffleAnswers : 1,
+    quizId: req.body.quizId
   };
 
   const question = await questionsController.createQuestion(data)

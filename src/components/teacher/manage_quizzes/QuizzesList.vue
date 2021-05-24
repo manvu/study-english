@@ -14,6 +14,7 @@
         <div class="cell">Questions</div>
         <div class="cell">Attempts</div>
         <div class="cell">Time Allowed</div>
+        <div class="cell">Average Rating</div>
         <div class="cell">Action</div>
       </div>
 
@@ -27,6 +28,14 @@
         <div class="cell" data-title="Attempts">{{ quiz.attempts }}</div>
         <div class="cell" data-title="Time Allowed">
           {{ quiz.time_allowed }}
+        </div>
+        <div class="cell" data-title="Time Allowed">
+          {{ quiz.average_rating.toFixed(2) }} {{ `(${quiz.rating_count})` }}
+          <font-awesome-icon
+            class="button-item"
+            :icon="faEraser"
+            @click="resetRating(quiz.quiz_id)"
+          ></font-awesome-icon>
         </div>
         <div class="cell" data-title="Action">
           <font-awesome-icon
@@ -42,6 +51,32 @@
         </div>
       </div>
     </div>
+    <div v-if="pagination.totalPages !== null" class="block-27 text-center">
+      <ul>
+        <li><span class="page-number" @click="prevPage()">&lt;</span></li>
+        <li
+          :class="{ active: page === pagination.currentPage }"
+          v-for="page in pagination.totalPages"
+          :key="page"
+        >
+          <span class="page-number" @click="specificPage(page)">{{
+            page
+          }}</span>
+        </li>
+        <li><span class="page-number" @click="nextPage()">&gt;</span></li>
+      </ul>
+      <p class="font-italic pagination-caption">
+        Showing
+        <span class="badge badge-pill badge-secondary">{{
+          quizzes.length
+        }}</span>
+        out of
+        <span class="badge badge-pill badge-secondary">{{
+          originalQuizzes.length
+        }}</span>
+        quizzes in total
+      </p>
+    </div>
   </div>
   <div v-else>
     <h1>Loading data...</h1>
@@ -52,29 +87,42 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faEraser } from "@fortawesome/free-solid-svg-icons";
+import { paginator } from "../../common/helper";
 
 export default {
   components: { FontAwesomeIcon },
   data() {
     return {
       isLoading: true,
+      quizzes: [],
+      originalQuizzes: [],
+      pagination: {
+        currentPage: 1,
+        totalPages: null,
+        pagesPerPage: 10,
+        nextPage: null,
+        prevPage: null,
+      },
     };
   },
   computed: {
-    quizzes() {
-      return this.$store.getters["teacherStore/getQuizList"];
-    },
     faEdit() {
       return faEdit;
     },
     faTrashAlt() {
       return faTrashAlt;
     },
+    faEraser() {
+      return faEraser;
+    },
   },
   created() {
     this.$store.dispatch("teacherStore/getDataForTeacher").then((response) => {
-      this.quizzes;
+      this.quizzes = this.$store.getters["teacherStore/getQuizList"];
+      this.originalQuizzes = this.quizzes;
       this.isLoading = false;
+      this.paginate();
     });
   },
   methods: {
@@ -84,12 +132,85 @@ export default {
     editQuiz(quizId) {
       this.$emit("toggleShowQuizEditor", { mode: "edit", quizId });
     },
+    resetRating(quizId) {
+      this.$store.dispatch("teacherStore/resetRating", { quizId: quizId })
+      .then((response) => {
+        if (response === "OK") {
+
+        } else {
+          
+        }
+      })
+    },
     removeQuiz(quizId) {},
+    paginate(currentPage, pagesPerPage) {
+      const paginated = paginator(
+        this.quizzes,
+        currentPage || this.pagination.currentPage,
+        pagesPerPage || this.pagination.pagesPerPage
+      );
+
+      this.quizzes = paginated.data;
+      this.pagination.totalPages = paginated.total_pages;
+      this.pagination.currentPage = paginated.page;
+      this.pagination.prevPage = paginated.pre_page;
+      this.pagination.nextPage = paginated.next_page;
+    },
+    prevPage() {
+      if (this.pagination.prevPage !== null) {
+        this.changePage(this.pagination.prevPage);
+      }
+    },
+    nextPage() {
+      if (this.pagination.nextPage !== null) {
+        this.changePage(this.pagination.nextPage);
+      }
+    },
+    specificPage(page) {
+      if (page !== null) {
+        this.changePage(page);
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+.pagination-caption {
+  font-size: 18px;
+}
+
+.page-number {
+  cursor: pointer;
+}
+
+.block-27 ul {
+  padding: 0;
+  margin: 0;
+}
+.block-27 ul li {
+  display: inline-block;
+  margin-bottom: 4px;
+  font-weight: 400;
+}
+.block-27 ul li a,
+.block-27 ul li span {
+  color: gray;
+  text-align: center;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  border: 1px solid #e6e6e6;
+}
+.block-27 ul li.active a,
+.block-27 ul li.active span {
+  background: #2a265f;
+  color: #fff;
+  border: 1px solid transparent;
+}
+
 body {
   margin: 0;
   background: linear-gradient(45deg, #49a09d, #5f2c82);

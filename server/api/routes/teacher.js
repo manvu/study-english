@@ -15,10 +15,29 @@ router.get("/quizzes/:id", authTeacherMiddleware, async (req, res) => {
   res.status(200).json(quiz)
 })
 
+router.delete("/quizzes/:id", authTeacherMiddleware, async (req, res) => {
+  const quizId = req.params.id
+  const quiz = await teacherController.deleteQuiz(quizId)
+  res.status(200).json(quiz)
+})
+
+
+router.delete("/quizzes/rating/:id", authTeacherMiddleware, async (req, res) => {
+  const quizId = req.params.id
+  const quiz = await teacherController.resetRatings(quizId)
+  res.status(200).json(quiz)
+})
+
+router.delete("/questions/:id", authTeacherMiddleware, async (req, res) => {
+  const questionId = req.params.id
+  const quiz = await teacherController.deleteQuestion(questionId)
+  res.status(200).json(quiz)
+})
+
 router.get("/questions/:id", authTeacherMiddleware, async (req, res) => {
   const questionId = req.params.id
   const question = await teacherController.getQuestionForEdit(questionId)
-  res.status(200).json(quiz)
+  res.status(200).json(question)
 })
 
 module.exports = router;

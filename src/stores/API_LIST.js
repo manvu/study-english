@@ -53,12 +53,20 @@ export default {
 
   getUserInfo: { method: "get", url: "/users", baseURL },
   saveUserInfo: (body) => ({ method: "put", url: "/users", baseURL, data: body }),
+  changePassword: (body) => ({ method: "post", url: "/users/changepassword", baseURL, data: body }),
+  uploadAvatar: (body) => ({ method: "post", url: "/users/avatar", baseURL, data: body }),
 
   updateRating: (quizId, body) => ({
     method: "put",
     url: `quizzes/${quizId}/rating`,
     baseURL,
     data: body 
+  }),
+
+  resetRating: (quizId) => ({
+    method: "delete",
+    url: `/teacher/quizzes/rating/${quizId}`,
+    baseURL
   }),
 
   toggleFavorite: (quizId) => ({

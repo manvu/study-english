@@ -5,8 +5,8 @@ class QuestionModel {
     this.db = database;
   }
 
-  async findAll() {
-    return await this.db.executeQuery(`SELECT * FROM question_type`);
+  async findOne(id) {
+    return await this.db.executeQuery(`SELECT * FROM question WHERE question_id = ${id}`);
   }
 
   async findManyByQuestionId() {}
@@ -80,6 +80,19 @@ class QuestionModel {
     VALUES ('${typeId}', '${instructionId}', '${isActive}', ${
       !paragraphTitle ? "NULL" : paragraphTitle
     }, '${question}')`);
+  }
+  
+  async deleteOne(questionId) {
+    return await this.db.executeQuery(`SET FOREIGN_KEY_CHECKS=0;
+    DELETE FROM user_answer_question WHERE question_id = ${questionId};
+    DELETE FROM quiz_question WHERE question_id = ${questionId};
+    DELETE FROM question_multiple_choice WHERE question_id = ${questionId};
+    DELETE FROM question_gap_filling WHERE question_id = ${questionId};
+    DELETE FROM question_matching_sub WHERE question_id = ${questionId};
+    DELETE FROM question_multiple WHERE question_id = ${questionId};
+    DELETE FROM question WHERE question_id = ${questionId};
+    SET FOREIGN_KEY_CHECKS=1;
+    `);
   }
 }
 

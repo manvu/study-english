@@ -94,6 +94,7 @@ const authStore = {
         });
     },
     signOut(context, payload) {
+      
       localStorage.clear();
       context.commit("signOut", payload);
     },

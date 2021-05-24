@@ -18,8 +18,8 @@
           <li class="nav-item">
             <router-link to="/home">Home</router-link>
           </li>
-          <li class="nav-item" v-if="isAuthenticated" >
-            <router-link  to="/quiz">Quiz</router-link>
+          <li class="nav-item disabled" v-if="isAuthenticated" >
+            <router-link to="/quiz">Quiz</router-link>
           </li>
           <li class="nav-item" v-if="isAuthenticated">
             <router-link to="/discussion">Discussion</router-link>

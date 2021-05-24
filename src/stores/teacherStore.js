@@ -37,7 +37,7 @@ const teacherStore = {
       quiz.description = payload.description;
       quiz.isActive = payload.isActive;
       quiz.timeAllowed = payload.timeAllowed;
-      quiz.selectedSkillId = payload.selectedSkillId;
+      quiz.skillId = payload.skillId;
     },
     getQuestionForEdit(state, payload) {
       state.editQuestion = payload.question;
@@ -60,7 +60,7 @@ const teacherStore = {
       state.statistics.quizStatistics = payload.quizStatistics;
     },
     getBoardStatisticsByStudent(state, payload) {
-      state.statistics.studentsStatistics = payload
+      state.statistics.studentsStatistics = payload;
     },
     getAllStudents(state, payload) {
       state.students = payload.students;
@@ -71,7 +71,7 @@ const teacherStore = {
       return axios(API_LIST.getDataForTeacher)
         .then((response) => {
           if (!response.data.error) {
-            payload = response.data.response
+            payload = response.data.response;
             context.commit("getDataForTeacher", payload);
           }
 
@@ -91,7 +91,6 @@ const teacherStore = {
       return axios(API_LIST.getQuizForEdit(quizId))
         .then((response) => {
           if (!response.data.error) {
-            
             const questions = response.data.response;
             payload.questions = questions;
             context.commit("getQuizForEdit", payload);
@@ -148,6 +147,7 @@ const teacherStore = {
         .then((response) => {
           if (!response.data.error) {
             let question = response.data.response;
+            debugger
             payload.question = question;
             context.commit("getQuestionForEdit", payload);
           }
@@ -168,9 +168,10 @@ const teacherStore = {
           if (!response.data.error) {
             payload.question_id = response.data.question_id;
             context.commit("createQuestion", payload);
+            return "OK";
           }
 
-          console.log(response);
+          return response.data.error;
         })
         .catch((error) => {
           console.log(error);
@@ -239,6 +240,23 @@ const teacherStore = {
           this.loading = false;
         });
     },
+    resetRating(context, payload) {
+      return axios(API_LIST.resetRating(payload.quizId))
+        .then((response) => {
+          if (!response.data.error) {
+            return "OK";
+          }
+
+          return response.data.response;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
   },
   getters: {
     getQuizList(state) {
@@ -266,7 +284,7 @@ const teacherStore = {
       return state.statistics.quizStatistics;
     },
     getBoardStatisticsByStudent(state) {
-      return state.statistics.studentsStatistics
+      return state.statistics.studentsStatistics;
     },
     getAllStudents(state) {
       return state.students;

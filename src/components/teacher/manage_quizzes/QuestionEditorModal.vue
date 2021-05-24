@@ -7,33 +7,75 @@
             <h2>Question Editor</h2>
             <h2 class="closeButton" @click="closeQuestionEditorModal()">X</h2>
           </div>
-
+          <div v-if="errorMessage" class="alert alert-danger mt-3">
+            {{ errorMessage }}
+          </div>
           <div class="modal-body">
             <div class="contact-form">
               <div class="form-group">
                 <label class="control-label" for="type">Type</label>
                 <div>
-                  <select name="type" class="col-4 form-control" id="question-type" v-model="selectedQuestionType" :disabled="mode === 'edit'" >
-                    <option class="dropdown-item" :value="type.type_id" v-for="type in allQuestionTypes" :key="type.type_id" >
+                  <select
+                    name="type"
+                    class="col-4 form-control"
+                    id="question-type"
+                    v-model="question.type_id"
+                    :disabled="mode === 'edit'"
+                  >
+                    <option
+                      class="dropdown-item"
+                      :value="type.type_id"
+                      v-for="type in allQuestionTypes"
+                      :key="type.type_id"
+                    >
                       {{ type.type_name }}
                     </option>
                   </select>
                 </div>
               </div>
+              <div class="form-group">
+                <label class="control-label" for="instruction"
+                  >Instruction</label
+                >
+                <div class="">
+                  <textarea
+                    name="instruction"
+                    id="instruction"
+                    rows="3"
+                    placeholder="Choose the most suitable option to fill in the blank"
+                    v-model="question.instruction"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label mr-2" for="active"
+                      >Is active?</label
+                    >
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      name="active"
+                      v-model="question.isActive"
+                    />
+                  </div>
+                </div>
+              </div>
               <multiple-choice-editor
-                v-if="selectedQuestionType === 1"
-                :item="question"
+                v-if="question.type_id === 1"
                 :mode="mode"
+                @handleSave="save"
               ></multiple-choice-editor>
               <gap-filling-editor
-                v-else-if="selectedQuestionType === 2"
-                :item="question"
+                v-else-if="question.type_id === 2"
                 :mode="mode"
+                @handleSave="save"
               ></gap-filling-editor>
               <matching-editor
-                v-else-if="selectedQuestionType === 3"
-                :item="question"
+                v-else-if="question.type_id === 3"
                 :mode="mode"
+                @handleSave="save"
               ></matching-editor>
             </div>
           </div>
@@ -50,23 +92,84 @@ import MultipleChoiceEditor from "./question_editor/MultipleChoiceEditor";
 
 export default {
   inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
-  props: ["question", "mode", "quizId"],
+  computed: {
+    questionTypeId() {
+      return this.question.type_id
+    }
+  },
+  props: ["mode", "quizId"],
   components: { MultipleChoiceEditor, GapFillingEditor, MatchingEditor },
+  watch: {
+    questionTypeId() {
+      this.errorMessage = ""
+    }
+  },
   data() {
     return {
-      selectedQuestionType:
-        this.mode === "create" ? 1 : this.question.type_id,
+      question: {
+        type_id: 1,
+        isActive: true,
+        instruction: "This is the test",
+        quizId: 0
+      },
+      allQuestionTypes: [],
+      errorMessage: "",
     };
   },
   created() {
+    if (this.mode === "edit") {
+      this.question = this.$store.getters["teacherStore/getEditQuestion"];
+    } else {
+      const quiz = this.$store.getters["teacherStore/getEditQuiz"]
+      this.question.quizId = quiz.quiz_id
+    }
+
+    this.allQuestionTypes = this.$store.getters[
+      "teacherStore/getAllQuestionTypes"
+    ];
+
     console.log(this.question);
-    
-    this.allQuestionTypes = this.$store.getters["teacherStore/getAllQuestionTypes"]
+  },
+  methods: {
+    save(otherProps) {
+      if (this.mode === "create") {
+        debugger
+        this.$store
+          .dispatch("teacherStore/createQuestion", {
+            ...otherProps,
+            instruction: this.question.instruction,
+            isActive: this.question.isActive,
+            quizId: this.question.quizId,
+          })
+          .then((response) => {
+            if (response === "OK") {
+              this.closeQuestionEditorModal();
+            } else {
+              this.errorMessage = response
+            }
+          });
+      } else if (this.mode === "edit") {
+        this.$store
+          .dispatch("teacherStore/updateQuestion", {
+            ...otherProps,
+            questionId: this.question_id,
+            instruction: this.instruction,
+            isActive: this.isActive,
+          })
+          .then((response) => {
+            this.closeQuestionEditorModal();
+          });
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+#instruction {
+  width: 100%;
+}
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
