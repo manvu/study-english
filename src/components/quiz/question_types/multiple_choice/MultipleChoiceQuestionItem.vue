@@ -24,19 +24,6 @@ import MultipleChoiceChoiceItem from "./MultipleChoiceChoiceItem";
 
 export default {
   components: { MultipleChoiceChoiceItem },
-  watch: {
-    selectedOptions(state) {
-      if (state !== null) {
-        let underscores = this.originalQuestionText.match(/__*/g);
-        this.questionText = this.originalQuestionText.replace(
-          underscores,
-          "<span style='color: red;'>" +
-            this.choices[this.selectedOptions] +
-            "</span>"
-        );
-      }
-    },
-  },
   props: ["id", "text", "choices", "instruction", "question"],
   data() {
     return {

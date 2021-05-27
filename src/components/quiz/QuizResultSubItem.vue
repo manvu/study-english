@@ -6,7 +6,24 @@
     <span v-else :class="{ 'is-selected': answer === 1 }">
       {{ characters[choice_id - 1] + ". " + choice_text }}
     </span>
+
+    <span v-if="type_id === 1">
     <font-awesome-icon
+      v-if="shouldDisplayIcon && isCorrect === true"
+      class="ml-1"
+      :icon="faCheckCircle"
+      :style="{ color: 'green' }"
+    ></font-awesome-icon>
+
+    <font-awesome-icon
+      v-else-if="shouldDisplayIcon && isCorrect === false"
+      class="ml-1"
+      :icon="faTimesCircle"
+      :style="{ color: 'red' }"
+    ></font-awesome-icon>
+    </span>
+    <span v-else>
+          <font-awesome-icon
       v-if="isCorrect === true"
       class="ml-1"
       :icon="faCheckCircle"
@@ -19,15 +36,16 @@
       :icon="faTimesCircle"
       :style="{ color: 'red' }"
     ></font-awesome-icon>
+    </span>
 
     <span v-if="isCorrect === false && type_id !== 1" class="correct-answer"
       >&nbsp;{{ `Correct answer: ${correct_answer}` }}</span
     >
 
-    <span v-if="!isCorrect && is_correct_choice === 1 && type_id === 1" class="correct-answer"
+    <span v-if="shouldDisplayIcon && !isCorrect && is_correct_choice === 1 && type_id === 1" class="correct-answer"
       >&nbsp;(should have been selected)</span
     >
-    <span v-else-if="!isCorrect &&is_correct_choice === 0 && type_id === 1" class="correct-answer"
+    <span v-else-if="shouldDisplayIcon && !isCorrect &&is_correct_choice === 0 && type_id === 1" class="correct-answer"
       >&nbsp;(should <strong>not</strong> have been selected)</span
     >
   </div>
@@ -52,6 +70,17 @@ export default {
     faTimesCircle() {
       return faTimesCircle;
     },
+    shouldDisplayIcon() {
+      if (this.is_correct_choice === 1 && this.answer === 1) {
+        return true;
+      } else if (this.is_correct_choice === 0 && this.answer === 1) {
+        return true;
+      } else if (this.is_correct_choice === 1 && this.answer === 0) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   props: [
     "answer",

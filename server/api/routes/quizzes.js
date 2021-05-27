@@ -18,6 +18,7 @@ router.get("/:id", authMiddleware, async (req, res) => {
   res.status(200).json(quiz);
 });
 
+
 router.post("/", [authMiddleware, authTeacherMiddleware], async (req, res) => {
   const data = {
     courseName: req.body.courseName,

@@ -5,7 +5,7 @@
         <span>
           <font-awesome-icon :icon="faClock"></font-awesome-icon>
         </span>
-        45 minutes
+        {{ displayCountdownTimer }} 
       </h4>
     </div>
 
@@ -34,11 +34,24 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import "moment-duration-format"
 
 export default {
-  props: ["questions"],
+  props: ["questions", "timer"],
   components: { FontAwesomeIcon },
+  data() {
+    return {
+      timeLeft: 0,
+      expiredTime: 0,
+      interval: 1000,
+      timeout: null
+    };
+  },
   computed: {
+    displayCountdownTimer() {
+      return moment.duration(this.timeLeft, 'seconds').format('h [hours], m [minutes], s [seconds]')
+    },
     faBars() {
       return faBars;
     },
@@ -57,14 +70,32 @@ export default {
   },
   methods: {
     submit() {
-      
-      this.$store.dispatch("quizStore/submitQuiz", {
-        quizId: this.questions[0].quiz_id,
-        attemptId: this.questions[0].attempt_id,
-      }).then(response => {
-        this.$router.push({ name: "quiz-result"})
-      })
+      this.$store
+        .dispatch("quizStore/submitQuiz", {
+          quizId: this.questions[0].quiz_id,
+          attemptId: this.questions[0].attempt_id,
+        })
+        .then((response) => {
+          this.$router.push({ name: "quiz-result" });
+        });
     },
+    countDownTimer() {
+      if (this.timeLeft > 0) {
+        this.timeout = setTimeout(() => {
+          this.timeLeft -= 1;
+          this.countDownTimer();
+        }, this.interval);
+      } else {
+        clearTimeout(this.timeout)
+        this.submit()
+      }
+    },
+  },
+  created() {
+    this.timeLeft = -1 * this.timer.time_left;
+    this.expiredTime = this.timer.expired_time;
+
+    this.countDownTimer()
   },
 };
 </script>

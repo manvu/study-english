@@ -99,6 +99,24 @@ function convertToObject(object) {
   return resObject;
 }
 
+async function getCurrentQuizInfo (quizId, userId, attemptId) {
+  const thisAttempt = await AttemptModel.findIncompleteAttempt(quizId, userId, attemptId)
+
+  if (!thisAttempt.error) {
+    const { time_allowed, start_time } = thisAttempt.response[0]
+    const currentMoment = moment();
+    const expiredTime = moment(start_time).add(time_allowed, "minutes");
+    const difference = currentMoment.diff(expiredTime, "seconds"); 
+
+    return sendSuccess({
+      time_left: difference,
+      expired_time: expiredTime,
+    })
+  } else {
+    return sendFailure(STRINGS.ERROR_OCCURRED)
+  }
+}
+
 module.exports = {
   startQuiz: async (quizId, userId) => {
     let latestAttempt = await AttemptModel.findLatest(quizId, userId);
@@ -131,7 +149,10 @@ module.exports = {
             attemptId: newAttempt[0].attempt_id,
           });
 
-          const response = questions.response;
+          const quizInfo = await getCurrentQuizInfo(quizId, userId, newAttempt[0].attempt_id)
+
+          const response = !quizInfo.error ? {questions: questions.response, ...quizInfo.response} : {questions: questions.response}
+
 
           questionsContent = helper.cleanObject(questionsContent.response);
 
@@ -145,7 +166,7 @@ module.exports = {
             }
           }
 
-          for (const question of response) {
+          for (const question of response.questions) {
             question.content = resObject[question.question_id];
           }
 
@@ -163,7 +184,9 @@ module.exports = {
         } else {
           const { questions, userAnswerQuestions } = incompleteAttempt;
 
-          const response = questions;
+          const quizInfo = await getCurrentQuizInfo(quizId, userId, latestAttempt.response[0].attempt_id)
+
+          const response = !quizInfo.error ? {questions, ...quizInfo.response} : {questions}
 
           const questionsContent = helper.cleanObject(
             incompleteAttempt.questionsContent
@@ -179,18 +202,16 @@ module.exports = {
             }
           }
 
-          for (const question of response) {
+          for (const question of response.questions) {
             question.content = resObject[question.question_id];
           }
 
           return sendSuccess(response);
         }
       }
-      // } else {
-      //   return sendFailure(STRINGS.ERROR_OCCURRED);
-      // }
     }
   },
+
   getQuiz: async (id) => {
     let quiz = await QuizModel.findDetailed(id);
 
@@ -328,6 +349,7 @@ module.exports = {
             
             for (const correct of corrects) {
               const isSelected = selectedOptions.includes(correct.choice_id) 
+              correct.user_answer = isSelected ? 1 : 0
               if ((isSelected && correct.is_correct_choice === 1) || (!isSelected && correct.is_correct_choice === 0)) {
                   correct.marked = true 
               } else {

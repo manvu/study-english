@@ -3,10 +3,17 @@
     <div class="col-1 col-sm-1 col-md-2 col-lg-3 col-xl-3"></div>
     <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6">
       <div class="quiz-result">
+        <div class="header-title quiz-result-header ">
+          <h3 class="text-center"><font-awesome-icon
+      class="ml-1"
+      :icon="faCheckCircle"
+      :style="{ color: 'green' }"
+    ></font-awesome-icon> Your submission has been marked</h3>
+        </div>
         <div class="quiz-result-header">
           <div class="left-column">
             <h6>Time spent: 45 minutes</h6>
-            <h6>Result: {{ result.result.correct}}/{{ result.result.total}}</h6>
+            <h6>Result: {{ result.result.correct + result.result.partial * 0.5}}/{{ result.result.total}}</h6>
           </div>
           <div class="right-column">
             <h6>Accuracy: {{ result.accuracy }}%</h6>
@@ -34,9 +41,16 @@
 
 <script>
 import QuizResultItem from './QuizResultItem'
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 
 export default {
-  components: {QuizResultItem},
+  components: {QuizResultItem, FontAwesomeIcon},
+  computed: {
+        faCheckCircle() {
+      return faCheckCircle;
+    },
+  },
   created() {
     
     this.result = this.$store.getters["quizStore/getQuizResult"];
@@ -51,6 +65,10 @@ h3,
 p,
 ol {
   font-family: sans-serif;
+}
+
+.header-title {
+  padding-bottom: 0px !important;
 }
 
 h2 {

@@ -78,6 +78,12 @@ class AttemptModel {
     WHERE ua.end_time IS NULL 
     ORDER BY start_time`)
   }
+
+  async findIncompleteAttempt(quizId, userId, attemptId) {
+    return await this.db.executeQuery(`SELECT ua.attempt_id, ua.user_id, ua.quiz_id, ua.start_time, q.time_allowed 
+    FROM user_attempt ua JOIN quiz q ON ua.quiz_id = q.quiz_id
+    WHERE ua.quiz_id = ${quizId} AND user_id = ${userId} AND attempt_id = ${attemptId}`)
+  }
 }
 
 module.exports = AttemptModel;

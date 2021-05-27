@@ -41,8 +41,10 @@
       </div>
       <question-palette
         id="question-palette"
+        v-if="!hideQuestionPalette"
         class="col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2"
         :questions="questions"
+        :timer="timer"
       ></question-palette>
     </div>
   </div>
@@ -65,6 +67,8 @@ export default {
   data() {
     return {
       questions: [],
+      timer: {},
+      hideQuestionPalette: true,
     };
   },
   created() {
@@ -74,6 +78,8 @@ export default {
       .dispatch("questionStore/getQuestionList", { quizId })
       .then(() => {
         this.questions = this.$store.getters["questionStore/getQuestionList"];
+        this.timer = this.$store.getters["questionStore/getTimer"];
+        this.hideQuestionPalette = false
       });
   },
 };

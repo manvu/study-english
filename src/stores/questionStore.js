@@ -6,11 +6,14 @@ const questionStore = {
   state() {
     return {
       questions: [],
+      timer: { expired_time: null, time_left: null },
     };
   },
   mutations: {
     getQuestionList(state, payload) {
       state.questions = payload.questions;
+      state.timer.expired_time = payload.expired_time;
+      state.timer.time_left = payload.time_left;
     },
   },
   actions: {
@@ -18,8 +21,14 @@ const questionStore = {
       return axios(API_LIST.getQuizById(payload.quizId))
         .then((response) => {
           if (!response.data.error) {
-            let questions = response.data.response;
+            const {
+              expired_time,
+              time_left,
+              questions,
+            } = response.data.response;
             payload.questions = questions;
+            payload.expired_time = expired_time;
+            payload.time_left = time_left;
             context.commit("getQuestionList", payload);
           }
 
@@ -34,7 +43,6 @@ const questionStore = {
         });
     },
     answerQuestion(context, payload) {
-      
       return axios(API_LIST.answerQuestion(payload.questionId, payload))
         .then((response) => {
           if (!response.data.error) {
@@ -60,6 +68,9 @@ const questionStore = {
     getEditQuestion(state) {
       return state.editQuestion;
     },
+    getTimer(state) {
+      return state.timer
+    }
   },
 };
 
