@@ -9,14 +9,79 @@ const QuestionModel = new (require("../../models/question"))();
 const MCModel = new (require("../../models/multiple_choice_option"))();
 const GModel = new (require("../../models/gap_filling_option"))();
 const MModel = new (require("../../models/matching_option"))();
+const InstructionModel = new (require("../../models/instruction"))();
+const validator = require("../validators/validator");
 
+async function createInstruction(instruction) {
+  let createInstruction = await InstructionModel.addOne(instruction);
+
+  if (!createInstruction.error) {
+    return sendSuccess(201, createInstruction.response);
+  } else {
+    return sendFailure(STRINGS.CANNOT_CREATE_INSTRUCTION);
+  }
+}
+
+async function getInstruction(instruction) {
+  const findInstruction = await InstructionModel.findOne(instruction);
+
+  if (!findInstruction.error && findInstruction.response.length === 1) {
+    return sendSuccess(findInstruction.response[0]);
+  } else {
+    return sendFailure(STRINGS.CANNOT_LOAD_INSTRUCTION);
+  }
+}
+
+async function updateQuestionContent(
+  questionId,
+  typeId,
+  items,
+  correctAnswers,
+  shuffleAnswers
+) {
+  if (typeId === 1) {
+    let content = await MCModel.saveMany(items, questionId);
+
+    if (!content.error) {
+      return sendSuccess(201);
+    } else {
+      return sendFailure(STRINGS.ERROR_OCCURRED);
+    }
+  } else if (typeId === 2) {
+    let content = await GModel.saveMany(items, questionId);
+
+    if (!content.error) {
+      return sendSuccess(201);
+    } else {
+      return sendFailure(STRINGS.ERROR_OCCURRED);
+    }
+  } else if (typeId === 3) {
+    let content = await MModel.saveMatchingQuestion(
+      correctAnswers,
+      questionId
+    );
+
+    if (!content.error) {
+      let insertItems = await MModel.saveMany(
+        [...items.leftItems, ...items.rightItems],
+        questionId
+      );
+
+      if (!insertItems.error) {
+        return sendSuccess(201);
+      } else {
+        return sendFailure(STRINGS.ERROR_OCCURRED);
+      }
+    }
+  }
+}
 
 async function getQuestionContent(id, typeId, questionData) {
   if (typeId === 1) {
     let content = await MCModel.findMany(id);
 
     if (!content.error) {
-      return sendSuccess({...questionData, items: content.response});
+      return sendSuccess({ ...questionData, items: content.response });
     } else {
       return sendFailure(STRINGS.CANNOT_LOAD_QUESTION);
     }
@@ -24,7 +89,7 @@ async function getQuestionContent(id, typeId, questionData) {
     let content = await GModel.findMany(id);
 
     if (!content.error) {
-      return sendSuccess({...questionData, items: content.response});
+      return sendSuccess({ ...questionData, items: content.response });
     } else {
       return sendFailure(STRINGS.CANNOT_LOAD_QUESTION);
     }
@@ -86,13 +151,16 @@ module.exports = {
     if (!question.error) {
       const questionData = question.response[0];
       const typeId = questionData.type_id;
-      return await getQuestionContent(id, typeId, {...questionData, isActive: questionData.is_active == 1 ? true : false});
+      return await getQuestionContent(id, typeId, {
+        ...questionData,
+        isActive: questionData.is_active == 1 ? true : false,
+      });
     } else {
       return sendFailure(STRINGS.CANNOT_LOAD_QUESTION);
     }
   },
   getTeacherHome: async () => {
-    let homeSummary = await HomeModel.getHomeSummaryForGuest();
+    let homeSummary = await QuizModel.findAllForTeacher();
     let allSkills = await SkillModel.findAll();
     let questionTypes = await QuestionTypeModel.findAll();
 
@@ -106,22 +174,67 @@ module.exports = {
       return sendFailure(STRINGS.ERROR_LOADING_TEACHER_PAGE);
     }
   },
-  deleteQuiz: async(quizId) => {
-    const deleteQuiz = await QuizModel.deleteQuiz(quizId);
+  deleteQuiz: async (quizId) => {
+    if (!validator.validateQuizId(quizId)) {
+      return sendFailure(STRINGS.INVALID_QUIZ_ID);
+    }
+
+    const deleteQuiz = await QuizModel.deleteOne(quizId);
 
     if (!deleteQuiz.error) {
-      return sendSuccess(202)
+      return sendSuccess(202);
     } else {
-      return sendFailure(400)
+      return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
-  deleteQuestion: async(questionId) => {
-    const deleteQuestion = await QuizModel.deleteQuestion(questionId);
+  updateQuestion: async (data) => {
+    const { questionId, instruction, isActive, typeId, items, correctAnswers } = data;
+
+    if (!validator.validateQuestionId(questionId)) {
+      return sendFailure(STRINGS.INVALID_QUESTION_ID);
+    }
+
+    const create = await createInstruction(instruction);
+
+    if (!create.error) {
+      let instructionId = create.response.insertId;
+
+      if (instructionId === 0) {
+        const findInstruction = await getInstruction(instruction);
+        instructionId = findInstruction.response.instruction_id;
+      }
+
+      if (instructionId > 0) {
+        const isActive = data.isActive === true ? 1 : 0;
+
+        const question = await QuestionModel.saveOne({...data, instructionId, isActive});
+        const questionsContent = await updateQuestionContent(questionId,
+          typeId,
+          items,
+          correctAnswers,
+          1)
+
+        if (!question.error) {
+          return sendSuccess(202);
+        } else {
+          return sendFailure(STRINGS.ERROR_OCCURRED);
+        }
+      }
+    } else {
+      return sendFailure(STRINGS.ERROR_OCCURRED);
+    }
+  },
+  deleteQuestion: async (questionId) => {
+    if (!validator.validateQuestionId(questionId)) {
+      return sendFailure(STRINGS.INVALID_QUESTION_ID);
+    }
+
+    const deleteQuestion = await QuestionModel.deleteOne(questionId);
 
     if (!deleteQuestion.error) {
-      return sendSuccess(202)
+      return sendSuccess(202);
     } else {
-      return sendFailure(400)
+      return sendFailure(STRINGS.ERROR_OCCURRED);
     }
-  }
+  },
 };

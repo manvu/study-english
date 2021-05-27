@@ -6,6 +6,7 @@ const QuestionModel = new (require("../../models/question"))();
 const MCModel = new (require("../../models/multiple_choice_option"))();
 const GModel = new (require("../../models/gap_filling_option"))();
 const MModel = new (require("../../models/matching_option"))();
+const AttemptModel = new (require("../../models/attempt"))();
 const InstructionModel = new (require("../../models/instruction"))();
 const validator = require("../validators/validator");
 
@@ -33,14 +34,14 @@ async function createQuestionContent(
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   } else if (typeId === 3) {
-    let content = await MModel.addManyItems(
+    let content = await MModel.addQuestion(
       correctAnswers,
       questionId,
       shuffleAnswers
     );
 
     if (!content.error) {
-      let insertItems = await MModel.addManyItems(
+      let insertItems = await MModel.addMany(
         items.leftItems,
         items.rightItems,
         questionId
@@ -82,6 +83,23 @@ async function getInstruction(instruction) {
     return sendSuccess(findInstruction.response[0]);
   } else {
     return sendFailure(STRINGS.CANNOT_LOAD_INSTRUCTION);
+  }
+}
+
+async function updateIncompleteAttempts(quizId, questionId) {
+  const incomplete = await AttemptModel.findIncompleteAttempts(quizId);
+
+  if (!incomplete.error && incomplete.response.length > 0) {
+    const attempts = incomplete.response
+
+    for (const attempt of attempts) {
+      const data = { questionId, quizId, userId: attempt.user_id, attemptId: attempt.attempt_id, numberOfQuestions: 1 } 
+      const update = await AttemptModel.addOnePlaceholder(data)
+      const a = 0
+    }
+    return true
+  } else {
+    return false
   }
 }
 
@@ -146,6 +164,8 @@ module.exports = {
             shuffleAnswers
           );
 
+          const addPlaceholderToIncompleteAttempts = await updateIncompleteAttempts(quizId, questionId)
+
           if (!bridge.error && !content.error) {
             return sendSuccess(201);
           } else {
@@ -159,6 +179,7 @@ module.exports = {
       }
     }
   },
+
   updateAnswer: async (data) => {
     const { questionId, quizId, attemptId, answerText, userId } = data;
     const answer = await UserAnswerModel.saveOne(data);

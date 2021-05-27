@@ -1151,62 +1151,7 @@ select {
 .posts__views {
   color: #8e9091;
 }
-@media only screen and (min-width: 1040px) {
-  .posts__views {
-    width: 8%;
-    min-width: 8%;
-  }
-}
-@media only screen and (max-width: 1039px) {
-  .posts__views {
-    display: none !important;
-  }
-}
-@media only screen and (min-width: 1040px) {
-  .posts__section-right .posts__views {
-    width: 21.62%;
-    min-width: 21.62%;
-  }
-}
-.posts__activity {
-  color: #8e9091;
-}
-@media only screen and (min-width: 1040px) {
-  .posts__activity {
-    width: 8%;
-    min-width: 8%;
-  }
-}
-@media only screen and (max-width: 1039px) {
-  .posts__head .posts__activity {
-    display: none !important;
-  }
-}
-@media only screen and (max-width: 1039px) {
-  .posts__item .posts__activity {
-    padding-top: 4px;
-    margin-top: 4px;
-    border-top: solid 1px #e9ecee;
-  }
-}
-@media only screen and (min-width: 1040px) {
-  .posts__section-right .posts__activity {
-    width: 21.62%;
-    min-width: 21.62%;
-  }
-}
-@media only screen and (max-width: 1039px) {
-  .posts__section-right .posts__activity {
-    justify-content: flex-end;
-  }
-}
-@media only screen and (min-width: 1040px) {
-  .posts__replies,
-  .posts__views,
-  .posts__activity {
-    justify-content: center;
-  }
-}
+
 .posts__content h3 {
   margin: 0;
   font-weight: 400;

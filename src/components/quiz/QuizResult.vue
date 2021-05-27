@@ -6,10 +6,10 @@
         <div class="quiz-result-header">
           <div class="left-column">
             <h6>Time spent: 45 minutes</h6>
-            <h6>Result: {{ result.accuracy.correctSubquestions}}/{{ result.accuracy.totalSubquestions}}</h6>
+            <h6>Result: {{ result.result.correct}}/{{ result.result.total}}</h6>
           </div>
           <div class="right-column">
-            <h6>Accuracy: {{ result.accuracy.percentage }}%</h6>
+            <h6>Accuracy: {{ result.accuracy }}%</h6>
             <h6>Quiz: {{ result.quiz_id }}</h6>
           </div>
         </div>
@@ -17,12 +17,11 @@
           <table>
             <tbody>
               <quiz-result-item
-                v-for="r in result.marked"
+                v-for="(r, i) in result.detailedAnswers"
                 :key="r.question_id"
-                :question_id="r.question_id"
-                :user_answers="r"
+                :question_id="i + 1"
                 :answers="r.answers"
-                :type_id="r.type_id"
+                :type_id="r.answers[0].type_id"
               ></quiz-result-item>
             </tbody>
           </table>
@@ -41,6 +40,7 @@ export default {
   created() {
     
     this.result = this.$store.getters["quizStore/getQuizResult"];
+    console.log(this.result)
   },
 };
 </script>

@@ -21,7 +21,9 @@
       <div class="row" v-for="quiz in quizzes" :key="quiz.quiz_id">
         <div class="cell" data-title="ID">{{ quiz.quiz_id }}</div>
         <div class="cell" data-title="Course Name">{{ quiz.course_name }}</div>
-        <div class="cell" data-title="Active">{{ quiz.is_active }}</div>
+        <div class="cell" data-title="Active">
+          {{ quiz.is_active === 1 ? "Yes" : "No" }}
+        </div>
         <div class="cell" data-title="Questions">
           {{ quiz.number_of_questions }}
         </div>
@@ -46,7 +48,7 @@
           <font-awesome-icon
             class="button-item ml-2"
             :icon="faTrashAlt"
-            @click="removeQuiz(quiz.quiz_id)"
+            @click="deleteQuiz(quiz.quiz_id)"
           ></font-awesome-icon>
         </div>
       </div>
@@ -116,6 +118,17 @@ export default {
     faEraser() {
       return faEraser;
     },
+    latestQuizzes() {
+      return this.$store.getters["teacherStore/getQuizList"];
+    },
+  },
+  watch: {
+    latestQuizzes() {
+      
+      this.quizzes = this.$store.getters["teacherStore/getQuizList"];
+      this.originalQuizzes = this.quizzes;
+      this.paginate();
+    },
   },
   created() {
     this.$store.dispatch("teacherStore/getDataForTeacher").then((response) => {
@@ -133,16 +146,19 @@ export default {
       this.$emit("toggleShowQuizEditor", { mode: "edit", quizId });
     },
     resetRating(quizId) {
-      this.$store.dispatch("teacherStore/resetRating", { quizId: quizId })
-      .then((response) => {
-        if (response === "OK") {
-
-        } else {
-          
-        }
-      })
+      this.$store
+        .dispatch("teacherStore/resetRating", { quizId: quizId })
+        .then((response) => {
+          if (response === "OK") {
+          } else {
+          }
+        });
     },
-    removeQuiz(quizId) {},
+    deleteQuiz: function (quizId) {
+      this.$store
+        .dispatch("teacherStore/deleteQuiz", { quizId })
+        .then((response) => {});
+    },
     paginate(currentPage, pagesPerPage) {
       const paginated = paginator(
         this.quizzes,
@@ -170,6 +186,18 @@ export default {
       if (page !== null) {
         this.changePage(page);
       }
+    },
+    changePage(changeTo) {
+      const paginated = paginator(
+        this.originalQuizzes,
+        changeTo,
+        this.pagination.pagesPerPage
+      );
+
+      this.quizzes = paginated.data;
+      this.pagination.currentPage = paginated.page;
+      this.pagination.prevPage = paginated.pre_page;
+      this.pagination.nextPage = paginated.next_page;
     },
   },
 };
@@ -248,6 +276,9 @@ tbody td:hover:before {
   }
 }
 
+.page-number {
+  cursor: pointer;
+}
 .wrapper {
   margin: 0 auto;
   padding: 40px;

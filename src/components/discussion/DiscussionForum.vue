@@ -134,7 +134,7 @@
           </div>
           <div
             v-if="pagination.totalPages !== null"
-            class="block-27 text-center"
+            class="block-27 text-center mt-3"
           >
             <ul>
               <li><span class="page-number" @click="prevPage()">&lt;</span></li>
@@ -347,6 +347,10 @@ export default {
 </script>
 
 <style scoped>
+.pagination-caption {
+  font-size: 18px;
+}
+
 .page-number {
   cursor: pointer;
 }
@@ -373,9 +377,9 @@ export default {
 }
 .block-27 ul li.active a,
 .block-27 ul li.active span {
-  background: #4ba1fa;
+  background: #2a265f;
   color: #fff;
-  border: 1px solid transparent;
+  border: 1px 
 }
 
 body {
@@ -626,20 +630,7 @@ ol {
   margin-left: auto !important;
   margin-right: auto !important;
 }
-@media only screen and (min-width: 1040px) {
-  [data-visible="mobile"] {
-    display: none !important;
-  }
-}
-@media only screen and (max-width: 1039px) {
-  [data-visible="desktop"] {
-    display: none !important;
-  }
-}
-input[type="checkbox"],
-input[type="radio"] {
-  margin: 0;
-}
+
 input {
   margin: 0;
 }
@@ -1165,16 +1156,7 @@ select {
   display: -webkit-flex;
   display: flex;
 }
-@media only screen and (min-width: 1040px) {
-  .nav__categories {
-    padding: 15px 0;
-  }
-}
-@media only screen and (max-width: 1039px) {
-  .nav__categories {
-    padding-top: 15px;
-  }
-}
+
 .nav__categories > * {
   margin-right: 15px;
 }
@@ -3155,37 +3137,6 @@ select {
     min-width: 200px;
   }
 }
-.header [data-dropdown-list="search"] {
-  padding: 0;
-}
-@media only screen and (min-width: 1040px) {
-  .header [data-dropdown-list="search"] {
-    min-width: 300px;
-    left: auto;
-    right: 0;
-  }
-}
-.header [data-dropdown-list="search"] ul {
-  padding: 0;
-}
-.header [data-dropdown-list="search"] ul li {
-  padding: 17px 30px;
-}
-.header [data-dropdown-list="search"] ul li:not(:first-child) {
-  border-top: solid 1px #e9ecee;
-}
-.header [data-dropdown-list="search"] ul li > label {
-  display: block;
-  color: #8e9091;
-  cursor: pointer;
-}
-.header [data-dropdown-list="search"] ul li > label > label {
-  margin-right: 15px;
-}
-.header [data-dropdown-list="search"] ul li i {
-  margin-right: 15px;
-  font-size: 20px;
-}
 @media only screen and (min-width: 1040px) {
   .header [data-dropdown-list="menu"] {
     min-width: 400px;
@@ -3532,100 +3483,5 @@ a:hover {
 [class^="icon-"]::before {
   color: inherit;
 }
-.bg-f9bc64 {
-  background-color: #f9bc64 !important;
-}
-.bg-348aa7 {
-  background-color: #348aa7 !important;
-}
-.bg-4436f8 {
-  background-color: #4436f8 !important;
-}
-.bg-5dd39e {
-  background-color: #5dd39e !important;
-}
-.bg-ff755a {
-  background-color: #ff755a !important;
-}
-.bg-bce784 {
-  background-color: #bce784 !important;
-}
-.bg-83253f {
-  background-color: #83253f !important;
-}
-.bg-c49bbb {
-  background-color: #c49bbb !important;
-}
-.bg-3ebafa {
-  background-color: #3ebafa !important;
-}
-.bg-c6b38e {
-  background-color: #c6b38e !important;
-}
-.bg-a7cdbd {
-  background-color: #a7cdbd !important;
-}
-.bg-525252 {
-  background-color: #525252 !important;
-}
-.bg-777da7 {
-  background-color: #777da7 !important;
-}
-.bg-368f8b {
-  background-color: #368f8b !important;
-}
-.bg-fef2e0 {
-  background-color: #fef2e0 !important;
-}
-.bg-f2f4f6 {
-  background-color: #f2f4f6 !important;
-}
-.bg-4f80b0 {
-  background-color: #4f80b0 !important;
-}
-.bg-424ee8 {
-  background-color: #424ee8 !important;
-}
-.bg-36b7d7 {
-  background-color: #36b7d7 !important;
-}
-.bg-ec008c {
-  background-color: #ec008c !important;
-}
-.bg-7cc576 {
-  background-color: #7cc576 !important;
-}
-.bg-3a3a17 {
-  background-color: #3a3a17 !important;
-}
-.bg-6f7e9c {
-  background-color: #6f7e9c !important;
-}
-.bg-f26522 {
-  background-color: #f26522 !important;
-}
-.bg-a3d39c {
-  background-color: #a3d39c !important;
-}
-.bg-6f7e9c {
-  background-color: #6f7e9c !important;
-}
-.bg-92278f {
-  background-color: #92278f !important;
-}
-.bg-8781bd {
-  background-color: #8781bd !important;
-}
-.bg-f1ab32 {
-  background-color: #f1ab32 !important;
-}
-.bg-3b96ca {
-  background-color: #3b96ca !important;
-}
-.bg-00bd9d {
-  background-color: #00bd9d !important;
-}
-.bg-218380 {
-  background-color: #218380 !important;
-}
+
 </style>

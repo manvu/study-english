@@ -6,7 +6,7 @@
           <div class="card-header">
             <div class="media flex-wrap w-100 align-items-center">
               <img
-                src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1574583246/AAA/2.jpg"
+                :src="`${publicPath}assets/images/avatars/${thread.avatarUrl}`"
                 class="d-block ui-w-40 rounded-circle"
                 alt=""
               />
@@ -143,6 +143,9 @@ export default {
         );
       }
       return null;
+    },
+    publicPath() {
+      return process.env.BASE_URL
     },
     displayedThreadCreatedAt() {
       return this.timeSince(new Date(this.thread.created_at));

@@ -1,22 +1,35 @@
 <template>
   <div>
-    <span v-if="type_id !== 1" class="subquestion-id">{{ answer.subquestion_id }}.</span>
-
-    {{ displayedAnswer }}
-
+    <span v-if="type_id !== 1" class="subquestion-id"
+      >{{ sequence_id }}.{{ displayedAnswer }}</span
+    >
+    <span v-else :class="{ 'is-selected': answer === 1 }">
+      {{ characters[choice_id - 1] + ". " + choice_text }}
+    </span>
     <font-awesome-icon
       v-if="isCorrect === true"
+      class="ml-1"
       :icon="faCheckCircle"
       :style="{ color: 'green' }"
     ></font-awesome-icon>
 
     <font-awesome-icon
       v-else-if="isCorrect === false"
+      class="ml-1"
       :icon="faTimesCircle"
       :style="{ color: 'red' }"
     ></font-awesome-icon>
 
-    <span v-if="isCorrect === false" class="correct-answer">&nbsp;{{ correctAnswer }}</span>
+    <span v-if="isCorrect === false && type_id !== 1" class="correct-answer"
+      >&nbsp;{{ `Correct answer: ${correct_answer}` }}</span
+    >
+
+    <span v-if="!isCorrect && is_correct_choice === 1 && type_id === 1" class="correct-answer"
+      >&nbsp;(should have been selected)</span
+    >
+    <span v-else-if="!isCorrect &&is_correct_choice === 0 && type_id === 1" class="correct-answer"
+      >&nbsp;(should <strong>not</strong> have been selected)</span
+    >
   </div>
 </template>
 
@@ -30,36 +43,9 @@ export default {
   components: { FontAwesomeIcon },
   computed: {
     displayedAnswer() {
-      if (this.type_id === 1) {
-        let answer = this.answer.answer;
-        if (answer !== "") {
-          return this.characters[parseInt(answer) - 1];
-        } else {
-          return "Unanswered";
-        }
-      } else {
-        let answer = this.answer.answer[1];
-
-        return answer === "?" ? "" : answer;
-      }
+      return this.answer === "?" || !this.answer ? "Unanswered" : this.answer;
     },
-    correctAnswer() {
-      if (this.type_id === 1) {
-        let correct =
-          this.answer.correct && this.answer.correct.length !== 0
-            ? this.answer.correct[1][0]
-            : this.answer.incorrect[1][0];
 
-        return `Correct answer: ${this.characters[parseInt(correct) - 1]}`;
-      } else {
-        let correct =
-          this.answer.correct && this.answer.correct.length !== 0
-            ? this.answer.correct[1]
-            : this.answer.incorrect[1];
-
-        return `Correct answer: ${correct}`;
-      }
-    },
     faCheckCircle() {
       return faCheckCircle;
     },
@@ -67,15 +53,39 @@ export default {
       return faTimesCircle;
     },
   },
-  props: ["answer", "type_id"],
+  props: [
+    "answer",
+    "correct_answer",
+    "type_id",
+    "sequence_id",
+    "marked",
+    "is_correct_choice",
+    "choice_id",
+    "choice_text",
+  ],
   data() {
     return {
-      isCorrect:
-        !this.answer.correct || this.answer.correct.length === 0 ? false : true,
+      isCorrect: false,
     };
   },
   created() {
     this.characters = characters;
+
+    if (this.type_id === 1) {
+      this.isCorrect = this.marked;
+    } else {
+      this.isCorrect = this.answer ? this.marked : false;
+    }
+
+    // if (this.type_id === 1) {
+    //   console.log(this.is_correct_choice);
+    //   console.log(this.choice_text);
+    //   console.log(this.choice_id);
+    //   console.log(this.marked);
+    //   console.log(this.answer);
+
+    //   const a = 3;
+    // }
   },
 };
 </script>
@@ -87,6 +97,10 @@ export default {
 }
 
 .correct-answer {
-    font-style: italic;
+  font-style: italic;
+}
+
+.is-selected {
+  font-weight: bold;
 }
 </style>

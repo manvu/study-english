@@ -35,7 +35,7 @@
             <div class="tab-pane fade active show" id="account-general">
               <div class="card-body media align-items-center">
                 <img
-                  :src="`${publicPath}assets/images/default-profile-picture.png`"
+                  :src="`${publicPath}assets/images/avatars/${avatarUrl}`"
                   alt=""
                   class="d-block ui-w-80"
                 />
@@ -208,6 +208,9 @@ export default {
     publicPath() {
       return process.env.BASE_URL;
     },
+    avatarUrl() {
+      return localStorage.getItem("avatarUrl")
+    }
   },
   data() {
     return {
@@ -241,7 +244,7 @@ export default {
         this.$store
           .dispatch("settingStore/uploadAvatar", formData)
           .then((response) => {
-            debugger
+            
             if (typeof response === "object") {
               this.avatar.currentStatus = STATUS_SUCCESS;
               this.avatar.mimeId = response.mimeId;
@@ -259,10 +262,10 @@ export default {
       return formData;
     },
     saveAvatar() {
-      debugger;
+      ;
     },
     save() {
-      debugger;
+      ;
       if (this.currentTab === 1) {
         this.$store
           .dispatch("settingStore/saveUserInfo", {

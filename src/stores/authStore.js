@@ -40,13 +40,17 @@ const authStore = {
               firstName,
               lastName,
               isTeacher,
+              avatarUrl
             } = response.data.response;
+
+            
 
             localStorage.setItem("token", token);
             localStorage.setItem("email", email);
             localStorage.setItem("firstName", firstName);
             localStorage.setItem("lastName", lastName);
             localStorage.setItem("isTeacher", isTeacher);
+            localStorage.setItem("avatarUrl", avatarUrl);
             return "OK";
           } else {
             return response.data.error;
@@ -71,6 +75,7 @@ const authStore = {
               firstName,
               lastName,
               isTeacher,
+              avatarUrl
             } = response.data.response;
 
             localStorage.setItem("token", token);
@@ -78,6 +83,7 @@ const authStore = {
             localStorage.setItem("firstName", firstName);
             localStorage.setItem("lastName", lastName);
             localStorage.setItem("isTeacher", isTeacher);
+            localStorage.setItem("avatarUrl", avatarUrl);
 
             return "OK";
           } else {

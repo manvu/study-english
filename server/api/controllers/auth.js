@@ -12,6 +12,7 @@ const {
   validateName,
 } = require("../validators/validator");
 const UserModel = new (require("../../models/user"))();
+const MimeTypeModel = new (require("../../models/mime_type"))();
 const {
   sendPasswordReset,
 } = require("../../services/email_notification/passwordReset");
@@ -73,6 +74,7 @@ module.exports = {
       if (user.response.affectedRows === 1) {
         const userId = user.response.insertId
         const isTeacher = roleId === 1 ? true : false
+        const avatarUrl =  "default-profile-picture.png"
 
         const token = jwt.sign(
           { id: userId, isTeacher: isTeacher },
@@ -90,7 +92,8 @@ module.exports = {
           firstName,
           lastName,
           token,
-          isTeacher
+          isTeacher,
+          avatarUrl
         });
       } else {
         return sendFailure(400, STRINGS.REGISTERING_USER_FAILED);
@@ -118,9 +121,10 @@ module.exports = {
         const firstName = validatedUser.response[0].first_name;
         const lastName = validatedUser.response[0].last_name;
         const userId = validatedUser.response[0].user_id;
-        const isTeacher =
-          validatedUser.response[0].role_id === 1 ? true : false;
+        const isTeacher = validatedUser.response[0].role_id === 1 ? true : false;
+        const avatarId = validatedUser.response[0].profile_picture_id;
 
+        const mime = await MimeTypeModel.findOne(avatarId)
         const success = await checkPassword(password, passwordHash);
 
         if (success) {
@@ -132,7 +136,9 @@ module.exports = {
             }
           );
 
-          return sendSuccess({ firstName, lastName, isTeacher, email, token });
+          const avatarUrl = !mime.error && mime.response.length === 1 ? mime.response[0].image_url : "default-profile-picture.png"
+
+          return sendSuccess({ firstName, lastName, isTeacher, email, token, avatarUrl });
         } else {
           return sendFailure(401, STRINGS.PLEASE_CHECK_YOUR_PASSWORD);
         }

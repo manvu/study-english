@@ -66,6 +66,13 @@ module.exports = {
 
     return true;
   },
+  validateQuestionId: function(questionId) {
+    if (!questionId || questionId < 0) {
+      return false
+    }
+
+    return true;
+  },
   validateQuestionTypeId: function(questionId) {
     if (!questionId) {
       return false;

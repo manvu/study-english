@@ -40,4 +40,10 @@ router.get("/questions/:id", authTeacherMiddleware, async (req, res) => {
   res.status(200).json(question)
 })
 
+router.put("/questions/:id", authTeacherMiddleware, async (req, res) => {
+  const questionId = req.params.id
+  const question = await teacherController.updateQuestion(req.body)
+  res.status(200).json(question)
+})
+
 module.exports = router;

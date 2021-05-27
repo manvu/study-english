@@ -6,7 +6,7 @@ class AnswerModel {
   }
 
   async findMany(questionId) {
-    return await this.db.executeQuery(`SELECT qms.letter, qms.text, qms.column_assigned
+    return await this.db.executeQuery(`SELECT qms.subquestion_id, qms.letter, qms.text, qms.column_assigned
     FROM question q
     JOIN question_matching_sub qms ON q.question_id = qms.question_id
     WHERE q.question_id = ${questionId}`)
@@ -17,7 +17,7 @@ class AnswerModel {
     VALUES ('${correctAnswers}', '${questionId}', '${shuffleAnswers}')`)
   }
 
-  async addManyItems(leftItems, rightItems, questionId) {
+  async addMany(leftItems, rightItems, questionId) {
     let query = `INSERT INTO question_matching_sub (subquestion_id, question_id, text, letter, column_assigned) VALUES `;
 
     for (let i = 0; i < leftItems.length; i++) {
@@ -41,6 +41,23 @@ class AnswerModel {
     console.log(formattedQuery);
 
     return await this.db.executeQuery(formattedQuery)
+  }
+
+  async saveMany(items, questionId) {
+    let query = ''
+    for (const { subquestion_id, text, item, letter, column_assigned} of items) {
+      query += `UPDATE question_matching_sub 
+      SET letter = '${letter}', text = '${item ? item : text}'
+      WHERE subquestion_id = ${subquestion_id} AND question_id = ${questionId} AND column_assigned = ${column_assigned};`;
+    }
+    
+    return await this.db.executeQuery(query)
+  }
+
+  async saveMatchingQuestion(correctAnswers, questionId) {
+    return await this.db.executeQuery(`UPDATE question_matching 
+    SET correct_answers = '${correctAnswers}'
+    WHERE question_id = ${questionId}`)
   }
 }
 

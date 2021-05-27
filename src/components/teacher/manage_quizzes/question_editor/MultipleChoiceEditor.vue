@@ -24,7 +24,7 @@
     </div>
     <div v-else>There is no choice created for this question</div>
   </div>
-  <button @click="addChoice" class="mb-3 btn btn-primary">Add Choice</button>
+  <button @click="addChoice" :disabled="mode === 'edit'" class="mb-3 btn btn-primary">Add Choice</button>
   <div class="form-group">
     <button
       type="button"
@@ -83,7 +83,13 @@ export default {
   created() {
     if (this.mode === "edit") {
       const question = this.$store.getters["teacherStore/getEditQuestion"];
-      this.items = question.items
+      this.items = question.items;
+
+      for (const choice of this.items) {
+        let index = this.nextChar();
+        let currentId = ++this.currentChoiceId;
+        choice.choice_order = index;
+      }
     }
   },
 };

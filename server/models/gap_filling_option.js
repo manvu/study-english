@@ -25,6 +25,15 @@ class GapFillingOptionModel {
 
     return await this.db.executeQuery(formattedQuery)
   }
+
+  async saveMany(items, questionId) {
+    let query = ''
+    for (const { sequence_id, correct_answer} of items) {
+      query += `UPDATE question_gap_filling SET correct_answer = '${correct_answer}' WHERE sequence_id = ${sequence_id} AND question_id = ${questionId};`;
+    }
+    
+    return await this.db.executeQuery(query)
+  }
 }
 
 module.exports = GapFillingOptionModel;

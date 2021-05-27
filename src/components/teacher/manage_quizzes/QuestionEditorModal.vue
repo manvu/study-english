@@ -133,7 +133,7 @@ export default {
   methods: {
     save(otherProps) {
       if (this.mode === "create") {
-        debugger
+        
         this.$store
           .dispatch("teacherStore/createQuestion", {
             ...otherProps,
@@ -149,12 +149,13 @@ export default {
             }
           });
       } else if (this.mode === "edit") {
+        
         this.$store
           .dispatch("teacherStore/updateQuestion", {
             ...otherProps,
-            questionId: this.question_id,
-            instruction: this.instruction,
-            isActive: this.isActive,
+            questionId: this.question.question_id,
+            instruction: this.question.instruction,
+            isActive: this.question.isActive,
           })
           .then((response) => {
             this.closeQuestionEditorModal();

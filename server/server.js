@@ -4,6 +4,7 @@ const { corsOptions } = require("./config/init");
 const { server_port } = require("./config/index");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const scheduler = require("./services/scheduler/checkAttempts")
 
 /* 
   Import all routes in the application

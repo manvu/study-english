@@ -40,12 +40,17 @@ class AttemptModel {
     WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId}`);
   }
 
-  async addPlaceHolder({quizId, userId, attemptId, numberOfQuestions}) {
+  async addOnePlaceholder({quizId, userId, attemptId, questionId}) {
+    return await this.db.executeQuery(`INSERT INTO user_answer_question (quiz_id, user_id, attempt_id, question_id, answer_text) 
+    VALUES ('${quizId}', '${userId}', '${attemptId}', '${questionId}', '')`)
+  }
+
+  async addManyPlaceholders({quizId, userId, attemptId, questionIds}) {
     let query = `INSERT INTO user_answer_question (quiz_id, user_id, attempt_id, question_id, answer_text) VALUES `;
 
-    for (let i = 1; i <= numberOfQuestions; i++) {
+    for (let i = 0; i < questionIds.length; i++) {
       query = query.concat(
-        `('${quizId}', '${userId}', '${attemptId}', '${i}', ''), `
+        `('${quizId}', '${userId}', '${attemptId}', '${questionIds[i]}', ''), `
       );
     }
 
@@ -60,6 +65,18 @@ class AttemptModel {
     return await this.db.executeQuery(`UPDATE user_attempt 
     SET end_time = '${endTime}', grade = ${grade}, remaining_time = 0
     WHERE quiz_id = ${quizId} AND user_id = ${userId} AND attempt_id = ${attemptId}`);
+  }
+
+  async findIncompleteAttempts(quizId) {
+    return await this.db.executeQuery(`SELECT user_id, quiz_id, attempt_id FROM user_attempt ua
+    WHERE ua.quiz_id = ${quizId} AND ua.end_time IS NULL AND grade IS NULL`)
+  }
+
+  async findAllIncompleteAttempts() {
+    return await this.db.executeQuery(`SELECT ua.attempt_id, ua.user_id, ua.quiz_id, ua.start_time, q.time_allowed 
+    FROM user_attempt ua JOIN quiz q ON ua.quiz_id = q.quiz_id
+    WHERE ua.end_time IS NULL 
+    ORDER BY start_time`)
   }
 }
 

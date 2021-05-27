@@ -23,24 +23,14 @@ class UserAnswerModel {
     return await this.db.executeQuery(``);
   }
 
-  async markOne({ items, userId, quizId, attemptId }) {
-    let query = `INSERT INTO user_answer_question 
-    (user_id, quiz_id, attempt_id, question_id, answer_text, is_correct)
-    VALUES `;
+  async markOne(items) {
+    let query = ""
 
-    for (let i = 0; i < items.length; i++) {
-      query = query.concat(
-        `(${userId}, ${quizId}, '${attemptId}', '${items[i][0]}', '', '${items[i].marked}'), `
-      );
+    for ( const {quizId, userId, attemptId, questionId, markedResult} of items) {
+      query += `UPDATE user_answer_question SET is_correct = ${markedResult} WHERE user_id = ${userId} AND quiz_id = ${quizId} AND attempt_id = ${attemptId} AND question_id = ${questionId};\n`
     }
 
-    let formattedQuery = query.substring(0, query.length - 2);
-    formattedQuery +=
-      " ON DUPLICATE KEY UPDATE is_correct = VALUES(is_correct)";
-
-    console.log(formattedQuery);
-
-    return await this.db.executeQuery(formattedQuery);
+    return await this.db.executeQuery(query);
   }
 
   async saveOne({ quizId, userId, attemptId, questionId, answerText }) {

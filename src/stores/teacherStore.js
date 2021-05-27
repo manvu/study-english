@@ -33,13 +33,17 @@ const teacherStore = {
     },
     updateQuiz(state, payload) {
       let quiz = state.quizzes.find((q) => q.quiz_id === payload.quiz.quiz_id);
-      quiz.courseName = payload.courseName;
+      quiz.course_name = payload.courseName;
       quiz.description = payload.description;
-      quiz.isActive = payload.isActive;
-      quiz.timeAllowed = payload.timeAllowed;
-      quiz.skillId = payload.skillId;
+      quiz.is_active = payload.isActive === true ? 1 : 0;
+      quiz.time_allowed = payload.timeAllowed;
+      quiz.skill_id = payload.skillId;
+    },
+    deleteQuiz(state, payload) {
+      state.quizzes = state.quizzes.filter((q) => q.quiz_id !== payload.quizId);
     },
     getQuestionForEdit(state, payload) {
+      
       state.editQuestion = payload.question;
     },
     createQuestion(state, payload) {
@@ -55,6 +59,11 @@ const teacherStore = {
       };
       state.newQuestions.push(newQuestion);
       state.questions.push(newQuestion);
+    },
+    deleteQuestion(state, payload) {
+      state.questions = state.questions.filter(
+        (q) => q.question_id !== payload.questionId
+      );
     },
     getBoardStatisticsByQuiz(state, payload) {
       state.statistics.quizStatistics = payload.quizStatistics;
@@ -110,7 +119,7 @@ const teacherStore = {
       return axios(API_LIST.createQuiz(payload))
         .then((response) => {
           if (!response.data.error) {
-            payload.quiz = response.data.quiz;
+            payload.quiz = response.data.response;
             context.commit("createQuiz", payload);
           }
 
@@ -128,11 +137,29 @@ const teacherStore = {
       return axios(API_LIST.saveQuizById(payload.quizId, payload))
         .then((response) => {
           if (!response.data.error) {
-            payload.quiz = response.data.quiz;
+            payload.quiz = response.data.response;
             context.commit("updateQuiz", payload);
           }
 
           console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    deleteQuiz(context, payload) {
+      return axios(API_LIST.deleteQuiz(payload.quizId))
+        .then((response) => {
+          if (!response.data.error) {
+            context.commit("deleteQuiz", payload);
+            return "OK";
+          }
+
+          return response.data.error;
         })
         .catch((error) => {
           console.log(error);
@@ -147,7 +174,7 @@ const teacherStore = {
         .then((response) => {
           if (!response.data.error) {
             let question = response.data.response;
-            debugger
+
             payload.question = question;
             context.commit("getQuestionForEdit", payload);
           }
@@ -168,6 +195,44 @@ const teacherStore = {
           if (!response.data.error) {
             payload.question_id = response.data.question_id;
             context.commit("createQuestion", payload);
+            return "OK";
+          }
+
+          return response.data.error;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    updateQuestion(context, payload) {
+      
+      return axios(API_LIST.updateQuestion(payload.questionId, payload))
+        .then((response) => {
+          if (!response.data.error) {
+            payload = response.data.response;
+            context.commit("updateQuestion", payload);
+            return "OK";
+          }
+
+          return response.data.error;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.errored = true;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    deleteQuestion(context, payload) {
+      return axios(API_LIST.deleteQuestion(payload.questionId))
+        .then((response) => {
+          if (!response.data.error) {
+            context.commit("deleteQuestion", payload);
             return "OK";
           }
 

@@ -5,7 +5,7 @@
         <div class="card-header">
           <div class="media flex-wrap w-100 align-items-center">
             <img
-              src="https://res.cloudinary.com/dxfq3iotg/image/upload/v1574583246/AAA/2.jpg"
+              :src="`${publicPath}assets/images/avatars/${p.avatarUrl}`"
               class="d-block ui-w-40 rounded-circle"
               alt=""
             />
@@ -68,6 +68,9 @@ export default {
     },
     isTeacher() {
       return this.$store.getters["authStore/isTeacher"];
+    },
+        publicPath() {
+      return process.env.BASE_URL
     },
   },
   created() {

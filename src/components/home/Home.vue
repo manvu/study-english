@@ -57,7 +57,7 @@
     </div>
 
     <div class="form-inline" v-if="isAuthenticated">
-      <label class="form-check-label">Only Favorites</label>
+      <label class="form-check-label">Favorite Only</label>
       <input
         type="checkbox"
         id="only-favorites"
@@ -201,6 +201,18 @@ export default {
         this.changePage(page);
       }
     },
+    changePage(changeTo) {
+      const paginated = paginator(
+        this.originalQuizzes,
+        changeTo,
+        this.pagination.pagesPerPage
+      );
+
+      this.quizzes = paginated.data;
+      this.pagination.currentPage = paginated.page;
+      this.pagination.prevPage = paginated.pre_page;
+      this.pagination.nextPage = paginated.next_page;
+    },
     sort() {
       const reverse = this.filterEntity.sortOrder === "asc" ? 1 : -1;
 
@@ -299,8 +311,6 @@ export default {
   font-weight: bold;
   padding-right: 20px;
 }
-
-
 
 .quizzes-list-container {
   /* background-image: linear-gradient(45deg, #7175da, #9790F2); */

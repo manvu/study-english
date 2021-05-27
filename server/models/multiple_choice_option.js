@@ -25,6 +25,15 @@ class MultipleChoiceOptionModel {
 
     return await this.db.executeQuery(formattedQuery)
   }
+
+  async saveMany(items, questionId) {
+    let query = ''
+    for (const { choice_id, choice_text, is_correct_choice} of items) {
+      query += `UPDATE question_multiple_choice SET choice_text = '${choice_text}', is_correct_choice = ${is_correct_choice} WHERE choice_id = ${choice_id} AND question_id = ${questionId};`;
+    }
+    
+    return await this.db.executeQuery(query)
+  }
 }
 
 module.exports = MultipleChoiceOptionModel;

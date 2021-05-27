@@ -13,7 +13,7 @@
       :id="index"
       :text="item.choice_text"
       :item="item"
-      :selectedOption="selectedOption"
+      :selectedOptions="selectedOptions"
       @selectOption="selectOption"
     ></multiple-choice-choice-item>
   </div>
@@ -25,13 +25,13 @@ import MultipleChoiceChoiceItem from "./MultipleChoiceChoiceItem";
 export default {
   components: { MultipleChoiceChoiceItem },
   watch: {
-    selectedOption(state) {
+    selectedOptions(state) {
       if (state !== null) {
         let underscores = this.originalQuestionText.match(/__*/g);
         this.questionText = this.originalQuestionText.replace(
           underscores,
           "<span style='color: red;'>" +
-            this.choices[this.selectedOption] +
+            this.choices[this.selectedOptions] +
             "</span>"
         );
       }
@@ -40,22 +40,28 @@ export default {
   props: ["id", "text", "choices", "instruction", "question"],
   data() {
     return {
-      selectedOption: this.question.answer_text ? this.question.answer_text : null,
+      selectedOptions: this.question.answer_text ? this.question.answer_text.split(",").map(item => parseInt(item) ? parseInt(item) : item) : [],
       questionText: this.text,
       originalQuestionText: this.text,
     };
   },
   methods: {
     selectOption(option) {
+      if (this.selectedOptions.includes(option)) {
+        this.selectedOptions = this.selectedOptions.filter(o => o !== option).sort()
+      } else {
+        this.selectedOptions.push(option);
+      }
+      
       this.$store
         .dispatch("questionStore/answerQuestion", {
           questionId: this.question.question_id,
           quizId: this.question.quiz_id,
           attemptId: this.question.attempt_id,
-          answerText: option,
+          answerText: this.selectedOptions.join(','),
         })
         .then((response) => {
-          this.selectedOption = option;
+          
         });
     },
   },

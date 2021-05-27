@@ -6,10 +6,10 @@
   <div class="form-group">
     <div class="label-button-group">
       <label class="control-label" for="question">Question</label>
-      <button @click="createGap" class="mb-3 btn btn-primary"> Create Gap </button>
+      <button @click="createGap" :disabled="mode === 'edit'"  class="mb-3 btn btn-primary"> Create Gap </button>
     </div>
     <div class="">
-      <textarea name="question" id="question" rows="3" v-model="question" ></textarea>
+      <textarea name="question" id="question" rows="10" :disabled="mode === 'edit'"  v-model="question" ></textarea>
     </div>
   </div>
   <div class="form-group">
@@ -67,6 +67,7 @@ export default {
       const question = this.$store.getters["teacherStore/getEditQuestion"];
       this.items = question.items
       this.paragraphTitle = question.paragraph_title
+      this.question = question.question
     }
   },
 };

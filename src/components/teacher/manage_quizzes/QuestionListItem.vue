@@ -17,7 +17,7 @@
       <font-awesome-icon
         class="button-item ml-2"
         :icon="faTrashAlt"
-        @click="removeQuestion(quiz.question_id)"
+        @click="deleteQuestion(quiz.question_id)"
       ></font-awesome-icon>
     </div>
   </div>
@@ -52,8 +52,12 @@ export default {
       return str.length > n ? str.substr(0, n - 1) + "&hellip;" : str;
     },
     editQuestion: function (questionId) {
-      
       this.openQuestionEditorModal(questionId, "edit");
+    },
+    deleteQuestion: function (questionId) {
+      this.$store.dispatch("teacherStore/deleteQuestion", { questionId }).then(response => {
+
+      })
     },
   },
 };

@@ -11,8 +11,8 @@ class MimeTypeModel {
     VALUES ('${image_url}', '${image_alt}')`)
   }
 
-  async findOne(instruction) {
-    return await this.db.executeQuery(`SELECT instruction_id FROM question_instruction WHERE instruction = '${instruction}'`)
+  async findOne(mimeId) {
+    return await this.db.executeQuery(`SELECT image_url, image_alt FROM mime_type WHERE mime_id = '${mimeId}'`)
   }
 }
 

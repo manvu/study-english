@@ -27,7 +27,7 @@ const characters = {
 };
 
 export default {
-  props: ["id", "text", "selectedOption", "item"],
+  props: ["id", "text", "selectedOptions", "item"],
   computed: {
     letter() {
       return characters[this.id];
@@ -35,13 +35,13 @@ export default {
     letterClass() {
       return {
         letter: true,
-        "letter-selected": this.item.choice_id == this.selectedOption,
+        "letter-selected": this.selectedOptions.includes(this.item.choice_id ),
       };
     },
     optionClass() {
       return {
         option: true,
-        "option-selected": this.item.choice_id == this.selectedOption
+        "option-selected": this.selectedOptions.includes(this.item.choice_id ),
       }
     },
   },

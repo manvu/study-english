@@ -42,7 +42,7 @@
           <li v-if="isAuthenticated">
             <img
               class="profile-image"
-              :src="`${publicPath}assets/images/default-profile-picture.png`"
+              :src="`${publicPath}assets/images/avatars/${avatarUrl}`"
               alt=""
             />
 
@@ -93,7 +93,9 @@ export default {
     authenticatedUser() {
       return this.$store.getters['authStore/getAuthenticatedUser'];
     },
-
+    avatarUrl() {
+      return localStorage.getItem("avatarUrl")
+    }
   },
   methods: {
     signOut() {

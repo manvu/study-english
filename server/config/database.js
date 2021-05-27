@@ -17,6 +17,7 @@ class Database {
       password: mysql_password,
       database: database_name,
       debug: false,
+      multipleStatements: true 
     });
 
     this.executeQuery = async function(query) {

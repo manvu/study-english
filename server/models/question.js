@@ -54,7 +54,7 @@ class QuestionModel {
             JOIN question_instruction qi ON q.instruction_id = qi.instruction_id
             JOIN question_type qt ON q.type_id = qt.type_id 
             JOIN user_answer_question uaq ON uaq.question_id = q.question_id
-            WHERE qq.quiz_id = '${quizId}' AND q.is_active = 1 AND uaq.user_id = '${userId}' AND uaq.attempt_id = '${attemptId}'
+            WHERE uaq.quiz_id = '${quizId}' AND q.is_active = 1 AND uaq.user_id = '${userId}' AND uaq.attempt_id = '${attemptId}'
             ORDER BY q.question_id`);
     } else {
       return await this.db
@@ -89,10 +89,24 @@ class QuestionModel {
     DELETE FROM question_multiple_choice WHERE question_id = ${questionId};
     DELETE FROM question_gap_filling WHERE question_id = ${questionId};
     DELETE FROM question_matching_sub WHERE question_id = ${questionId};
-    DELETE FROM question_multiple WHERE question_id = ${questionId};
+    DELETE FROM question_matching WHERE question_id = ${questionId};
     DELETE FROM question WHERE question_id = ${questionId};
     SET FOREIGN_KEY_CHECKS=1;
     `);
+  }
+
+  async saveOne({ typeId, questionId, instructionId, isActive, paragraphTitle, question}) {
+    if (typeId == 2) {
+      return await this.db.executeQuery(` UPDATE question
+      SET instruction_id = ${instructionId}, is_active = ${isActive}, paragraph_title = ${paragraphTitle}
+      WHERE question_id = ${questionId};`)
+    } else {
+      return await this.db.executeQuery(` UPDATE question
+      SET instruction_id = ${instructionId}, is_active = ${isActive},
+      question = '${question}'
+      WHERE question_id = ${questionId};`)
+    }
+
   }
 }
 

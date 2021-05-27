@@ -23,7 +23,7 @@
     </div>
     <div v-else>There is no item created for left column</div>
   </div>
-  <button @click="addLeftItem" class="mb-3 btn btn-primary">Add Item</button>
+  <button @click="addLeftItem" class="mb-3 btn btn-primary" :disabled="mode === 'edit'" >Add Item</button>
 
   <div class="form-group">
     <label class="control-label" for="active">Right Column</label>
@@ -37,7 +37,7 @@
     </div>
     <div v-else>There is no item created for right column</div>
   </div>
-  <button @click="addRightItem" class="mb-3 btn btn-primary">Add Item</button>
+  <button @click="addRightItem" class="mb-3 btn btn-primary" :disabled="mode === 'edit'" >Add Item</button>
   <div class="form-group">
     <button
       type="button"
@@ -124,6 +124,7 @@ export default {
       const question = this.$store.getters["teacherStore/getEditQuestion"];
       this.leftItems = question.items.leftItems
       this.rightItems = question.items.rightItems
+      this.question = question.question
     }
   },
 };

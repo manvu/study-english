@@ -14,10 +14,7 @@ const quizStore = {
   },
   mutations: {
     submitQuiz(state, payload) {
-      state.quizResult.attempt_id = payload.attempt_id
-      state.quizResult.marked = payload.marked
-      state.quizResult.quiz_id = payload.quiz_id 
-      state.quizResult.accuracy = payload.accuracy 
+      state.quizResult = payload
     }
   },
   actions: {
@@ -26,11 +23,7 @@ const quizStore = {
       .then((response) => {
         
         if (!response.data.error) {
-          const {marked, attempt_id, quiz_id, accuracy} = response.data.response
-          payload.marked = marked;
-          payload.attempt_id = attempt_id;
-          payload.quiz_id = quiz_id;
-          payload.accuracy = accuracy;
+          payload = response.data.response
           context.commit("submitQuiz", payload);
         }
 

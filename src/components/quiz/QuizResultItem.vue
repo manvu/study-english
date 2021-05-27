@@ -4,11 +4,20 @@
       <span class="question-title"
         >Question {{ question_id + displayedQuestionType }}</span
       >
+
+      
       <quiz-result-sub-item
-        v-for="answer in answers"
-        :key="answer[0]"
-        :answer="answer"
+      
+        v-for="(answer, i) in answers" 
+        :key="i + 1"
+        :sequence_id="i + 1"
+        :answer="answer.user_answer === null || answer.user_answer === undefined ? null : answer.user_answer"
+        :correct_answer="answer.correct_answer"
         :type_id="type_id"
+        :marked="answer.marked"
+        :is_correct_choice="answer.is_correct_choice"
+         :choice_id="answer.choice_id"
+         :choice_text="answer.choice_text"
       ></quiz-result-sub-item>
     </td>
   </tr>
@@ -18,12 +27,12 @@
 import QuizResultSubItem from "./QuizResultSubItem";
 
 export default {
-  props: ["question_id", "user_answers", "answers", "type_id"],
+  props: ["question_id", "answers", "type_id"],
   components: { QuizResultSubItem },
   computed: {
     displayedQuestionType() {
       if (this.type_id === 1) {
-        return " (Multiple Choice)";
+        return " (Multiple Choice) - Texts in bold indicate your selected options";
       } else if (this.type_id === 2) {
         return " (Gap Filling)";
       } else if (this.type_id === 3) {
@@ -33,7 +42,8 @@ export default {
       }
     },
   },
-  created() {},
+  created() {
+  },
 };
 </script>
 

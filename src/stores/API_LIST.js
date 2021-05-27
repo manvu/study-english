@@ -63,6 +63,13 @@ export default {
     data: body 
   }),
 
+  updateQuestion: (questionId, body) => ({
+    method: "put",
+    url: `teacher/questions/${questionId}`,
+    baseURL,
+    data: body 
+  }),
+
   resetRating: (quizId) => ({
     method: "delete",
     url: `/teacher/quizzes/rating/${quizId}`,
@@ -119,15 +126,15 @@ export default {
     data: body 
   }),
 
-  deleteQuizById: (quizId) => ({
+  deleteQuiz: (quizId) => ({
     method: "delete",
-    url: `quizzes/${quizId}`,
+    url: `teacher/quizzes/${quizId}`,
     baseURL,
   }),
 
-  deleteQuestionById: (questionId) => ({
+  deleteQuestion: (questionId) => ({
     method: "delete",
-    url: `questions/${questionId}`,
+    url: `teacher/questions/${questionId}`,
     baseURL,
   }),
 

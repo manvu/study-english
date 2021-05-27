@@ -26,7 +26,7 @@ class UserModel {
 
   async findOneByEmail(email) {
     return await this.db.executeQuery(
-      `SELECT user_id, role_id, password_hash, first_name, last_name FROM user WHERE email='${email}'`
+      `SELECT user_id, role_id, password_hash, first_name, last_name, profile_picture_id FROM user WHERE email='${email}'`
     );
   }
 

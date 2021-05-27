@@ -26,13 +26,8 @@ export default {
   props: ["id", "item", "mode"],
   data() {
     return {
-      checked:
-        this.mode === "create"
-          ? false
-          : this.item.is_correct_choice === 1
-          ? true
-          : false,
-      choiceText: this.mode === "create" ? "" : this.item.choice_text,
+      checked: false,
+      choiceText: "",
     };
   },
   methods: {
@@ -44,6 +39,13 @@ export default {
       });
     },
   },
+  created() {
+    if (this.mode === "edit") {
+      this.checked = this.item.is_correct_choice === 1 ? true : false
+      this.choiceText = this.item.choice_text
+    }
+    console.log(this.item)
+  }
 };
 </script>
 

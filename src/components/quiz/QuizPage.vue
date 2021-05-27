@@ -30,8 +30,12 @@
             :text="question.question"
             :question="question"
             :instruction="question.instruction"
-            :leftItems=" question.content.filter((item) => item.column_assigned === 1) "
-            :rightItems=" question.content.filter((item) => item.column_assigned === 2) "
+            :leftItems="
+              question.content.filter((item) => item.column_assigned === 1)
+            "
+            :rightItems="
+              question.content.filter((item) => item.column_assigned === 2)
+            "
           ></matching-question-item>
         </div>
       </div>
@@ -64,8 +68,8 @@ export default {
     };
   },
   created() {
-    const quizId = this.$route.params.id
-  
+    const quizId = this.$route.params.id;
+
     this.$store
       .dispatch("questionStore/getQuestionList", { quizId })
       .then(() => {
@@ -76,6 +80,11 @@ export default {
 </script>
 
 <style scoped>
+#similar-quiz {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .quiz-container {
   display: flex;
   flex-direction: row;

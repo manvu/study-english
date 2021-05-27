@@ -1,24 +1,36 @@
 <template>
-  <div class="bg-light border-right" id="sidebar-wrapper">
-    <div class="sidebar-heading">Similar Quizzes</div>
+  <div class="bg-light border-right" id="sidebar-wrapper" v-if="!isLoading">
+    <div class="sidebar-heading"><strong>Similar Quizzes</strong></div>
     <div class="list-group list-group-flush">
-      <a href="#" class="list-group-item list-group-item-action bg-light"
-        >Quiz 1</a
-      >
-      <a href="#" class="list-group-item list-group-item-action bg-light"
-        >Quiz 2</a
-      >
-      <a href="#" class="list-group-item list-group-item-action bg-light"
-        >Quiz 3</a
-      >
+
+      <a v-for="quiz in quizzes" :key="quiz.quiz_id" href="#" class="list-group-item list-group-item-action bg-light"
+        >Quiz {{ quiz.quiz_id}} - {{ quiz.description}} </a >
     </div>
+  </div>
+  <div v-else>
+    <h1>Loading data...</h1>
   </div>
 </template>
 
 <script>
 export default {
-  setup() {
-    return {};
+  data() {
+    return {
+      originalQuizzes: [],
+      quizzes: [],
+      isLoading: true,
+    };
+  },
+  created() {
+    this.$store.dispatch("homeStore/getDataForHome").then((response) => {
+      this.originalQuizzes = this.$store.getters["homeStore/getQuizList"];
+      this.originalQuizzes = this.originalQuizzes.filter(q => q.number_of_questions > 0)
+      this.quizzes = this.originalQuizzes;
+      console.log(this.quizzes, "similar quiz")
+
+      // this.paginate();
+      this.isLoading = false;
+    });
   },
 };
 </script>
@@ -37,7 +49,13 @@ export default {
   transition: margin 0.25s ease-out;
 }
 
-#sidebar-wrapper .sidebar-heading {
+#sidebar-wrapper {
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+.sidebar-heading {
+    padding-left: 0.5rem;
   padding: 0.875rem 1.25rem;
   font-size: 1.2rem;
 }
@@ -53,12 +71,6 @@ export default {
 #wrapper.toggled #sidebar-wrapper {
   margin-left: 0;
 }
-
-/* @media (max-width: 480px) {
-  #sidebar-wrapper {
-    display: none;
-  }
-} */
 
 @media (min-width: 768px) {
   #sidebar-wrapper {
