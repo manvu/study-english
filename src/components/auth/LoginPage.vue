@@ -95,16 +95,14 @@ export default {
 }
 
 body {
-  background-color: #f0f0f0;
   font-family: helvetica;
 }
 
 a {
   display: block;
-  color: #ad5482;
+  color: #f90d87;
   text-decoration: none;
   font-weight: bold;
-  /* margin-top: 40px; */
   text-align: center;
 }
 
@@ -126,7 +124,7 @@ a {
   margin-left: auto;
   margin-right: auto;
   border-radius: 5px;
-  background: RGBA(255, 255, 255, 1);
+  background-color: #6250e9 !important;
 
   -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.45);
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.45);
@@ -161,14 +159,6 @@ a {
 
 .tab:hover {
   background-color: rgba(0, 0, 0, 0.1);
-}
-
-.activeTab {
-  background: #fff;
-}
-
-.activeTab .icon {
-  opacity: 1;
 }
 
 .icon {

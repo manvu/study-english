@@ -1,6 +1,9 @@
 <template>
-  <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <header :class="{ headerExpanded: expanded }">
+    <nav
+      class="navbar navbar-expand-lg navbar-dark bg-dark"
+      :class="{ navbarExpanded: expanded }"
+    >
       <button
         class="navbar-toggler"
         type="button"
@@ -9,6 +12,7 @@
         aria-controls="navbarSupportedContent"
         aria-expanded="false"
         aria-label="Toggle navigation"
+        @click="expanded = !expanded"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -18,7 +22,7 @@
           <li class="nav-item">
             <router-link to="/home">Home</router-link>
           </li>
-          <li class="nav-item disabled" v-if="isAuthenticated" >
+          <li class="nav-item disabled" v-if="isAuthenticated">
             <router-link to="/quiz">Quiz</router-link>
           </li>
           <li class="nav-item" v-if="isAuthenticated">
@@ -45,7 +49,6 @@
               :src="`${publicPath}assets/images/avatars/${avatarUrl}`"
               alt=""
             />
-
           </li>
           <li v-if="isAuthenticated" class="nav-item dropdown ml-2 mr-3">
             <a
@@ -78,6 +81,7 @@ export default {
   data() {
     return {
       publicPath: process.env.BASE_URL,
+      expanded: false,
     };
   },
   created() {
@@ -85,17 +89,17 @@ export default {
   },
   computed: {
     isAuthenticated() {
-      return this.$store.getters['authStore/isAuthenticated'];
+      return this.$store.getters["authStore/isAuthenticated"];
     },
     isTeacher() {
-      return this.$store.getters['authStore/isTeacher'];
+      return this.$store.getters["authStore/isTeacher"];
     },
     authenticatedUser() {
-      return this.$store.getters['authStore/getAuthenticatedUser'];
+      return this.$store.getters["authStore/getAuthenticatedUser"];
     },
     avatarUrl() {
-      return localStorage.getItem("avatarUrl")
-    }
+      return localStorage.getItem("avatarUrl");
+    },
   },
   methods: {
     signOut() {
@@ -156,5 +160,43 @@ a.active {
   width: 50px;
   height: 50px;
   border-radius: 50%;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .headerExpanded {
+    margin-bottom: 255px !important;
+    transition: all 0.5s ease;
+  }
+
+  .navbarExpanded {
+    padding-bottom: 325px !important;
+    transition: all 0.5s ease;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .headerExpanded {
+    margin-bottom: 255px !important;
+    transition: all 0.5s ease;
+  }
+
+  .navbarExpanded {
+    padding-bottom: 325px !important;
+    transition: all 0.5s ease;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
 }
 </style>

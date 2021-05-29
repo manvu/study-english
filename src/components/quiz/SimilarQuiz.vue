@@ -1,10 +1,16 @@
 <template>
-  <div class="bg-light border-right" id="sidebar-wrapper" v-if="!isLoading">
-    <div class="sidebar-heading"><strong>Similar Quizzes</strong></div>
+  <div class="bg-purple" id="sidebar-wrapper" v-if="!isLoading">
+    <div class="sidebar-heading"><strong>Active Quizzes</strong></div>
     <div class="list-group list-group-flush">
-
-      <a v-for="quiz in quizzes" :key="quiz.quiz_id" href="#" class="list-group-item list-group-item-action bg-light"
-        >Quiz {{ quiz.quiz_id}} - {{ quiz.description}} </a >
+      <a
+        v-for="quiz in quizzes"
+        :key="quiz.quiz_id"
+        @click="navigateToQuiz(quiz.quiz_id)"
+        href="#"
+        class="list-group-item list-group-item-action"
+        :class="selected(quiz.quiz_id)"
+        >Quiz {{ quiz.quiz_id }} - {{ quiz.description }}
+      </a>
     </div>
   </div>
   <div v-else>
@@ -18,19 +24,39 @@ export default {
     return {
       originalQuizzes: [],
       quizzes: [],
+      currentQuiz: null,
       isLoading: true,
     };
   },
   created() {
+    const quizId = this.$route.params.id;
+
+    if (quizId) {
+      this.currentQuiz = quizId;
+    }
+
     this.$store.dispatch("homeStore/getDataForHome").then((response) => {
       this.originalQuizzes = this.$store.getters["homeStore/getQuizList"];
-      this.originalQuizzes = this.originalQuizzes.filter(q => q.number_of_questions > 0)
+      this.originalQuizzes = this.originalQuizzes.filter(
+        (q) => q.number_of_questions > 0
+      );
       this.quizzes = this.originalQuizzes;
-      console.log(this.quizzes, "similar quiz")
+      console.log(this.quizzes, "similar quiz");
 
-      // this.paginate();
       this.isLoading = false;
     });
+  },
+  methods: {
+    navigateToQuiz(quizId) {
+      this.$router.push({
+        name: "quizzes.index",
+        params: { id: quizId },
+      });
+      window.location.href = `/quiz/${quizId}`;
+    },
+    selected(quizId) {
+      return { selected: quizId == this.currentQuiz };
+    },
   },
 };
 </script>
@@ -38,6 +64,29 @@ export default {
 <style scoped>
 #wrapper {
   overflow-x: hidden;
+}
+
+.list-group-item {
+  background-color: #5d51bd;
+  color: #eee;
+}
+
+.list-group-item:hover {
+  background-color: #6355ce;
+  color: #eee;
+}
+
+.bg-purple {
+  background-color: #5d51bd;
+}
+
+.bg-purple-cover:hover {
+  background-color: #6355ce;
+}
+
+.selected {
+  color: #6355ce;
+  background-color: #eee;
 }
 
 #sidebar-wrapper {
@@ -55,9 +104,10 @@ export default {
 }
 
 .sidebar-heading {
-    padding-left: 0.5rem;
+  padding-left: 0.5rem;
   padding: 0.875rem 1.25rem;
   font-size: 1.2rem;
+  background: #5d51bd;
 }
 
 #sidebar-wrapper .list-group {
@@ -85,5 +135,10 @@ export default {
   #wrapper.toggled #sidebar-wrapper {
     margin-left: -15rem;
   }
+}
+
+#sidebar .sidebar-heading {
+  padding: 20px;
+  background: #5d51bd;
 }
 </style>

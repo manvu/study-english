@@ -47,6 +47,14 @@ const router = createRouter({
       },
     },
     {
+      path: "/quiz",
+      name: "quizzes",
+      component: QuizPage,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
       path: "/quiz/:id",
       name: "quizzes.index",
       component: QuizPage,

@@ -60,8 +60,9 @@ export default {
 .option {
   width: 100%;
   height: 60px;
-  background-color: #f4f7f7;
+  background-color: #23334b;
   cursor: pointer;
+  color: #eee;
 }
 .option a span:nth-child(2) {
   display: inline-block;
@@ -75,11 +76,11 @@ export default {
 }
 
 .option:hover {
-  background-color: #e3eded !important;
+  background-color: #6250e9 !important;
 }
 
 .option-selected {
-  background-color: #b7c6c6 !important;
+  background-color: rgb(85, 62, 255) !important;
 }
 
 .letter {

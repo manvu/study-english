@@ -19,7 +19,7 @@
       </div>
 
       <div class="row" v-for="quiz in quizzes" :key="quiz.quiz_id">
-        <div class="cell" data-title="ID">{{ quiz.quiz_id }}</div>
+        <div class="cell" data-title="ID">{{ quiz.quiz_id }} <span class="badge badge-pill" :class="badgeClass(quiz.skill_id)"> {{ quiz.skill_description }}</span></div>
         <div class="cell" data-title="Course Name">{{ quiz.course_name }}</div>
         <div class="cell" data-title="Active">
           {{ quiz.is_active === 1 ? "Yes" : "No" }}
@@ -37,6 +37,7 @@
             class="button-item"
             :icon="faEraser"
             @click="resetRating(quiz.quiz_id)"
+            :style="{ color: 'red' }"
           ></font-awesome-icon>
         </div>
         <div class="cell" data-title="Action">
@@ -48,6 +49,7 @@
           <font-awesome-icon
             class="button-item ml-2"
             :icon="faTrashAlt"
+            :style="{ color: 'red' }"
             @click="deleteQuiz(quiz.quiz_id)"
           ></font-awesome-icon>
         </div>
@@ -139,6 +141,18 @@ export default {
     });
   },
   methods: {
+        badgeClass(skillId) {
+      const badges = {
+        1: "secondary",
+        2: "primary",
+        3: "success",
+        4: "danger",
+        5: "warning",
+        6: "info",
+      };
+      
+      return `badge-${badges[skillId]}`
+    },
     createQuiz() {
       this.$emit("toggleShowQuizEditor", { mode: "create" });
     },
@@ -204,12 +218,20 @@ export default {
 </script>
 
 <style scoped>
+body {
+  color: #eee;
+}
+
 .pagination-caption {
   font-size: 18px;
 }
 
 .page-number {
   cursor: pointer;
+}
+
+.block-27 {
+  color: #eee;
 }
 
 .block-27 ul {
@@ -234,7 +256,7 @@ export default {
 }
 .block-27 ul li.active a,
 .block-27 ul li.active span {
-  background: #2a265f;
+  background: #6356ca;
   color: #fff;
   border: 1px solid transparent;
 }
@@ -299,15 +321,17 @@ tbody td:hover:before {
 
 .row {
   display: table-row;
-  background: #f6f6f6;
+  background: #23334b;
+  color: #eee;
 }
 .row:nth-of-type(odd) {
-  background: #e9e9e9;
+    background: #0d0f13;
+  color: #eee;
 }
 .row.header {
   font-weight: 900;
   color: #ffffff;
-  background: #ea6153;
+  background: #6356ca;
 }
 .row.green {
   background: #27ae60;

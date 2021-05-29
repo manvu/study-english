@@ -189,6 +189,7 @@ export default {
 .contact {
   padding: 4%;
   height: 400px;
+  color: #eee;
 }
 .col-md-3 {
   background: #ff9b00;

@@ -22,7 +22,7 @@
               <div class="progress--after" :style="progressBar"></div>
             </div>
             <span class="progress-text">
-              {{ completedChallenges + "/" + numberOfQuestions }} Challenges
+              {{ progressText }} Challenges
             </span>
           </div>
 
@@ -39,19 +39,19 @@
           >
           <button
             @click="navigateToQuiz"
-            v-if="completedChallenges > 0"
+            v-if="latestAttempt"
             class="btn"
           >
             Continue
           </button>
           <button
             @click="navigateToQuiz"
-            v-if="numberOfQuestions > 0 && completedChallenges === 0"
+            v-else-if="numberOfQuestions > 0"
             class="btn"
           >
             Start
           </button>
-          <button @click="navigateToQuiz" v-else class="btn" disabled>
+          <button @click="navigateToQuiz" v-else-if="numberOfQuestions === 0" class="btn" disabled>
             Start
           </button>
         </div>
@@ -78,7 +78,7 @@ export default {
     "numberOfQuestions",
     "averageRating",
     "ratingCount",
-    "completedChallenges",
+    "latestAttempt",
     "favorite",
   ],
   components: { QuizListItemRating, QuizListItemFavorite },
@@ -95,9 +95,12 @@ export default {
       
       return `badge-${badges[this.skill_id]}`
     },
+    progressText() {
+      return (this.latestAttempt ? this.latestAttempt.answered : 0)  + "/" + this.numberOfQuestions
+    },
     progressBar() {
       return {
-        width: (this.completedChallenges / this.numberOfQuestions) * 100 + "%",
+        width: this.latestAttempt ? (this.latestAttempt.answered / this.numberOfQuestions) * 100 + "%" : 0 + "%"
       };
     },
     favoriteQuiz() {
@@ -151,7 +154,7 @@ export default {
 }
 
 .course-preview {
-  background-color: #2a265f;
+  background-color: #6356ca;
   color: #fff;
   padding: 30px;
   display: flex;
@@ -174,10 +177,13 @@ export default {
   padding: 30px;
   position: relative;
   width: 100%;
+  color: #eee;
+  background: #0d0f13;
 }
 
 .course-info--yellow {
   background-color: yellow;
+  color: #111;
 }
 
 .progress-container {
@@ -189,7 +195,7 @@ export default {
 }
 
 .progress {
-  background-color: #ddd;
+  background-color: #6356ca;
   border-radius: 3px;
   height: 5px;
   width: 100%;
@@ -243,4 +249,43 @@ export default {
   top: 5px;
   right: 5px;
 }
+
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .course {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .course {
+
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .course {
+
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .course {
+
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .course {
+
+  }
+}
+
 </style>

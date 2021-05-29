@@ -1,5 +1,5 @@
 <template>
-  <div id="sort-and-filter" class="form-row details-wrapper bg-light">
+  <div id="sort-and-filter" class="details-wrapper">
     <div class="form-inline">
       <label>Sort by</label>
       <select
@@ -55,7 +55,6 @@
         </option>
       </select>
     </div>
-
     <div class="form-inline" v-if="isAuthenticated">
       <label class="form-check-label">Favorite Only</label>
       <input
@@ -84,7 +83,7 @@
         :created_by="quiz.created_by"
         :created_at="quiz.created_at"
         :skill_description="quiz.skill_description"
-        :completedChallenges="0"
+        :latestAttempt="quiz.latestAttempt"
         :numberOfQuestions="quiz.number_of_questions"
         :averageRating="quiz.average_rating"
         :ratingCount="quiz.rating_count"
@@ -267,6 +266,10 @@ export default {
   cursor: pointer;
 }
 
+.block-27 {
+  color: #eee;
+}
+
 .block-27 ul {
   padding: 0;
   margin: 0;
@@ -289,22 +292,21 @@ export default {
 }
 .block-27 ul li.active a,
 .block-27 ul li.active span {
-  background: #2a265f;
+  background: #6356ca;
   color: #fff;
   border: 1px solid transparent;
 }
 
 .details-wrapper div {
-  /* flex: 1; */
-  padding: 1em; /* add some padding ?*/
-  /* text-align: center; */
-  /* border: 1px solid #000; */
+  padding: 1em;
 }
 
 #sort-and-filter {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: #6356ca;
+  color: #eee;
 }
 
 #sort-and-filter label {
@@ -321,5 +323,40 @@ export default {
   flex-direction: column;
 
   margin: 0;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  #sort-and-filter {
+    display: block;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .course {
+    
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .course {
+    
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .course {
+    
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .course {
+    
+  }
 }
 </style>

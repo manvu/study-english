@@ -35,6 +35,7 @@ export default {
 
 <style scoped>
 body {
+  color: #eee;
   background-color: #25274d;
 }
 </style>

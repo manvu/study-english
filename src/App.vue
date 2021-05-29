@@ -36,11 +36,19 @@ export default {
 html {
   font-family: sans-serif;
     /* font-size: 14px; */
+    scroll-behavior: smooth;
 }
 
-
+input, select, textarea {
+  background-color: #111 !important;
+  color: #eee !important;
+}
 
 body {
   margin: 0;
+  background-color: #1c2431;
+  color: #eee;
 }
+
+
 </style>

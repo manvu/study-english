@@ -39,6 +39,4 @@ module.exports = {
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
-
-  deleteAvatar: async (data) => {},
 };

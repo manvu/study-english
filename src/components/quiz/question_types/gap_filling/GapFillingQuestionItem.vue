@@ -5,11 +5,11 @@
     <div class="question">
       <h3 class="instruction">{{ id + 1 + "." }} {{ instruction }}</h3>
     </div>
-    <div>
-      <h4 class="text-center mt-3">{{ paragraph_title }}</h4>
-      <p><span v-html="questionText"> </span></p>
+    <div class="question-area p-4">
+      <h4 class="text-center">{{ paragraph_title }}</h4>
+      <p class="question-text"><span v-html="questionText"> </span></p>
     </div>
-    <div class="response">
+    <div class="response pb-3">
       <gap-filling-question-gap-item
         v-for="item in gapItems"
         :key="item.id"
@@ -131,17 +131,23 @@ h2 {
 .question {
   width: 100%;
   height: auto;
-  background-color: #dddddd;
   white-space: initial;
   overflow: auto;
-  /* text-overflow: ellipsis; */
+  background-color: #6356ca;
 }
-.question h3,
-p {
+.question h3 {
   padding-top: 16px;
   padding-left: 20px;
   font-size: 14pt;
-  color: #1c1c1c;
+}
+
+.question-text {
+  font-size: 15pt;
+  font-family: Verdana;
+}
+
+.question-area {
+  background-color: #23334b;
 }
 
 .btn {
@@ -159,11 +165,6 @@ p {
   cursor: pointer;
 }
 
-@media screen and (max-width: 400px) {
-  .question h3 {
-    padding-top: 0px;
-  }
-}
 
 .button-control {
   display: flex;
@@ -180,11 +181,13 @@ p {
 
 .instruction {
   font-weight: bold;
+  background-color: #6356ca;
+  color: #eee;
 }
 
 .response {
   padding-top: 16px;
   padding-left: 20px;
-  background-color: #f4f7f7;
+  background-color: #23334b;
 }
 </style>

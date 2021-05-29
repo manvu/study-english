@@ -1,11 +1,8 @@
 <template>
   <tr>
     <td>
-      <span class="question-title"
-        >Question {{ question_id + displayedQuestionType }}</span
-      >
+      <span class="question-title" >Question {{ question_id + displayedQuestionType }}</span>
 
-      
       <quiz-result-sub-item
       
         v-for="(answer, i) in answers" 

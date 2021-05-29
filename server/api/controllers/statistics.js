@@ -43,8 +43,8 @@ function createPieChart(statsType, stats, additionalInfo) {
   const firstName = additionalInfo ? additionalInfo.firstName : null;
 
   if (statsType === 1) {
-    const { number_of_quizzes, incomplete, completed } = stats;
-    const unattempted = number_of_quizzes - (completed + incomplete);
+    const { number_of_quizzes, incomplete, unattempted } = stats;
+    const completed = number_of_quizzes - (incomplete + unattempted);
 
     labels = ["Completed", "Incomplete", "Not Attempted"];
     data = [completed, incomplete, unattempted];
@@ -73,6 +73,7 @@ function createPieChart(statsType, stats, additionalInfo) {
       chart: {
         width: 380,
         type: "pie",
+        foreColor: '#eee'
       },
       title: {
         text,
@@ -85,7 +86,7 @@ function createPieChart(statsType, stats, additionalInfo) {
           fontSize: "18px",
           fontWeight: "bold",
           fontFamily: undefined,
-          color: "#263238",
+          color: "#eee",
         },
       },
       labels,

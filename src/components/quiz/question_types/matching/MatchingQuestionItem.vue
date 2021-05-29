@@ -6,7 +6,7 @@
       <h3 class="instruction">{{ id + 1 + "." }} {{ instruction }}</h3>
     </div>
 
-    <div class="question-body">
+    <div class="question-body pb-3">
       <div>
         <p class="question-text">{{ text }}</p>
 
@@ -21,7 +21,7 @@
           </div>
         </div>
 
-        <div class="response">
+        <div class="response pb-3">
           <matching-question-left-item
             v-for="item in leftMatchingItems"
             :key="item.id"
@@ -112,11 +112,7 @@ h2 {
   width: 100%;
   height: auto;
   background-color: #eceeef;
-  /* position: relative;
-  top: 50%;
-  left: 50%; */
   border-radius: 5px;
-  /* transform: translate(25%, 0%); */
   -webkit-box-shadow: 0px 0px 47px 9px rgba(0, 0, 0, 0.08);
   -moz-box-shadow: 0px 0px 47px 9px rgba(0, 0, 0, 0.08);
   box-shadow: 0px 0px 47px 9px rgba(0, 0, 0, 0.08);
@@ -128,10 +124,9 @@ h2 {
 .instruction-wrapper {
   width: 100%;
   height: auto;
-  background-color: #dddddd;
+  background-color: #6356ca;
   white-space: initial;
   overflow: auto;
-  /* text-overflow: ellipsis; */
 }
 .instruction-wrapper h3,
 .instruction-wrapper p,
@@ -139,7 +134,7 @@ h2 {
   padding-top: 16px;
   padding-left: 20px;
   font-size: 14pt;
-  color: #1c1c1c;
+  color: #eee;
 }
 
 .btn {
@@ -149,19 +144,11 @@ h2 {
   font-size: 16px;
   margin: 10px;
   padding: 12px 25px;
-  /* position: relative; */
-  /* left: 675px; */
-  /* bottom: 30px; */
-  /* right: 0px; */
   letter-spacing: 1px;
   cursor: pointer;
 }
 
-@media screen and (max-width: 400px) {
-  .question h3 {
-    padding-top: 0px;
-  }
-}
+
 
 .button-control {
   display: flex;
@@ -181,7 +168,8 @@ h2 {
 }
 
 .question-body {
-  background-color: #f4f7f7;
+  background-color: #23334b;
+  padding: 10px;
 }
 
 .box-container {
@@ -191,7 +179,7 @@ h2 {
 }
 
 .middle-box {
-  border: 1px solid #111111;
+  border: 1px solid #eee;
   padding: 15px;
 }
 
@@ -203,5 +191,11 @@ ol {
   padding-top: 16px;
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.instruction {
+  font-weight: bold;
+  background-color: #6356ca;
+  color: #eee;
 }
 </style>

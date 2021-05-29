@@ -1,11 +1,11 @@
 <template>
-  <div class="bg-light border-right" id="sidebar-wrapper">
+  <div class="bg-purple" id="sidebar-wrapper">
     <div class="sidebar-heading">
       <h4>
         <span>
           <font-awesome-icon :icon="faClock"></font-awesome-icon>
         </span>
-        {{ displayCountdownTimer }} 
+        Time Left: {{ displayCountdownTimer }}
       </h4>
     </div>
 
@@ -17,9 +17,9 @@
     </div>
 
     <div class="row mt-3 mb-3">
-      <div v-for="(q, index) in questions" :key="index" :class="letterClass">
-        {{ index + 1 }}
-      </div>
+      <question-palette-item v-for="(q, index) in liveQuestions" :key="index" :number="index + 1" :question="q">
+        
+      </question-palette-item>
     </div>
     <div>
       <button @click="submit" class="btn btn-primary">
@@ -35,22 +35,23 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
-import "moment-duration-format"
+import "moment-duration-format";
+import QuestionPaletteItem from './QuestionPaletteItem.vue';
 
 export default {
   props: ["questions", "timer"],
-  components: { FontAwesomeIcon },
+  components: { FontAwesomeIcon, QuestionPaletteItem },
   data() {
     return {
       timeLeft: 0,
       expiredTime: 0,
       interval: 1000,
-      timeout: null
+      timeout: null,
     };
   },
   computed: {
     displayCountdownTimer() {
-      return moment.duration(this.timeLeft, 'seconds').format('h [hours], m [minutes], s [seconds]')
+      return moment.duration(this.timeLeft, "seconds").format("hh:mm:ss");
     },
     faBars() {
       return faBars;
@@ -61,15 +62,13 @@ export default {
     faPaperPlane() {
       return faPaperPlane;
     },
-    letterClass() {
-      return {
-        letter: true,
-        // "letter-selected": this.id === this.selectedOption,
-      };
-    },
+    liveQuestions() {
+      return this.$store.getters["questionStore/getQuestionList"]
+    }
   },
   methods: {
     submit() {
+      console.log(this.questions);
       this.$store
         .dispatch("quizStore/submitQuiz", {
           quizId: this.questions[0].quiz_id,
@@ -86,8 +85,8 @@ export default {
           this.countDownTimer();
         }, this.interval);
       } else {
-        clearTimeout(this.timeout)
-        this.submit()
+        clearTimeout(this.timeout);
+        this.submit();
       }
     },
   },
@@ -95,7 +94,7 @@ export default {
     this.timeLeft = -1 * this.timer.time_left;
     this.expiredTime = this.timer.expired_time;
 
-    this.countDownTimer()
+    this.countDownTimer();
   },
 };
 </script>
@@ -103,6 +102,14 @@ export default {
 <style scoped>
 #wrapper {
   overflow-x: hidden;
+}
+
+.bg-purple {
+  background-color: #5d51bd;
+}
+
+.bg-purple-cover:hover {
+  background-color: #6355ce;
 }
 
 #sidebar-wrapper {
@@ -149,21 +156,7 @@ export default {
   }
 }
 
-.letter {
-  width: 40px;
-  height: 40px;
-  background-color: #3498db;
-  text-align: center;
-  margin: 5px 10px;
-  border-radius: 50%;
-  padding-bottom: 5px;
-  line-height: 40px;
-  color: white;
-  font-family: arial;
-  font-size: 16pt;
-  font-weight: 600;
-  cursor: pointer;
-}
+
 
 .question-list {
   display: flex;

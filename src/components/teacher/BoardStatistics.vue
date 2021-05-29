@@ -1,6 +1,6 @@
 <template>
   <header>
-    <div id="filter" class="form-row details-wrapper bg-light">
+    <div id="filter" class="details-wrapper">
       <div class="form-inline">
         <label>Filter by</label>
         <select
@@ -158,6 +158,7 @@ export default {
   /* justify-content: space-between; */
   align-items: center;
   margin-bottom: 3px;
+  
 }
 
 .details-wrapper div {
@@ -186,6 +187,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+    background-color: #6356ca;
+  color: #eee;
 }
 
 #filter label {

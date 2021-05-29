@@ -4,6 +4,7 @@ axios.defaults.baseURL = process.env.VUE_APP_SERVER_ENDPOINT;
 axios.defaults.headers.common["Authorization"] = !!localStorage.getItem("token")
   ? `Bearer ${localStorage.getItem("token")}`
   : "";
+axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 // Add a response interceptor
 axios.interceptors.response.use(
@@ -11,13 +12,12 @@ axios.interceptors.response.use(
     return response;
   },
   function(error) {
-    ;
     if (
       error.response.status === 403 &&
       error.response.data.error === "TokenExpiredError"
     ) {
-      alert("Your session has expired. Please sign-in again!")
-      
+      alert("Your session has expired. Please sign-in again!");
+
       localStorage.clear();
       window.location.reload();
     } else {

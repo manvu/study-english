@@ -1,11 +1,18 @@
 <template>
-  <div class="quiz-container">
-    <div class="row">
+  <div class="container">
+    <div class="row quiz-container">
       <similar-quiz
         id="similar-quiz"
-        class="col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2"
+        class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3"
       ></similar-quiz>
-      <div class="question-wrapper col-12 col-sm-12 col-md-6 col-lg-8 col-xl-8">
+      <div v-if="!quizId" class="p-3 ml-3">
+        <h1>Please select a quiz...</h1>
+      </div>
+      <div
+        v-else
+        id="quiz-content"
+        class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6"
+      >
         <div v-for="(question, index) in questions" :key="question.id">
           <multiple-choice-question-item
             v-if="question.type_id === 1"
@@ -41,8 +48,8 @@
       </div>
       <question-palette
         id="question-palette"
-        v-if="!hideQuestionPalette"
-        class="col-12 col-sm-12 col-md-3 col-lg-2 col-xl-2"
+        v-if="quizId && !hideQuestionPalette"
+        class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3"
         :questions="questions"
         :timer="timer"
       ></question-palette>
@@ -69,18 +76,23 @@ export default {
       questions: [],
       timer: {},
       hideQuestionPalette: true,
+      quizId: null,
     };
   },
   created() {
     const quizId = this.$route.params.id;
 
-    this.$store
-      .dispatch("questionStore/getQuestionList", { quizId })
-      .then(() => {
-        this.questions = this.$store.getters["questionStore/getQuestionList"];
-        this.timer = this.$store.getters["questionStore/getTimer"];
-        this.hideQuestionPalette = false
-      });
+    this.quizId = quizId;
+
+    if (quizId) {
+      this.$store
+        .dispatch("questionStore/getQuestionList", { quizId })
+        .then(() => {
+          this.questions = this.$store.getters["questionStore/getQuestionList"];
+          this.timer = this.$store.getters["questionStore/getTimer"];
+          this.hideQuestionPalette = false;
+        });
+    }
   },
 };
 </script>
@@ -89,42 +101,59 @@ export default {
 #similar-quiz {
   padding-left: 0;
   padding-right: 0;
-}
-
-.quiz-container {
-  display: flex;
-  flex-direction: row;
-  padding: 15px;
+  /* position: fixed; */
 }
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
   .quiz-container {
-    display: block;
+    display: flex;
+    flex-direction: row;
+    align-items: space-between;
+  }
+
+  #question-palette {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+  }
+
+  #similar-quiz {
+    margin-bottom: 1em;
   }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
-  .quiz-container {
+@media only screen and (max-width: 767px) {
+  #question-palette {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+  }
+
+  #similar-quiz {
+    margin-bottom: 1em;
   }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
-  .quiz-container {
-  }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-  .quiz-container {
-  }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-  .quiz-container {
-  }
+}
+
+#quiz-content {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#question-palette {
+  padding: 20px;
 }
 </style>

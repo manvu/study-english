@@ -79,10 +79,10 @@
     <div class="copyright">
       <div class="container">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-6 col-sm-12">
             <span>Copyright © 2021, All Right Reserved</span>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-6 col-sm-12">
             <div class="copyright-menu">
               <ul>
                 <li>
@@ -316,9 +316,7 @@ p {
   margin: 26px 0 32px;
 }
 
-.footer-left-widget {
-  padding-left: 80px;
-}
+
 
 .footer-widget .section-heading {
   margin-bottom: 35px;
@@ -335,7 +333,6 @@ p {
 }
 
 .footer-widget ul {
-  width: 50%;
   float: left;
   list-style: none;
   margin: 0;
@@ -497,5 +494,40 @@ p {
   cursor: pointer;
   background: #fa6742;
   border-color: #fa6742;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .copyright {
+    text-align: center;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .course {
+    
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  .course {
+    
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .course {
+    
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .course {
+    
+  }
 }
 </style>

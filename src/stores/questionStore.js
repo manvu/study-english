@@ -15,6 +15,10 @@ const questionStore = {
       state.timer.expired_time = payload.expired_time;
       state.timer.time_left = payload.time_left;
     },
+    answerQuestion(state, payload) {
+      const question = state.questions.find(question => question.question_id === payload.questionId)
+      question.answer_text = payload.answerText
+    }
   },
   actions: {
     getQuestionList(context, payload) {
@@ -47,7 +51,7 @@ const questionStore = {
         .then((response) => {
           if (!response.data.error) {
             // payload.question = response.data.question;
-            // context.commit("createQuestion", payload);
+            context.commit("answerQuestion", payload);
           }
 
           console.log(response);

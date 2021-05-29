@@ -91,16 +91,16 @@ h2 {
 .question {
   width: 100%;
   height: auto;
-  background-color: #dddddd;
+  background-color: #6356ca;
   white-space: initial;
   overflow: auto;
+  color: #eee;
   /* text-overflow: ellipsis; */
 }
 .question h3 {
   padding-top: 16px;
   padding-left: 20px;
   font-size: 14pt;
-  color: #1c1c1c;
 }
 
 .btn {
@@ -110,19 +110,11 @@ h2 {
   font-size: 16px;
   margin: 10px;
   padding: 12px 25px;
-  /* position: relative; */
-  /* left: 675px; */
-  /* bottom: 30px; */
-  /* right: 0px; */
   letter-spacing: 1px;
   cursor: pointer;
 }
 
-@media screen and (max-width: 400px) {
-  .question h3 {
-    padding-top: 0px;
-  }
-}
+
 
 .button-control {
   display: flex;
@@ -139,5 +131,7 @@ h2 {
 
 .instruction {
   font-weight: bold;
+  background-color: #6356ca;
+  color: #eee;
 }
 </style>
