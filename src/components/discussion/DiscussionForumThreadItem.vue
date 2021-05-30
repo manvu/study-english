@@ -1,7 +1,8 @@
 <template>
   <div class="row">
     <div class="cell" data-title="Topic"> 
-      <span class="subject"> {{ displayedSubject }}</span><br>
+
+      <span class="subject"><a @click="navigateToThread(t.thread_id)"> {{ displayedSubject }} </a></span><br>
       {{ displayedThreadContent }}  
       </div>
     <div class="cell" data-title="Related Quiz Id">Quiz {{ t.quiz_id }}</div>
@@ -10,7 +11,7 @@
       /></a>
     </div>
     <div class="cell" data-title="Number of replies">{{ t.replies }}</div>
-    <div class="cell" data-title="Last Activity">{{ displayedLastActivity }}</div>
+    <div class="cell" data-title="Last Activity">{{ displayedLastActivity }} ago</div>
   </div>
 </template>
 
@@ -64,6 +65,10 @@ export default {
 
 .subject {
   font-weight: bold;
+}
+
+.subject:hover {
+  color: #988ee6;
 }
 
 td { white-space:pre-line }
@@ -125,5 +130,9 @@ td { white-space:pre-line }
     padding: 2px 16px;
     display: block;
   }
+}
+
+a {
+  cursor: pointer;
 }
 </style>

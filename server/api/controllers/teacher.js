@@ -56,10 +56,7 @@ async function updateQuestionContent(
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   } else if (typeId === 3) {
-    let content = await MModel.saveMatchingQuestion(
-      correctAnswers,
-      questionId
-    );
+    let content = await MModel.saveMatchingQuestion(correctAnswers, questionId);
 
     if (!content.error) {
       let insertItems = await MModel.saveMany(
@@ -188,7 +185,14 @@ module.exports = {
     }
   },
   updateQuestion: async (data) => {
-    const { questionId, instruction, isActive, typeId, items, correctAnswers } = data;
+    const {
+      questionId,
+      instruction,
+      isActive,
+      typeId,
+      items,
+      correctAnswers,
+    } = data;
 
     if (!validator.validateQuestionId(questionId)) {
       return sendFailure(STRINGS.INVALID_QUESTION_ID);
@@ -207,12 +211,18 @@ module.exports = {
       if (instructionId > 0) {
         const isActive = data.isActive === true ? 1 : 0;
 
-        const question = await QuestionModel.saveOne({...data, instructionId, isActive});
-        const questionsContent = await updateQuestionContent(questionId,
+        const question = await QuestionModel.saveOne({
+          ...data,
+          instructionId,
+          isActive,
+        });
+        const questionsContent = await updateQuestionContent(
+          questionId,
           typeId,
           items,
           correctAnswers,
-          1)
+          1
+        );
 
         if (!question.error) {
           return sendSuccess(202);

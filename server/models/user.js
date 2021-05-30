@@ -26,7 +26,8 @@ class UserModel {
 
   async findOneByEmail(email) {
     return await this.db.executeQuery(
-      `SELECT user_id, role_id, password_hash, first_name, last_name, profile_picture_id FROM user WHERE email='${email}'`
+      `SELECT user_id, role_id, password_hash, first_name, last_name, profile_picture_id, password_reset_hash, password_reset_salt, password_reset_expiry
+       FROM user WHERE email='${email}'`
     );
   }
 
@@ -48,9 +49,25 @@ class UserModel {
     WHERE user_id = ${userId}`);
   }
 
+  async saveResetPassword({ userId, passwordHash, passwordSalt, passwordExpiry}) {
+    return this.db.executeQuery(`UPDATE user
+    SET password_reset_salt = '${passwordSalt}', 
+    password_reset_hash = '${passwordHash}',
+    password_reset_expiry = '${passwordExpiry}'
+    WHERE user_id = ${userId}`);
+  }
+
   async saveProfilePicture({ userId, mimeId}) {
     return this.db.executeQuery(`UPDATE user
     SET profile_picture_id = '${mimeId}'
+    WHERE user_id = ${userId}`);
+  }
+
+  async deleteResetPassword({userId}) {
+    return this.db.executeQuery(`UPDATE user
+    SET password_reset_salt = NULL,
+    password_reset_hash = NULL,
+    password_reset_expiry = NULL
     WHERE user_id = ${userId}`);
   }
 }

@@ -11,11 +11,11 @@
             />
             <div class="media-body ml-3">
               <a href="javascript:void(0)" data-abc="true">{{ p.full_name }}</a>
-              <div class="text-muted small">
+              <div class="small">
                 {{ displayedPostPostedAt }} ago
               </div>
             </div>
-            <div class="text-muted small ml-3">
+            <div class="small ml-3">
               <div>
                 Member since <strong>{{ displayedMemberSince }}</strong>
               </div>
@@ -28,7 +28,7 @@
             </div>
           </div>
         </div>
-        <div class="card-body" v-html="p.content"></div>
+        <div class="card-body text-dark" v-html="p.content"></div>
         <div
           class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3"
         >
@@ -114,7 +114,8 @@ export default {
   padding-right: 0.625rem;
   height: 3.5rem;
   text-transform: uppercase;
-  background-color: #fff;
+
+  background-color: #6356ca;
   border-bottom: 1px solid rgba(26, 54, 126, 0.125);
 }
 
@@ -140,6 +141,10 @@ export default {
 
 .card-body p {
   font-size: 16px;
+}
+
+.card-footer {
+  background-color: #6356ca;
 }
 
 a {

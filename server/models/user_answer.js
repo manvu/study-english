@@ -8,7 +8,7 @@ class UserAnswerModel {
   async findAll({ quizId, userId, attemptId }) {
     return await this.db.executeQuery(`SELECT ua.*, q.type_id
     FROM user_answer_question ua JOIN question q ON q.question_id = ua.question_id
-    WHERE ua.quiz_id = ${quizId} AND ua.user_id = ${userId} AND ua.attempt_id = ${attemptId} 
+    WHERE ua.quiz_id = ${quizId} AND ua.user_id = ${userId} AND ua.attempt_id = ${attemptId} AND q.is_active = 1
     ORDER BY ua.question_id ASC`);
   }
 

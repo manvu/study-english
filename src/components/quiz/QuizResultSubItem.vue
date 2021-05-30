@@ -12,14 +12,14 @@
       v-if="shouldDisplayIcon && isCorrect === true"
       class="ml-1"
       :icon="faCheckCircle"
-      :style="{ color: 'green' }"
+      :style="{ color: 'green', borderColor: 'white' }"
     ></font-awesome-icon>
 
     <font-awesome-icon
       v-else-if="shouldDisplayIcon && isCorrect === false"
       class="ml-1"
       :icon="faTimesCircle"
-      :style="{ color: 'red' }"
+      :style="{ color: 'red', borderColor: 'white' }"
     ></font-awesome-icon>
     </span>
     <span v-else>

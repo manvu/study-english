@@ -3,16 +3,16 @@
     <h3>Question List</h3>
     <div class="table">
       <div class="row header">
-        <div class="cell">ID</div>
-        <div class="cell">Type</div>
-        <div class="cell">Instruction</div>
-        <div class="cell">Paragraph Title</div>
-        <div class="cell">Question</div>
-        <div class="cell">Active</div>
-        <div class="cell">Action</div>
+        <div class="cell"><strong>ID</strong></div>
+        <div class="cell"><strong>Type</strong></div>
+        <div class="cell"><strong>Instruction</strong></div>
+        <div class="cell"><strong>Paragraph Title</strong></div>
+        <div class="cell"><strong>Question</strong></div>
+        <div class="cell"><strong>Active</strong></div>
+        <div class="cell"><strong>Action</strong></div>
       </div>
 
-      <question-list-item v-for="q in questions" :key="q.question_id" :quiz="q"></question-list-item>
+      <question-list-item v-for="q in questions" :key="q.question_id" :question="q"></question-list-item>
     </div>
   </div>
 </template>
@@ -22,11 +22,12 @@ import QuestionListItem from './QuestionListItem'
 
 export default {
   components: { QuestionListItem },
-  props: ["questions"],
-  methods() {
-    function truncate(str, n) {
-      return str.length > n ? str.substr(0, n - 1) + "&hellip;" : str;
+  computed: {
+    questions() {
+      return this.$store.getters["teacherStore/getEditQuestions"]
     }
+  },
+  methods() {
   },
 };
 </script>
@@ -89,15 +90,16 @@ tbody td:hover:before {
 
 .row {
   display: table-row;
-  background: #f6f6f6;
+  background: #23334b;
+  color: #eee;
 }
 .row:nth-of-type(odd) {
-  background: #e9e9e9;
+    background: #0d0f13;
+  color: #eee;
 }
 .row.header {
-  font-weight: 900;
   color: #ffffff;
-  background: #ea6153;
+  background: #6356ca;
 }
 .row.green {
   background: #27ae60;

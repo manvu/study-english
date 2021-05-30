@@ -9,55 +9,97 @@
         v-model="searchEntity.subject"
       />
     </div>
-        <div class="form-inline">
+    <div class="form-inline">
       <label>Date created</label>
-            <input
-              type="date"
-              class="form-control"
-              v-model="searchEntity.dateCreated"
-            />
+      <input
+        type="date"
+        class="form-control"
+        v-model="searchEntity.dateCreated"
+      />
     </div>
     <div class="form-inline dropdown">
-      <button class="btn btn-info dropdown-toggle" type="button" id="sort-by" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ><strong>Created By</strong>: {{ searchEntity.selectedUser}}
+      <button
+        class="btn btn-info dropdown-toggle"
+        type="button"
+        id="sort-by"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <strong>Created By</strong>: {{ searchEntity.selectedUser }}
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#" @click="changeUserId('', 'All users')">All users</a >
-        <a v-for="user in users" :key="user.user_id" :value="user.user_id" class="dropdown-item" @click="changeUserId(user.user_id, user.first_name)" href="#" >{{ `${user.first_name}, ${user.last_name}` }}</a >
+        <a class="dropdown-item" href="#" @click="changeUserId('', 'All users')"
+          >All users</a
+        >
+        <a
+          v-for="user in users"
+          :key="user.user_id"
+          :value="user.user_id"
+          class="dropdown-item"
+          @click="changeUserId(user.user_id, user.first_name)"
+          href="#"
+          >{{ `${user.first_name}, ${user.last_name}` }}</a
+        >
       </div>
     </div>
-          <button @click="searchThreads" class="btn btn-primary">
-        <font-awesome-icon :icon="faSearch"></font-awesome-icon>
-      </button>
-            <div class="header__offset-btn">
-        <router-link to="create-thread"
-          ><img src="./fonts/icons/main/New_Topic.svg" alt="New Topic"
-        /></router-link>
-      </div>
+    <button @click="searchThreads" class="btn btn-primary">
+      <font-awesome-icon :icon="faSearch"></font-awesome-icon>
+    </button>
   </div>
 
   <!-- MAIN -->
   <main class="mt-3">
     <div class="container">
       <div class="nav mb-3">
-            <div class="form-inline dropdown">
-      <button class="btn btn-info dropdown-toggle" type="button" id="sort-by" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" > <strong> Related Quiz</strong>: {{ filterEntity.selectedQuiz }}
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" @click="changeQuizId('', 'All Quizzes')" href="#" >All Quizzes</a >
-        <a v-for="quiz in quizzes" :key="quiz.quiz_id" :value="quiz.quiz_id" class="dropdown-item" @click="changeQuizId(quiz.quiz_id, quiz.description)" href="#" >{{ `${quiz.quiz_id} - ${quiz.description}` }}</a >
-      </div>
-    </div>
-    <div class="form-inline dropdown ml-3">
-      <button class="btn btn-info dropdown-toggle" type="button" id="sort-by" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-        <strong> Sort By</strong>: {{ filterEntity.sortBy }}
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" @click="sort('Latest')" href="#">Latest</a>
-        <a class="dropdown-item" @click="sort('Oldest')" href="#">Oldest</a>
-        <a class="dropdown-item" @click="sort('Most Replies')" href="#" >Most Replies</a >
-      </div>
-    </div>
-
+        <div class="form-inline dropdown">
+          <button
+            class="btn btn-info dropdown-toggle"
+            type="button"
+            id="sort-by"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <strong> Related Quiz</strong>: {{ filterEntity.selectedQuiz }}
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a
+              class="dropdown-item"
+              @click="changeQuizId('', 'All Quizzes')"
+              href="#"
+              >All Quizzes</a
+            >
+            <a
+              v-for="quiz in quizzes"
+              :key="quiz.quiz_id"
+              :value="quiz.quiz_id"
+              class="dropdown-item"
+              @click="changeQuizId(quiz.quiz_id, quiz.description)"
+              href="#"
+              >{{ `${quiz.quiz_id} - ${quiz.description}` }}</a
+            >
+          </div>
+        </div>
+        <div class="form-inline dropdown ml-3">
+          <button
+            class="btn btn-info dropdown-toggle"
+            type="button"
+            id="sort-by"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <strong> Sort By</strong>: {{ filterEntity.sortBy }}
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" @click="sort('Latest')" href="#">Latest</a>
+            <a class="dropdown-item" @click="sort('Oldest')" href="#">Oldest</a>
+            <a class="dropdown-item" @click="sort('Most Replies')" href="#"
+              >Most Replies</a
+            >
+          </div>
+        </div>
       </div>
       <div class="posts">
         <div v-if="!isLoading">
@@ -122,12 +164,21 @@
       </div>
     </div>
   </main>
+  <div id="create-thread" class="create-thread">
+     <router-link to="create-thread">
+    <button class="btn btn-dark" title="Back to Top" style="display: block">
+      <i class="fa fa-plus"></i>
+      
+    </button>
+     </router-link>
+  </div>
 </template>
 
 <script>
 import DiscussionForumThreadItem from "./DiscussionForumThreadItem";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+
 import { paginator } from "../common/helper";
 import moment from "moment";
 
@@ -254,13 +305,13 @@ export default {
     },
     changeUserId(userId, firstName) {
       this.searchEntity.selectedUser = firstName;
-      this.searchEntity.userId = userId
-      this.filter()
+      this.searchEntity.userId = userId;
+      this.filter();
     },
     changeQuizId(quizId, description) {
       this.filterEntity.selectedQuiz = `${quizId} - ${description}`;
-      this.filterEntity.quizId = quizId
-      this.filter()
+      this.filterEntity.quizId = quizId;
+      this.filter();
     },
     sort(sortBy) {
       this.filterEntity.sortBy = sortBy;
@@ -312,6 +363,33 @@ export default {
 </script>
 
 <style scoped>
+.create-thread {
+  position: relative;
+  z-index: 1000;
+}
+.create-thread .btn-dark {
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  border-radius: 50%;
+  padding: 0;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #0ceb13aa;
+  border-color: #2e2e2e;
+  display: none;
+  z-index: 999;
+  -webkit-transition: all 0.3s linear;
+  -o-transition: all 0.3s linear;
+  transition: all 0.3s linear;
+}
+.create-thread .btn-dark:hover {
+  cursor: pointer;
+  background: #fa6742;
+  border-color: #fa6742;
+}
+
 .pagination-caption {
   font-size: 18px;
 }
@@ -428,7 +506,6 @@ export default {
   justify-content: center;
   background-color: #6356ca;
   color: #eee;
-  padding: 1em;
 }
 
 .details-wrapper div {
@@ -442,7 +519,6 @@ export default {
 
 .dropdown-menu {
   background-color: #6356ca;
-  
 }
 
 .dropdown-item {

@@ -177,8 +177,7 @@ export default {
   padding: 30px;
   position: relative;
   width: 100%;
-  color: #eee;
-  background: #0d0f13;
+  color: #111;
 }
 
 .course-info--yellow {

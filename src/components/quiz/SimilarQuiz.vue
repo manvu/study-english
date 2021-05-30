@@ -1,6 +1,9 @@
 <template>
   <div class="bg-purple" id="sidebar-wrapper" v-if="!isLoading">
-    <div class="sidebar-heading"><strong>Active Quizzes</strong></div>
+    <div class="sidebar-heading">
+      <strong v-if="currentQuiz">Active Quizzes</strong>
+      <strong v-else>Select a Quiz</strong>
+      </div>
     <div class="list-group list-group-flush">
       <a
         v-for="quiz in quizzes"
@@ -9,7 +12,10 @@
         href="#"
         class="list-group-item list-group-item-action"
         :class="selected(quiz.quiz_id)"
-        >Quiz {{ quiz.quiz_id }} - {{ quiz.description }}
+        >Quiz {{ quiz.quiz_id }} -         <span class="badge badge-pill" :class="badgeClass(quiz.skill_id)">{{
+          quiz.skill_description
+        }}</span> - {{ quiz.description }}
+
       </a>
     </div>
   </div>
@@ -56,6 +62,20 @@ export default {
     },
     selected(quizId) {
       return { selected: quizId == this.currentQuiz };
+    },
+    badgeClass(skillId) {
+      const badges = {
+        1: "secondary",
+        2: "primary",
+        3: "success",
+        4: "danger",
+        5: "warning",
+        6: "info",
+      };
+
+      
+
+      return `badge-${badges[skillId]}`;
     },
   },
 };

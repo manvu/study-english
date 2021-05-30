@@ -8,8 +8,7 @@
 
     <div class="question-body pb-3">
       <div>
-        <p class="question-text">{{ text }}</p>
-
+        <p class="question-text" v-html="text"></p>
         <div class="box-container">
           <div class="middle-box">
             <div v-for="item in rightMatchingItems" :key="item.id">

@@ -30,6 +30,8 @@ const teacherStore = {
     },
     createQuiz(state, payload) {
       state.quizzes.push(payload.quiz);
+      
+      state.quizzes = state.quizzes.filter((q) => q.quiz_id > 0);
     },
     updateQuiz(state, payload) {
       let quiz = state.quizzes.find((q) => q.quiz_id === payload.quiz.quiz_id);
@@ -43,25 +45,41 @@ const teacherStore = {
       state.quizzes = state.quizzes.filter((q) => q.quiz_id !== payload.quizId);
     },
     getQuestionForEdit(state, payload) {
-      
       state.editQuestion = payload.question;
     },
     createQuestion(state, payload) {
+      const typeNames = {
+        1: "Multiple Choice",
+        2: "Gap Filling",
+        3: "Matching"
+      }
+
       let newQuestion = {
         question_id: payload.question_id,
         type_id: payload.typeId,
+        type_name: payload.type_name ? payload.type_name : (typeNames[payload.typeId]),
         items: payload.items,
         question: payload.question,
         instruction: payload.instruction,
-        paragraphTitle: payload.paragraphTitle,
-        isActive: payload.isActive,
+        paragraph_title: payload.paragraphTitle,
+        is_active: payload.isActive,
         correctAnswer: payload.correctAnswers,
       };
-      state.newQuestions.push(newQuestion);
-      state.questions.push(newQuestion);
+      state.editQuiz.questions.push(newQuestion)
+    },
+    updateQuestion(state, payload) {
+      const question = state.editQuiz.questions.find(q => q.question_id === payload.questionId)
+      question.question_id = payload.question_id
+      question.type_id = payload.typeId
+      question.items = payload.items
+      question.question = payload.question
+      question.instruction = payload.instruction
+      question.paragraph_title = payload.paragraphTitle
+      question.is_active = payload.isActive
+      question.correctAnswer = payload.correctAnswers
     },
     deleteQuestion(state, payload) {
-      state.questions = state.questions.filter(
+      state.editQuiz.questions = state.editQuiz.questions.filter(
         (q) => q.question_id !== payload.questionId
       );
     },
@@ -193,7 +211,8 @@ const teacherStore = {
       return axios(API_LIST.createQuestion(payload))
         .then((response) => {
           if (!response.data.error) {
-            payload.question_id = response.data.question_id;
+            
+            payload.question_id = response.data.response.question_id;
             context.commit("createQuestion", payload);
             return "OK";
           }
@@ -213,7 +232,6 @@ const teacherStore = {
       return axios(API_LIST.updateQuestion(payload.questionId, payload))
         .then((response) => {
           if (!response.data.error) {
-            payload = response.data.response;
             context.commit("updateQuestion", payload);
             return "OK";
           }
@@ -329,6 +347,13 @@ const teacherStore = {
     },
     getEditQuiz(state) {
       return state.editQuiz;
+    },
+    getEditQuestions(state) {
+      if (state.editQuiz) {
+        return state.editQuiz.questions
+      } else {
+        return null
+      }
     },
     getAllQuestionTypes(state) {
       return state.allQuestionTypes;

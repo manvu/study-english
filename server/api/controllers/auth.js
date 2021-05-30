@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { jwt_secret_key, jwt_expiry_time } = require("../../config/index");
+const { jwt_secret_key, jwt_expiry_time, password_reset_expiry_time, datetime_format } = require("../../config/index");
 const { hashPasswordAsync, checkPassword } = require("../../misc/helper");
 const STRINGS = require("../../config/strings");
 const { sendSuccess, sendFailure } = require("../../config/res");
@@ -17,6 +17,7 @@ const {
   sendPasswordReset,
 } = require("../../services/email_notification/passwordReset");
 const passwordGenerator = require("generate-password");
+const moment = require("moment");
 
 module.exports = {
   register: async (data) => {
@@ -123,9 +124,24 @@ module.exports = {
         const userId = validatedUser.response[0].user_id;
         const isTeacher = validatedUser.response[0].role_id === 1 ? true : false;
         const avatarId = validatedUser.response[0].profile_picture_id;
+        const passwordResetHash = validatedUser.response[0].password_reset_hash
+        const passwordResetSalt = validatedUser.response[0].password_reset_salt
+        const passwordExpiry = validatedUser.response[0].password_reset_expiry
 
         const mime = await MimeTypeModel.findOne(avatarId)
-        const success = await checkPassword(password, passwordHash);
+        let success = await checkPassword(password, passwordHash);
+
+        if (passwordResetHash) {
+          const currentMoment = moment();
+          const difference = currentMoment.diff(moment(passwordExpiry), "seconds");
+
+          if (difference > 0) {
+            return sendFailure(401, STRINGS.PLEASE_CHECK_YOUR_PASSWORD);
+          } else {
+            success = await checkPassword(password, passwordResetHash)
+          }
+        }
+        
 
         if (success) {
           let token = jwt.sign(
@@ -163,15 +179,28 @@ module.exports = {
             uppercase: true,
           });
 
-          const sendResult = await sendPasswordReset(email, password);
+          const userId = validatedUser.response[0].user_id
 
-          const statusCode = sendResult.response.substring(0, 3);
+          const { passwordHash, passwordSalt } = await hashPasswordAsync(password);
 
-          if (statusCode === "250") {
-            return sendSuccess(200);
+          const expiredTime = moment().add(password_reset_expiry_time, "seconds").format(datetime_format)
+
+          const addPasswordReset = await UserModel.saveResetPassword({userId, passwordHash, passwordSalt, passwordExpiry: expiredTime})
+
+          if (!addPasswordReset.error) {
+            const sendResult = await sendPasswordReset(email, password);
+
+            const statusCode = sendResult.response.substring(0, 3);
+  
+            if (statusCode === "250") {
+              return sendSuccess(200);
+            } else {
+              return sendFailure(STRINGS.PLEASE_CHECK_YOUR_EMAIL);
+            }
           } else {
             return sendFailure(STRINGS.PLEASE_CHECK_YOUR_EMAIL);
           }
+
         }
       }
     } else {

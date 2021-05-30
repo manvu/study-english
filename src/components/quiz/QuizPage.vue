@@ -5,11 +5,8 @@
         id="similar-quiz"
         class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3"
       ></similar-quiz>
-      <div v-if="!quizId" class="p-3 ml-3">
-        <h1>Please select a quiz...</h1>
-      </div>
+
       <div
-        v-else
         id="quiz-content"
         class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6"
       >
@@ -138,6 +135,15 @@ export default {
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
+  #question-palette {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+  }
+  
+  .quiz-container {
+    position: relative;
+  }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
@@ -155,5 +161,6 @@ export default {
 
 #question-palette {
   padding: 20px;
+  z-index: 1000;
 }
 </style>

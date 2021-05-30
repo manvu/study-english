@@ -8,10 +8,10 @@
 
       <ul class="list-unstyled components">
         <li @click="switchTab(0)">
-          <a href="#">Manage Quizzes</a>
+          <a :class="{selectedTab: selectedTab === 0}" href="#">Manage Quizzes</a>
         </li>
         <li @click="switchTab(1)">
-          <a href="#">Board Statistics</a>
+          <a :class="{selectedTab: selectedTab === 1}" href="#">Board Statistics</a>
         </li>
       </ul>
     </nav>
@@ -40,13 +40,9 @@ export default {
       }
     },
     contentPadding: function () {
-      if (this.selectedTab === 1) {
-        return null;
-      } else {
         return {
           "content-padding": true,
         };
-      }
     },
   },
   data() {
@@ -161,6 +157,11 @@ a:focus {
 #sidebar ul li a:hover {
   color: #7386d5;
   background: #fff;
+}
+
+.selectedTab {
+  color: #7943e4 !important;
+  background: rgba(255, 255, 255, 0.975);
 }
 
 #sidebar ul li.active > a,

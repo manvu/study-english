@@ -7,10 +7,11 @@
             <h2>Question Editor</h2>
             <h2 class="closeButton" @click="closeQuestionEditorModal()">X</h2>
           </div>
-          <div v-if="errorMessage" class="alert alert-danger mt-3">
+
+          <div class="modal-body">
+                      <div v-if="errorMessage" class="alert alert-danger mt-3">
             {{ errorMessage }}
           </div>
-          <div class="modal-body">
             <div class="contact-form">
               <div class="form-group">
                 <label class="control-label" for="type">Type</label>
@@ -119,6 +120,7 @@ export default {
   created() {
     if (this.mode === "edit") {
       this.question = this.$store.getters["teacherStore/getEditQuestion"];
+      this.question.instruction = this.question.instruction.replaceAll("<br>", '\n').replaceAll(`''`, `'`)
     } else {
       const quiz = this.$store.getters["teacherStore/getEditQuiz"]
       this.question.quizId = quiz.quiz_id
@@ -137,7 +139,7 @@ export default {
         this.$store
           .dispatch("teacherStore/createQuestion", {
             ...otherProps,
-            instruction: this.question.instruction,
+            instruction: this.question.instruction.replaceAll("\n", '<br>').replaceAll("'", "''"),
             isActive: this.question.isActive,
             quizId: this.question.quizId,
           })
@@ -154,7 +156,7 @@ export default {
           .dispatch("teacherStore/updateQuestion", {
             ...otherProps,
             questionId: this.question.question_id,
-            instruction: this.question.instruction,
+            instruction: this.question.instruction.replaceAll("\n", '<br>').replaceAll("'", "''"),
             isActive: this.question.isActive,
           })
           .then((response) => {
@@ -178,7 +180,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(218, 210, 210, 0.5);
   display: grid;
   transition: opacity 0.3s ease;
   overflow: auto;
@@ -187,41 +189,35 @@ export default {
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
+  
 }
 
 .modal-container {
   width: 55%;
   margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #fff;
+  /* padding: 20px 30px; */
+  background: #111;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
 
-.modal-header h3 {
-  margin-top: 0;
-  color: #42b983;
+.modal-header {
+  background: #6356ca;
 }
 
+
 .modal-body {
-  margin: 20px 0;
   overflow-y: auto;
+  background: #111;
+    padding-left: 30px;
+  padding-right: 30px;
 }
 
 .modal-default-button {
   float: right;
 }
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
 
 .modal-enter {
   opacity: 0;

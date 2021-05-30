@@ -113,7 +113,7 @@ export default {
       this.$emit("handleSave", {
         typeId: 3,
         items: { leftItems: this.leftItems, rightItems: this.rightItems },
-        question: this.question,
+        question: this.question.replaceAll("\n", '<br>').replaceAll("'", "''"),
         paragraphTitle: this.paragraphTitle,
         correctAnswers: this.leftItems .reduce( (string, current) => string + `${current.letter}.${current.correct_answer} `, "" ) .trim(),
       });
@@ -124,7 +124,7 @@ export default {
       const question = this.$store.getters["teacherStore/getEditQuestion"];
       this.leftItems = question.items.leftItems
       this.rightItems = question.items.rightItems
-      this.question = question.question
+      this.question = question.question.replaceAll("<br>", '\n').replaceAll(`''`, `'`)
     }
   },
 };

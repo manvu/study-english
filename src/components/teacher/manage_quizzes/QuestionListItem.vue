@@ -1,10 +1,10 @@
 <template>
   <div class="row">
-    <div class="cell" data-title="ID">{{ quiz.question_id }}</div>
-    <div class="cell" data-title="Type">{{ quiz.type_name }}</div>
-    <div class="cell" data-title="Instruction">{{ quiz.instruction }}</div>
+    <div class="cell" data-title="ID">{{ question.question_id }}</div>
+    <div class="cell" data-title="Type"><span class="badge badge-pill" :class="badgeClass">{{ question.type_name }}</span></div>
+    <div class="cell" data-title="Instruction" v-html="formattedInstruction"></div>
     <div class="cell" data-title="Paragraph Title">
-      {{ quiz.paragraph_title }}
+      {{ question.paragraph_title }}
     </div>
     <div class="cell" data-title="Question" v-html="formattedQuestion"></div>
     <div class="cell" data-title="Active">{{ formattedActive }}</div>
@@ -12,12 +12,13 @@
       <font-awesome-icon
         class="button-item"
         :icon="faEdit"
-        @click="editQuestion(quiz.question_id)"
+        @click="editQuestion(question.question_id)"
       ></font-awesome-icon>
       <font-awesome-icon
         class="button-item ml-2"
         :icon="faTrashAlt"
-        @click="deleteQuestion(quiz.question_id)"
+        :style="{ color: 'red'}"
+        @click="deleteQuestion(question.question_id)"
       ></font-awesome-icon>
     </div>
   </div>
@@ -30,21 +31,32 @@ import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 export default {
   inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
-  props: ["quiz"],
+  props: ["question"],
   components: { FontAwesomeIcon },
   computed: {
+            badgeClass() {
+      const badges = {
+        1: "danger",
+        2: "primary",
+        3: "success",
+      };
+      
+      return `badge-${badges[this.question.type_id]}`
+    },
     faEdit() {
       return faEdit;
     },
     faTrashAlt() {
       return faTrashAlt;
     },
-
+    formattedInstruction() {
+      return this.truncate(this.question.instruction, 100);
+    },
     formattedQuestion() {
-      return this.truncate(this.quiz.question, 100);
+      return this.truncate(this.question.question, 100);
     },
     formattedActive() {
-      return this.quiz.is_active ? "Yes" : "No";
+      return this.question.is_active ? "Yes" : "No";
     },
   },
   methods: {

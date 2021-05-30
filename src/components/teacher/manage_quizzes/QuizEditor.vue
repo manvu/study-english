@@ -1,12 +1,12 @@
 <template>
-  <div v-if="quiz" class="col-md-10">
+  <div v-if="quiz" class="col-md-12">
     <h2>Selected Quiz: {{ quiz.quizId }}</h2>
     <div class="contact-form">
       <div class="form-group">
         <label class="control-label col-sm-6" for="courseName"
           >Course Name:</label
         >
-        <div class="col-sm-10">
+        <div class="col-sm-12">
           <input
             type="text"
             class="form-control"
@@ -19,7 +19,7 @@
       </div>
       <div class="form-group">
         <label class="control-label col-sm-6" for="type">Description</label>
-        <div class="form-row col-sm-10">
+        <div class="form-row col-sm-12">
           <textarea
             name="description"
             class="form-control"
@@ -44,7 +44,7 @@
       </div>
       <div class="form-group">
         <label class="control-label col-sm-6" for="email">Time allowed</label>
-        <div class="form-row col-sm-10">
+        <div class="form-row col-sm-12">
           <div class="form-row align-items-center">
             <div class="col-auto">
               <input
@@ -63,7 +63,7 @@
       </div>
       <div class="form-group">
         <label class="control-label col-sm-6" for="type">Skill</label>
-        <div class="form-row col-sm-10">
+        <div class="form-row col-sm-12">
           <select
             name="type"
             class="col-4 form-control"
@@ -84,7 +84,6 @@
       </div>
       <questions-list
         v-if="quiz.questions.length > 0"
-        :questions="quiz.questions"
       ></questions-list>
       <div class="mt-2 mb-2" v-else>
         There is no question created for this quiz yet
@@ -121,6 +120,7 @@ import CaseConverter from 'js-convert-case';
 
 export default {
   props: ["mode"],
+  emits: ["toggleShowQuizEditor"],
   provide() {
     return {
       openQuestionEditorModal: this.openQuestionEditorModal,
@@ -128,14 +128,29 @@ export default {
     };
   },
   components: { QuestionsList, QuestionEditorModal },
+  computed: {
+    editQuiz() {
+      return this.$store.getters["teacherStore/getEditQuiz"];
+    }
+  },
+  watch: {
+    editQuiz() {
+      if (this.mode === "edit") {
+      const quiz = this.editQuiz
+      const convertedQuiz = CaseConverter.camelKeys(quiz)
+      this.quiz = convertedQuiz
+      this.quiz.isActive = this.quiz.isActive === 1 ? true : false;
+      }
+    }
+  },
   data() {
     return {
       quiz: {
         quizId: " New ",
-        courseName: "",
+        courseName: "Test",
         isActive: true,
         timeAllowed: 30,
-        description: "",
+        description: "Test",
         questions: [],
         skillId: 1,
       },
@@ -162,7 +177,7 @@ export default {
       this.showQuestionEditor = false;
     },
     cancel() {
-      this.$emit("toggleShowQuizEditor");
+      this.$emit("toggleShowQuizEditor", { mode: this.mode, action: "close"});
     },
     handleSave() {
       if (this.mode === "create") {

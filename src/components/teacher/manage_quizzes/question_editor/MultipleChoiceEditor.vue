@@ -77,13 +77,14 @@ export default {
       choiceItem.is_correct_choice = item.is_correct_choice === true ? 1 : 0;
     },
     save() {
-      this.$emit("handleSave", { typeId: 1, items: this.items, question: this.question, });
+      this.$emit("handleSave", { typeId: 1, items: this.items, question: this.question.replaceAll("\n", '<br>').replaceAll("'", "''"), });
     },
   },
   created() {
     if (this.mode === "edit") {
       const question = this.$store.getters["teacherStore/getEditQuestion"];
       this.items = question.items;
+      this.question = question.question.replaceAll("<br>", '\n').replaceAll(`''`, `'`)
 
       for (const choice of this.items) {
         let index = this.nextChar();

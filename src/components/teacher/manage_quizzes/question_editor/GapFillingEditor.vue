@@ -59,7 +59,8 @@ export default {
       gapItem.correct_answer = keyAnswer;
     },
     save() {
-      this.$emit("handleSave", { typeId: 2, items: this.items, question: this.question, paragraphTitle: this.paragraphTitle});
+      
+      this.$emit("handleSave", { typeId: 2, items: this.items, question: this.question.replaceAll("\n", '<br>').replaceAll("'", "''"), paragraphTitle: this.paragraphTitle});
     },
   },
   created() {
@@ -67,7 +68,7 @@ export default {
       const question = this.$store.getters["teacherStore/getEditQuestion"];
       this.items = question.items
       this.paragraphTitle = question.paragraph_title
-      this.question = question.question
+      this.question = question.question.replaceAll("<br>", '\n').replaceAll(`''`, `'`)
     }
   },
 };

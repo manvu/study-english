@@ -19,6 +19,7 @@ const envFile = {
   redis_ttl: process.env.REDIS_TTL,
   jwt_secret_key: process.env.JWT_SECRET_KEY,
   jwt_expiry_time: process.env.JWT_EXPIRY_TIME ? parseInt(process.env.JWT_EXPIRY_TIME) : 86400,
+  password_reset_expiry_time: process.env.PASSWORD_RESET_EXPIRY_TIME,
   datetime_format: process.env.DATETIME_FORMAT,
   appmail: process.env.APPMAIL,
   appmail_password: process.env.APPMAIL_PASSWORD

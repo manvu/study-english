@@ -81,10 +81,7 @@ h2 {
 .quiz-result {
   width: 100%;
   height: auto;
-  background-color: #eceeef;
-  /* position: relative;
-  top: 50%;
-  left: 50%; */
+  background-color: #0d0f13;
   border-radius: 5px;
   /* transform: translate(50%, 0%); */
   -webkit-box-shadow: 0px 0px 47px 9px rgba(0, 0, 0, 0.08);
@@ -98,14 +95,14 @@ h2 {
 .quiz-result-header {
   width: 100%;
   height: auto;
-  background-color: #dddddd;
+  background-color: #6355ce;
   white-space: initial;
   overflow: auto;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   padding: 20px;
-  color: #1c1c1c;
+  color: #eee;
 }
 
 .btn {

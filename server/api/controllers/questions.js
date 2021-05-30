@@ -167,7 +167,7 @@ module.exports = {
           const addPlaceholderToIncompleteAttempts = await updateIncompleteAttempts(quizId, questionId)
 
           if (!bridge.error && !content.error) {
-            return sendSuccess(201);
+            return sendSuccess(201, {question_id: questionId});
           } else {
             return sendFailure(STRINGS.CANNOT_CREATE_QUESTION);
           }

@@ -4,9 +4,11 @@
       <div class="create">
         <div class="create__head">
           <div class="create__title">
-            <img src="./fonts/icons/main/New_Topic.svg" alt="New topic" />Create
-            New Thread
+            <i class="fa fa-plus"></i>&nbsp;Create New Thread
           </div>
+        </div>
+        <div v-if="errorMessage" class="alert alert-danger mt-3">
+          {{ errorMessage }}
         </div>
         <div class="create__section">
           <label class="create__label" for="title">Thread Title</label>
@@ -32,8 +34,12 @@
                 required
               >
                 <option value="none">Please choose a related quiz</option>
-                <option v-for="q in quizzes" :key="q.quiz_id" :value="q.quiz_id">
-                  Quiz {{ q.quiz_id }} - {{q.description}}
+                <option
+                  v-for="q in quizzes"
+                  :key="q.quiz_id"
+                  :value="q.quiz_id"
+                >
+                  Quiz {{ q.quiz_id }} - {{ q.description }}
                 </option>
               </select>
             </div>
@@ -76,7 +82,7 @@ export default {
       errorMessage: "",
       error: false,
       isLoading: true,
-      quizzes: []
+      quizzes: [],
     };
   },
   methods: {
@@ -93,35 +99,34 @@ export default {
       if (this.subject.length < 10) {
         this.error = true;
         this.errorMessage =
-          "Thread subject should be longer than 10 characters";
+          "Thread subject must be longer than 10 characters";
         return;
       }
 
       if (this.description.length < 10) {
         this.error = true;
-        this.errorMessage = "Description should be longer than 10 characters";
+        this.errorMessage = "Description must be longer than 10 characters";
         return;
       }
 
       this.error = false;
       this.errorMessage = "";
-
-
-      this.$store.dispatch("forumStore/createThread", {
-        subject: this.subject,
-        selectedRelatedQuizId: this.selectedRelatedQuiz,
-        description: this.description
-      }).then((response) => {
-        
-        this.$router.push({
-          name: "threads.index",
-          params: { id: response.newThreadId },
+      
+      this.$store
+        .dispatch("forumStore/createThread", {
+          subject: this.subject,
+          selectedRelatedQuizId: this.selectedRelatedQuiz,
+          description: this.description.replaceAll("\n", '<br>').replaceAll("'", "''"),
+        })
+        .then((response) => {
+          this.$router.push({
+            name: "threads.index",
+            params: { id: response.newThreadId },
+          });
         });
-      });
     },
   },
-  computed: {
-  },
+  computed: {},
   created() {
     this.$store.dispatch("forumStore/getDataForDiscussion").then((response) => {
       this.isLoading = false;
@@ -133,7 +138,7 @@ export default {
 
 <style scoped>
 .create {
-  background-color: #ffffff;
+  background-color: #6356ca;
   border: solid 1px #f3f4f5;
 }
 @media only screen and (min-width: 1040px) {
@@ -148,15 +153,7 @@ export default {
     margin-top: 15px;
   }
 }
-.create input.form-control {
-  border: solid 1px #e9ecee;
-  border-radius: 0;
-  background-color: #f8f9fa;
-  color: #8e9091;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-}
+
 @media only screen and (min-width: 1040px) {
   .create input.form-control {
     height: 48px;

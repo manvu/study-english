@@ -120,10 +120,7 @@ export default {
   -moz-transition: margin 0.25s ease-out;
   -o-transition: margin 0.25s ease-out;
   transition: margin 0.25s ease-out;
-}
-
-#sidebar-wrapper .sidebar-heading {
-  padding: 0.875rem 1.25rem;
+    padding: 0.875rem 1.25rem;
   font-size: 1.2rem;
 }
 
@@ -155,8 +152,6 @@ export default {
     margin-left: -15rem;
   }
 }
-
-
 
 .question-list {
   display: flex;

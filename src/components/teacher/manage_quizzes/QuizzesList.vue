@@ -8,14 +8,14 @@
     </div>
     <div class="table">
       <div class="row header">
-        <div class="cell">ID</div>
-        <div class="cell">Course Name</div>
-        <div class="cell">Active</div>
-        <div class="cell">Questions</div>
-        <div class="cell">Attempts</div>
-        <div class="cell">Time Allowed</div>
-        <div class="cell">Average Rating</div>
-        <div class="cell">Action</div>
+        <div class="cell"><strong>ID</strong></div>
+        <div class="cell"><strong>Course Name</strong></div>
+        <div class="cell"><strong>Active</strong></div>
+        <div class="cell"><strong>Questions</strong></div>
+        <div class="cell"><strong>Attempts</strong></div>
+        <div class="cell"><strong>Time Allowed</strong></div>
+        <div class="cell"><strong>Average Rating</strong></div>
+        <div class="cell"><strong>Action</strong></div>
       </div>
 
       <div class="row" v-for="quiz in quizzes" :key="quiz.quiz_id">
@@ -31,8 +31,8 @@
         <div class="cell" data-title="Time Allowed">
           {{ quiz.time_allowed }}
         </div>
-        <div class="cell" data-title="Time Allowed">
-          {{ quiz.average_rating.toFixed(2) }} {{ `(${quiz.rating_count})` }}
+        <div class="cell" data-title="Average Rating">
+          {{ quiz.average_rating ? quiz.average_rating.toFixed(2) : Number(0).toFixed(2) }} {{ `(${quiz.rating_count ? quiz.rating_count : 0})` }}
           <font-awesome-icon
             class="button-item"
             :icon="faEraser"
@@ -125,12 +125,11 @@ export default {
     },
   },
   watch: {
-    latestQuizzes() {
-      
-      this.quizzes = this.$store.getters["teacherStore/getQuizList"];
-      this.originalQuizzes = this.quizzes;
-      this.paginate();
-    },
+    latestQuizzes(value) {
+      this.quizzes = value
+      this.originalQuizzes = value
+      this.paginate()
+    }
   },
   created() {
     this.$store.dispatch("teacherStore/getDataForTeacher").then((response) => {
@@ -154,10 +153,10 @@ export default {
       return `badge-${badges[skillId]}`
     },
     createQuiz() {
-      this.$emit("toggleShowQuizEditor", { mode: "create" });
+      this.$emit("toggleShowQuizEditor", { mode: "create", action: "open" });
     },
     editQuiz(quizId) {
-      this.$emit("toggleShowQuizEditor", { mode: "edit", quizId });
+      this.$emit("toggleShowQuizEditor", { mode: "edit", quizId, action: "open" });
     },
     resetRating(quizId) {
       this.$store
@@ -329,7 +328,6 @@ tbody td:hover:before {
   color: #eee;
 }
 .row.header {
-  font-weight: 900;
   color: #ffffff;
   background: #6356ca;
 }

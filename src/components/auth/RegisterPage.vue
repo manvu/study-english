@@ -5,45 +5,13 @@
         <h2 class="title">REGISTER YOUR ACCOUNT</h2>
           <p class="mb-3" v-if="error">
             <b>Please correct the following error(s):</b>
-            <ul>
-              <li class="error-message">{{ error }}</li>
-            </ul>
+            <ul> <li class="error-message">{{ error }}</li> </ul>
           </p>
-          <input
-          type="text"
-          placeholder="First Name"
-          class="textbox"
-          v-model="firstName"
-          autocomplete="on"
-        />
-         <input
-          type="text"
-          placeholder="Last Name"
-          class="textbox"
-          v-model="lastName"
-          autocomplete="on"
-        />
-        <input
-          type="email"
-          placeholder="Email Address"
-          class="textbox"
-          v-model="email"
-          autocomplete="on"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          class="textbox"
-          v-model="password"
-          autocomplete="on"
-        />
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          class="textbox"
-          v-model="confirmPassword"
-          autocomplete="off"
-        />
+          <input type="text" placeholder="First Name" class="textbox" v-model="firstName" autocomplete="on" />
+         <input type="text" placeholder="Last Name" class="textbox" v-model="lastName" autocomplete="on" />
+        <input type="email" placeholder="Email Address" class="textbox" v-model="email" autocomplete="on" />
+        <input type="password" placeholder="Password" class="textbox" v-model="password" autocomplete="on" />
+        <input type="password" placeholder="Confirm Password" class="textbox" v-model="confirmPassword" autocomplete="off" />
         <input type="submit" value="Register" class="button" />
         <router-link to="/login">Already signed up? Log in</router-link>
       </form>
@@ -104,12 +72,9 @@ body {
 }
 
 a {
-  /* display: block; */
   color: #ad5482;
   text-decoration: none;
   font-weight: bold;
-  /* margin-top: -5px; */
-  /* text-align: center; */
 }
 
 #bg {
@@ -117,11 +82,9 @@ a {
   top: 20px;
   height: 900px;
   width: 650px;
-  /* background: url("https://i.imgur.com/3eP9Z4O.png") center no-repeat; */
   background-size: cover;
   margin-left: auto;
   margin-right: auto;
-  /* border: #fff 15px solid; */
 }
 
 .module {
@@ -132,7 +95,7 @@ a {
   margin-left: auto;
   margin-right: auto;
   border-radius: 5px;
-  background: RGBA(255, 255, 255, 1);
+  background-color: #6250e9 !important;
 
   -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.45);
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.45);
@@ -224,7 +187,23 @@ a {
 }
 
 .button:hover {
-  background: #80b438;
+  background: #80b438 !important;
+}
+
+.green-button {
+  background: #90c843 !important;
+}
+
+.green-button:hover {
+  background: #80b438 !important;
+}
+
+.red-button {
+  background: #ff8080 !important;
+}
+
+.red-button:hover {
+  background: #f90e0e !important;
 }
 
 .title {

@@ -1,5 +1,8 @@
 <template>
   <header>
+        <div class="header d-flex">
+      <h2>Query Statistics</h2>
+    </div>
     <div id="filter" class="details-wrapper">
       <div class="form-inline">
         <label>Filter by</label>

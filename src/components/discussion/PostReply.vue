@@ -40,7 +40,8 @@ export default {
     cancel() {},
     submit() {
       const threadId = this.threadId
-      const content = this.content;
+      const content = this.content.replaceAll("\n", '<br>').replaceAll("'", "''")
+
 
       this.$store.dispatch('forumStore/createPost', {threadId, content})
     },

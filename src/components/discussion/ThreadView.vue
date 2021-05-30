@@ -14,11 +14,11 @@
                 <a href="javascript:void(0)" data-abc="true">{{
                   thread.full_name
                 }}</a>
-                <div class="text-muted small">
+                <div class="small">
                   {{ displayedThreadCreatedAt }} ago
                 </div>
               </div>
-              <div class="text-muted small ml-3">
+              <div class="small ml-3">
                 <div>
                   Member since <strong>{{ displayedMemberSince }}</strong>
                 </div>
@@ -269,7 +269,8 @@ export default {
   padding-right: 0.625rem;
   height: 3.5rem;
   text-transform: uppercase;
-  background-color: #fff;
+  background-color: #6356ca;
+  color: #eee;
   border-bottom: 1px solid rgba(26, 54, 126, 0.125);
 }
 
@@ -291,6 +292,12 @@ export default {
 .card-body {
   flex: 1 1 auto;
   padding: 2rem;
+  color: #111;
+  
+}
+
+.card-footer {
+  background-color: #6356ca;
 }
 
 .card-body p {
