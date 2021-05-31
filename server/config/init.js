@@ -4,8 +4,10 @@ module.exports = {
     mongoose.Promise = global.Promise;
   },
   corsOptions: {
-    credentials: true,
     origin: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204
   },
   // cors: async (req, res, next) => {
   //     res.header("Access-Control-Allow-Origin", "*");

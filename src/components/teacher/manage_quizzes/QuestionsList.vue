@@ -12,22 +12,118 @@
         <div class="cell"><strong>Action</strong></div>
       </div>
 
-      <question-list-item v-for="q in questions" :key="q.question_id" :question="q"></question-list-item>
+      <question-list-item
+        v-for="q in questions"
+        :key="q.question_id"
+        :question="q"
+      ></question-list-item>
     </div>
+  </div>
+  <div v-if="pagination.totalPages !== null" class="block-27 text-center">
+    <ul>
+      <li><span class="page-number" @click="prevPage()">&lt;</span></li>
+      <li
+        :class="{ active: page === pagination.currentPage }"
+        v-for="page in pagination.totalPages"
+        :key="page"
+      >
+        <span class="page-number" @click="specificPage(page)">{{ page }}</span>
+      </li>
+      <li><span class="page-number" @click="nextPage()">&gt;</span></li>
+    </ul>
+    <p class="font-italic pagination-caption">
+      Showing
+      <span class="badge badge-pill badge-secondary">{{
+        questions.length
+      }}</span>
+      out of
+      <span class="badge badge-pill badge-secondary">{{
+        originalQuestions.length
+      }}</span>
+      questions in total
+    </p>
   </div>
 </template>
 
 <script>
-import QuestionListItem from './QuestionListItem'
+import QuestionListItem from "./QuestionListItem";
+import { paginator } from "../../common/helper";
 
 export default {
   components: { QuestionListItem },
-  computed: {
-    questions() {
-      return this.$store.getters["teacherStore/getEditQuestions"]
-    }
+  data() {
+    return {
+      pagination: {
+        currentPage: 1,
+        totalPages: null,
+        pagesPerPage: 10,
+        nextPage: null,
+        prevPage: null,
+      },
+      questions: [],
+      originalQuestions: [],
+    };
   },
-  methods() {
+  watch: {
+    latestQuestions(value) {
+      this.questions = value;
+      this.originalQuestions = value;
+      this.paginate();
+    },
+  },
+  computed: {
+    latestQuestions() {
+      return this.$store.getters["teacherStore/getEditQuestions"];
+    },
+  },
+  created() {
+    this.originalQuestions = this.$store.getters[
+      "teacherStore/getEditQuestions"
+    ];
+    this.questions = this.$store.getters["teacherStore/getEditQuestions"];
+    this.paginate();
+  },
+  methods: {
+    paginate(currentPage, pagesPerPage) {
+      const paginated = paginator(
+        this.questions,
+        currentPage || this.pagination.currentPage,
+        pagesPerPage || this.pagination.pagesPerPage
+      );
+
+      this.questions = paginated.data;
+      this.pagination.totalPages = paginated.total_pages;
+      this.pagination.currentPage = paginated.page;
+      this.pagination.prevPage = paginated.pre_page;
+      this.pagination.nextPage = paginated.next_page;
+    },
+    prevPage() {
+      if (this.pagination.prevPage !== null) {
+        this.changePage(this.pagination.prevPage);
+      }
+    },
+    nextPage() {
+      if (this.pagination.nextPage !== null) {
+        this.changePage(this.pagination.nextPage);
+      }
+    },
+    specificPage(page) {
+      if (page !== null) {
+        this.changePage(page);
+      }
+    },
+    changePage(changeTo) {
+      const paginated = paginator(
+        this.originalQuestions,
+        changeTo,
+        this.pagination.pagesPerPage
+      );
+
+      this.questions = paginated.data;
+      this.pagination.currentPage = paginated.page;
+      this.pagination.prevPage = paginated.pre_page;
+      this.pagination.nextPage = paginated.next_page;
+    },
   },
 };
 </script>
@@ -94,7 +190,7 @@ tbody td:hover:before {
   color: #eee;
 }
 .row:nth-of-type(odd) {
-    background: #0d0f13;
+  background: #0d0f13;
   color: #eee;
 }
 .row.header {
@@ -148,5 +244,44 @@ tbody td:hover:before {
 
 .button-item {
   cursor: pointer;
+}
+
+.pagination-caption {
+  font-size: 18px;
+}
+
+.page-number {
+  cursor: pointer;
+}
+
+.block-27 {
+  color: #eee;
+}
+
+.block-27 ul {
+  padding: 0;
+  margin: 0;
+}
+.block-27 ul li {
+  display: inline-block;
+  margin-bottom: 4px;
+  font-weight: 400;
+}
+.block-27 ul li a,
+.block-27 ul li span {
+  color: gray;
+  text-align: center;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  border: 1px solid #e6e6e6;
+}
+.block-27 ul li.active a,
+.block-27 ul li.active span {
+  background: #6356ca;
+  color: #fff;
+  border: 1px solid transparent;
 }
 </style>

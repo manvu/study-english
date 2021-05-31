@@ -23,15 +23,15 @@ class QuestionModel {
 
   async loadContent(quizId) {
     return await this.db
-      .executeQuery(`SELECT q.question_id, qmc.choice_id, qmc.choice_text, qgf.sequence_id , qms.letter, qms.subquestion_id, qms.text, qms.column_assigned
-    FROM question q 
-    JOIN quiz_question qq ON qq.question_id = q.question_id 
-    JOIN question_instruction qi ON q.instruction_id = qi.instruction_id
-    LEFT JOIN question_multiple_choice qmc ON q.question_id =  qmc.question_id
-    LEFT JOIN question_gap_filling qgf ON q.question_id = qgf.question_id
-    LEFT JOIN question_matching_sub qms ON q.question_id = qms.question_id
-    WHERE qq.quiz_id = ${quizId} AND q.is_active = 1
-    ORDER BY q.question_id, qmc.choice_id, qgf.sequence_id, qms.subquestion_id`);
+      .executeQuery(`SELECT q.question_id, qmc.choice_id, qmc.choice_text, qgf.sequence_id , qms.letter, qms.subquestion_id, qms.text, qmc.is_correct_choice, qms.column_assigned
+      FROM question q 
+      JOIN quiz_question qq ON qq.question_id = q.question_id 
+      JOIN question_instruction qi ON q.instruction_id = qi.instruction_id
+      LEFT JOIN question_multiple_choice qmc ON q.question_id =  qmc.question_id
+      LEFT JOIN question_gap_filling qgf ON q.question_id = qgf.question_id
+      LEFT JOIN question_matching_sub qms ON q.question_id = qms.question_id
+      WHERE qq.quiz_id = ${quizId} AND q.is_active = 1
+      ORDER BY q.question_id, qmc.choice_id, qgf.sequence_id, qms.subquestion_id`);
   }
 
   async findManyByQuizIdForEdit(quizId) {

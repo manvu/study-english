@@ -9,7 +9,8 @@ class GapFillingOptionModel {
     return await this.db.executeQuery(`SELECT qgf.sequence_id, qgf.correct_answer
     FROM question q 
     JOIN question_gap_filling qgf ON q.question_id = qgf.question_id
-    WHERE q.question_id = ${questionId}`)
+    WHERE q.question_id = ${questionId}
+    ORDER BY sequence_id`)
   }
 
   async addMany(items, questionId) {

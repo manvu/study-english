@@ -3,9 +3,8 @@ const moment = require("moment");
 const AttemptModel = new (require("../../models/attempt"))();
 const quizzesController = require("../../api/controllers/quizzes");
 
-cron.schedule("* * * * * *", async () => {
+cron.schedule("*/15 * * * * *", async () => {
   const attemptsResponse = await AttemptModel.findAllIncompleteAttempts();
-  console.log("running a task every 3 seconds");
   if (!attemptsResponse.error && attemptsResponse.response.length > 0) {
     const attempts = attemptsResponse.response;
     const currentMoment = moment();

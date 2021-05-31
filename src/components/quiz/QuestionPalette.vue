@@ -1,24 +1,36 @@
 <template>
   <div class="bg-purple" id="sidebar-wrapper">
     <div class="sidebar-heading">
-      <h4>
-        <span>
-          <font-awesome-icon :icon="faClock"></font-awesome-icon>
-        </span>
-        Time Left: {{ displayCountdownTimer }}
-      </h4>
-    </div>
-
-    <div class="sidebar-heading mt-3">
-      <h4>
+      <h6>
         <span><font-awesome-icon :icon="faBars"></font-awesome-icon> </span>
         Question Palette
-      </h4>
+        <font-awesome-icon
+          v-if="!showQuestionsSwitch"
+          @click="toggleShowQuestions"
+          :icon="faCaretUp"
+          class="showQuestionsIcon"
+        ></font-awesome-icon>
+        <font-awesome-icon
+          v-else
+          @click="toggleShowQuestions"
+          :icon="faCaretDown"
+          class="showQuestionsIcon"
+        ></font-awesome-icon>
+        &nbsp;
+        <span class="float-right">
+          <font-awesome-icon :icon="faClock"></font-awesome-icon>&nbsp;Time
+          Left: {{ displayCountdownTimer }}
+        </span>
+      </h6>
     </div>
 
-    <div class="row mt-3 mb-3">
-      <question-palette-item v-for="(q, index) in liveQuestions" :key="index" :number="index + 1" :question="q">
-        
+    <div v-if="showQuestionsSwitch" class="row mt-3 mb-3">
+      <question-palette-item
+        v-for="(q, index) in liveQuestions"
+        :key="index"
+        :number="index + 1"
+        :question="q"
+      >
       </question-palette-item>
     </div>
     <div>
@@ -34,9 +46,11 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { faClock } from "@fortawesome/free-solid-svg-icons";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faCaretUp } from "@fortawesome/free-solid-svg-icons";
+import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import "moment-duration-format";
-import QuestionPaletteItem from './QuestionPaletteItem.vue';
+import QuestionPaletteItem from "./QuestionPaletteItem.vue";
 
 export default {
   props: ["questions", "timer"],
@@ -47,6 +61,7 @@ export default {
       expiredTime: 0,
       interval: 1000,
       timeout: null,
+      showQuestionsSwitch: false,
     };
   },
   computed: {
@@ -62,9 +77,15 @@ export default {
     faPaperPlane() {
       return faPaperPlane;
     },
+        faCaretDown() {
+      return faCaretDown;
+    },
+        faCaretUp() {
+      return faCaretUp;
+    },
     liveQuestions() {
-      return this.$store.getters["questionStore/getQuestionList"]
-    }
+      return this.$store.getters["questionStore/getQuestionList"];
+    },
   },
   methods: {
     submit() {
@@ -89,6 +110,9 @@ export default {
         this.submit();
       }
     },
+    toggleShowQuestions() {
+      this.showQuestionsSwitch = !this.showQuestionsSwitch;
+    },
   },
   created() {
     this.timeLeft = -1 * this.timer.time_left;
@@ -105,7 +129,7 @@ export default {
 }
 
 .bg-purple {
-  background-color: #5d51bd;
+  background-color: #222928;
 }
 
 .bg-purple-cover:hover {
@@ -120,7 +144,7 @@ export default {
   -moz-transition: margin 0.25s ease-out;
   -o-transition: margin 0.25s ease-out;
   transition: margin 0.25s ease-out;
-    padding: 0.875rem 1.25rem;
+  padding: 0.875rem 1.25rem;
   font-size: 1.2rem;
 }
 
@@ -160,5 +184,9 @@ export default {
 button {
   font-weight: 600;
   width: 100%;
+}
+
+.showQuestionsIcon {
+  cursor: pointer;
 }
 </style>

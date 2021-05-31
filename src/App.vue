@@ -40,8 +40,8 @@ html {
 }
 
 input, select, textarea {
-  background-color: #111 !important;
-  color: #eee !important;
+  /* background-color: #111 !important; */
+  /* color: #eee !important; */
 }
 
 body {

@@ -21,7 +21,6 @@ const postsRoutes = require("./api/routes/posts");
 const questionsRoutes = require("./api/routes/questions");
 
 app.use(cors(corsOptions));
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

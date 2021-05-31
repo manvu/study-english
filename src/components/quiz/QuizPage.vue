@@ -8,7 +8,7 @@
 
       <div
         id="quiz-content"
-        class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6"
+        class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9"
       >
         <div v-for="(question, index) in questions" :key="question.id">
           <multiple-choice-question-item
@@ -19,6 +19,7 @@
             :choices="question.content"
             :instruction="question.instruction"
             :selectedOption="question.selectedOption"
+            :number_of_selections="question.number_of_selections"
           ></multiple-choice-question-item>
           <gap-filling-question-item
             v-else-if="question.type_id === 2"
@@ -46,7 +47,7 @@
       <question-palette
         id="question-palette"
         v-if="quizId && !hideQuestionPalette"
-        class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3"
+        class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"
         :questions="questions"
         :timer="timer"
       ></question-palette>
@@ -123,8 +124,7 @@ export default {
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (max-width: 767px) {
   #question-palette {
-    position: fixed;
-    left: 0;
+    position: sticky;
     bottom: 0;
   }
 
@@ -136,13 +136,13 @@ export default {
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
   #question-palette {
-    position: fixed;
+    position: sticky;
     bottom: 0;
-    right: 0;
+
   }
   
   .quiz-container {
-    position: relative;
+    /* position: relative; */
   }
 }
 

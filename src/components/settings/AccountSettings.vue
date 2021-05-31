@@ -63,10 +63,6 @@
                       @change="saveAvatar"
                     />
                   </label>
-                  &nbsp;
-                  <button type="button" class="btn btn-default md-btn-flat">
-                    Reset
-                  </button>
 
                   <div class="text-light small mt-1">
                     Allowed JPG, JPEG and PNG. 2MB max

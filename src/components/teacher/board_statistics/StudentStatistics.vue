@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isLoading" id="chartArea" class="mt-5">
-    <span class="chart">
+    <span v-if="statistics.quizStatistics" class="chart">
       <apexchart
         width="500"
         type="pie"
@@ -8,8 +8,9 @@
         :series="statistics.quizStatistics.data"
       ></apexchart>
     </span>
+    <h3 v-else>No data about quiz statistics has been found about this user</h3>
 
-    <span class="chart">
+    <span v-if="statistics.answerStatistics" class="chart">
       <apexchart
         width="500"
         type="pie"
@@ -17,6 +18,7 @@
         :series="statistics.answerStatistics.data"
       ></apexchart>
     </span>
+    <h3 v-else>No data about answer statistics has been found about this user</h3>
   </div>
   <div v-else>
     <h1>Loading data...</h1>
@@ -39,6 +41,7 @@ export default {
     this.statistics = this.$store.getters[
       "teacherStore/getBoardStatisticsByStudent"
     ];
+    debugger
     console.log(this.statistics)
     if (this.statistics)
     this.isLoading = false

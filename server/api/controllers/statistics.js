@@ -44,6 +44,11 @@ function createPieChart(statsType, stats, additionalInfo) {
 
   if (statsType === 1) {
     const { number_of_quizzes, incomplete, unattempted } = stats;
+
+    if (number_of_quizzes === 0 && incomplete === 0 && unattempted === 0) {
+      return false
+    }
+
     const completed = number_of_quizzes - (incomplete + unattempted);
 
     labels = ["Completed", "Incomplete", "Not Attempted"];
@@ -56,6 +61,10 @@ function createPieChart(statsType, stats, additionalInfo) {
     }
   } else {
     const { correct, partially_correct, incorrect, unanswered } = stats;
+
+    if (correct === 0 && partially_correct === 0 && incorrect === 0 && unanswered === 0) {
+      return false
+    }
 
     labels = ["Correct", "Partially Correct", "Incorrect", "Unanswered"];
     data = [correct, partially_correct, incorrect, unanswered];
@@ -140,9 +149,7 @@ module.exports = {
   },
   getBoardStatisticsByStudent: async (data) => {
     const { userId, dateFrom, dateTo } = data;
-    const answer = await StatisticsModel.findBoardStatisticsByAnswerQuality(
-      data
-    );
+    const answer = await StatisticsModel.findBoardStatisticsByAnswerQuality( data );
     const quiz = await StatisticsModel.findBoardStatisticsByQuizCompleted(data);
     const user = await UserModel.findOneById(userId);
 

@@ -3,7 +3,7 @@
     <div class="quiz-header"></div>
 
     <div class="question">
-      <h3 class="instruction">{{ id + 1 + "." }} {{ instruction }}</h3>
+      <h3 class="instruction" v-html="id + 1 + '. ' + instruction"></h3>
     </div>
     <div class="question-area p-4">
       <h4 class="text-center">{{ paragraph_title }}</h4>
@@ -47,6 +47,7 @@ export default {
     };
   },
   created() {
+    debugger;
     if (this.question.answer_text) {
       let items = this.question.answer_text.split(",").map((s) => s.split("."));
 
@@ -54,22 +55,15 @@ export default {
         let gap = this.question.content[i];
         this.gapItems.push({
           id: gap.sequence_id,
-          response:
-            items[i][1] === "?" ? "" : items[i][1],
+          response: items[i][1] === "?" ? "" : items[i][1],
         });
       }
       console.log(this.paragraph_title);
     } else {
-      let found;
-      while ((found = regex.exec(this.text))) {
-        let id = parseInt(found[1]);
-        if (id > 0) {
-          this.gapItems.push({
-            id,
-            response: "",
-          });
-        }
-      }
+      this.gapItems = new Array(this.question.content.length) .fill()
+        .map((e, i) => {
+          return { id: i + 1, response: "" };
+        });
     }
   },
   methods: {
@@ -143,7 +137,7 @@ h2 {
 
 .question-text {
   font-size: 15pt;
-  font-family: Verdana;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .question-area {
@@ -165,7 +159,6 @@ h2 {
   cursor: pointer;
 }
 
-
 .button-control {
   display: flex;
   flex-direction: row;
@@ -180,7 +173,6 @@ h2 {
 }
 
 .instruction {
-  font-weight: bold;
   background-color: #6356ca;
   color: #eee;
 }

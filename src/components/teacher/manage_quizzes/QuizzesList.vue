@@ -6,7 +6,7 @@
         Create Quiz
       </button>
     </div>
-    <div class="table">
+    <div v-if="quizzes.length > 0" class="table">
       <div class="row header">
         <div class="cell"><strong>ID</strong></div>
         <div class="cell"><strong>Course Name</strong></div>
@@ -54,6 +54,9 @@
           ></font-awesome-icon>
         </div>
       </div>
+    </div>
+    <div v-else>
+      <h3>No quizzes found.</h3>
     </div>
     <div v-if="pagination.totalPages !== null" class="block-27 text-center">
       <ul>

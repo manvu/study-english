@@ -21,7 +21,7 @@ export default {
   components: { QuizzesList, QuizEditor },
   methods: {
     toggleShowQuizEditor(data) {
-      debugger
+      
       if (data.mode === "create") {
         this.mode = "create";
 
@@ -36,7 +36,7 @@ export default {
           .then((response) => {
             this.mode = "edit";
 
-            debugger
+            
 
             if (data.action === "close") {
               this.showQuizEditor = false;

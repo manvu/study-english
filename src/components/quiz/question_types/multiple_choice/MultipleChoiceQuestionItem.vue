@@ -3,7 +3,7 @@
     <div class="quiz-header"></div>
 
     <div class="question">
-      <h3 class="instruction">{{ id + 1 + "." }} {{ instruction }}</h3>
+      <h3 class="instruction" v-html="id + 1 + '. ' + instruction"></h3>
       <h3><span v-html="questionText"> </span></h3>
     </div>
 
@@ -24,37 +24,55 @@ import MultipleChoiceChoiceItem from "./MultipleChoiceChoiceItem";
 
 export default {
   components: { MultipleChoiceChoiceItem },
-  props: ["id", "text", "choices", "instruction", "question"],
+  props: [
+    "id",
+    "text",
+    "choices",
+    "instruction",
+    "question",
+    "number_of_selections",
+  ],
   data() {
     return {
-      selectedOptions: this.question.answer_text ? this.question.answer_text.split(",").map(item => parseInt(item) ? parseInt(item) : item) : [],
+      selectedOptions: this.question.answer_text
+        ? this.question.answer_text
+            .split(",")
+            .map((item) => (parseInt(item) ? parseInt(item) : item))
+        : [],
       questionText: this.text,
       originalQuestionText: this.text,
     };
   },
   methods: {
     selectOption(option) {
-      if (this.selectedOptions.includes(option)) {
-        this.selectedOptions = this.selectedOptions.filter(o => o !== option).sort()
+      if (this.number_of_selections > 1) {
+        if (this.selectedOptions.includes(option)) {
+          // Deselect it
+          this.selectedOptions = this.selectedOptions
+            .filter((o) => o !== option)
+            .sort();
+        } else {
+          // Select it
+          this.selectedOptions.push(option);
+        }
       } else {
+        this.selectedOptions = []
         this.selectedOptions.push(option);
       }
-      
+
       this.$store
         .dispatch("questionStore/answerQuestion", {
           questionId: this.question.question_id,
           quizId: this.question.quiz_id,
           attemptId: this.question.attempt_id,
-          answerText: this.selectedOptions.join(','),
+          answerText: this.selectedOptions.join(","),
         })
-        .then((response) => {
-          
-        });
+        .then((response) => {});
     },
   },
   created() {
-    console.log(this.question.answer_text)
-  }
+    console.log(this.question.answer_text);
+  },
 };
 </script>
 
@@ -114,8 +132,6 @@ h2 {
   cursor: pointer;
 }
 
-
-
 .button-control {
   display: flex;
   flex-direction: row;
@@ -130,7 +146,6 @@ h2 {
 }
 
 .instruction {
-  font-weight: bold;
   background-color: #6356ca;
   color: #eee;
 }

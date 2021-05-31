@@ -147,7 +147,7 @@ export default {
     return {
       quiz: {
         quizId: " New ",
-        courseName: "Test",
+        courseName: "CAE",
         isActive: true,
         timeAllowed: 30,
         description: "Test",

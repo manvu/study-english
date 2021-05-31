@@ -70,6 +70,7 @@
   </div>
   <div class="quizzes-list-container">
     <div v-if="!isLoading">
+      <div v-if="quizzes.length >0">
       <quiz-list-item
         v-for="quiz in quizzes"
         :favorite="quiz.favorite"
@@ -89,6 +90,10 @@
         :ratingCount="quiz.rating_count"
         :ratingGiven="quiz.rating_given"
       ></quiz-list-item>
+      </div>
+      <div v-else>
+        <h3>No quizzes found.</h3>
+      </div>
       <div v-if="pagination.totalPages !== null" class="block-27 text-center">
         <ul>
           <li><span class="page-number" @click="prevPage()">&lt;</span></li>

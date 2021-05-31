@@ -66,6 +66,7 @@ const teacherStore = {
         correctAnswer: payload.correctAnswers,
       };
       state.editQuiz.questions.push(newQuestion)
+      state.editQuiz.questions = state.editQuiz.questions.filter((q) => q.question_id > 0);
     },
     updateQuestion(state, payload) {
       const question = state.editQuiz.questions.find(q => q.question_id === payload.questionId)

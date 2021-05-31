@@ -25,6 +25,7 @@
           class="form-control"
           id="filter-by"
           v-model="selectedStudentId"
+          required
         >
           <option selected value="">Select a student</option>
           <option

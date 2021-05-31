@@ -110,7 +110,7 @@ export default {
       question: {
         type_id: 1,
         isActive: true,
-        instruction: "This is the test",
+        instruction: "Think of <b>one</b> word only which can be used appropriately in <b>all three sentences</b>.",
         quizId: 0
       },
       allQuestionTypes: [],

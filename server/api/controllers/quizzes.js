@@ -203,6 +203,11 @@ module.exports = {
           }
 
           for (const question of response.questions) {
+            if (question.type_id === 1) {
+              const content = resObject[question.question_id];
+              question.number_of_selections = content.filter(choice => choice.is_correct_choice).length
+              content.forEach(choice => delete choice.is_correct_choice)
+            }
             question.content = resObject[question.question_id];
           }
 
@@ -373,7 +378,17 @@ module.exports = {
             }
           } else if (type_id === 2) {
             const answers = answer_text.split(",").map((a) => a.split("."));
-            const marked = answers.map((item, i) => item[1].toLowerCase().trim() === corrects[i].correct_answer.toLowerCase().trim())
+            const marked = answers.map((item, i) => {
+              const string = corrects[i].correct_answer.toLowerCase().trim()
+              const string2 = item[1].toLowerCase().trim()
+              
+              if (string.includes('/') || string.includes('|'))  {
+                const correct_answers = (string.includes('/') ? string.split('/') : string.split('|')).map(a => a.trim())
+                return correct_answers.some(answer => string2 === answer)
+              } else {
+                return string2 === string
+              }
+            })
 
             response.detailedAnswers[index].answers = corrects
             

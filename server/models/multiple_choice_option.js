@@ -9,7 +9,8 @@ class MultipleChoiceOptionModel {
     return await this.db.executeQuery(`SELECT qmc.choice_id, qmc.choice_text, qmc.is_correct_choice
     FROM question q 
     JOIN question_multiple_choice qmc ON q.question_id = qmc.question_id
-    WHERE q.question_id = ${questionId}`)
+    WHERE q.question_id = ${questionId}
+    ORDER BY choice_id`)
   }
 
   async addMany(items, questionId) {
