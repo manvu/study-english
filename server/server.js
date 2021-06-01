@@ -30,16 +30,16 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Use these routes
-app.use("/auth", authRoutes);
-app.use("/discussion", discussionRoutes);
-app.use("/home", homeRoutes);
-app.use("/users", userRoutes);
-app.use("/quizzes", quizRoutes);
-app.use("/threads", threadsRoutes);
-app.use("/teacher", teacherRoutes);
-app.use("/statistics", statisticsRoutes);
-app.use("/posts", postsRoutes);
-app.use("/questions", questionsRoutes);
+app.use("api/auth", authRoutes);
+app.use("api/discussion", discussionRoutes);
+app.use("api/home", homeRoutes);
+app.use("api/users", userRoutes);
+app.use("api/quizzes", quizRoutes);
+app.use("api/threads", threadsRoutes);
+app.use("api/teacher", teacherRoutes);
+app.use("api/statistics", statisticsRoutes);
+app.use("api/posts", postsRoutes);
+app.use("api/questions", questionsRoutes);
 
 // set port, listen for requests
 app.listen(process.env.PORT || 3000, () => {
