@@ -117,6 +117,15 @@ a:focus {
   align-items: stretch;
 }
 
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: space-between;
+  }
+}
+
 #sidebar {
   min-width: 250px;
   max-width: 250px;
@@ -229,7 +238,7 @@ a.article:hover {
     MEDIAQUERIES
 ----------------------------------------------------- */
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   #sidebar {
     margin-left: -250px;
   }
@@ -239,5 +248,5 @@ a.article:hover {
   #sidebarCollapse span {
     display: none;
   }
-}
+} */
 </style>

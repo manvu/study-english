@@ -24,6 +24,4 @@ const envFile = {
   appmail_password: process.env.APPMAIL_PASSWORD
 };
 
-console.log(envFile)
-
 module.exports = envFile;

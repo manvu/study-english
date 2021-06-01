@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const scheduler = require("./services/scheduler/checkAttempts");
-const history = require('connect-history-api-fallback');
+const history = require("connect-history-api-fallback");
 
 /* 
   Import all routes in the application
@@ -22,12 +22,15 @@ const statisticsRoutes = require("./api/routes/statistics");
 const postsRoutes = require("./api/routes/posts");
 const questionsRoutes = require("./api/routes/questions");
 
-// app.use(cors(corsOptions));
+if (process.env.NODE_ENV === "development") {
+  app.use(cors(corsOptions));
+}
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 if (process.env.NODE_ENV === "production") {
-  app.use(history())
+  app.use(history());
   app.use(express.static(path.join(__dirname, "../dist")));
 }
 
@@ -43,7 +46,13 @@ app.use("/api/statistics", statisticsRoutes);
 app.use("/api/posts", postsRoutes);
 app.use("/api/questions", questionsRoutes);
 
-// set port, listen for requests
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`Server is running on port ${process.env.PORT}.`);
-});
+if (process.env.NODE_ENV === "production") {
+  // set port, listen for requests
+  app.listen(process.env.PORT || 3000, () => {
+    console.log(`Server is running on port ${process.env.PORT}.`);
+  });
+} else {
+  app.listen(server_port, () => {
+    console.log(`Server is running on port ${server_port}.`);
+  });
+}
