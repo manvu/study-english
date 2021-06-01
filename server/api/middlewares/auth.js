@@ -2,8 +2,8 @@ const jwt = require('jsonwebtoken')
 const { jwt_secret_key } = require("../../config/index");
 
 const guestAccessibleURLs = {
-  "/home": true,
-  "/discussion": true
+  "/api/home": true,
+  "/api/discussion": true
 } 
 
 module.exports = (req, res, next) => {
