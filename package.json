@@ -6,10 +6,11 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "start": "npm run prod",
     "test": "export NODE_ENV=test && mocha 'server/api/test/**/*.test.js' --recursive --timeout 60000 --exit",
     "test-coverage": "nyc mocha 'server/api/test/**/*.test.js' --recursive --timeout 60000 --exit",
     "dev": "export NODE_ENV=development && nodemon --inspect=9300 'server/server.js'",
-    "prod": "export NODE_ENV=production && nodemon 'server/server.js'"
+    "prod": "export NODE_ENV=production && node 'server/server.js'"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
