@@ -42,6 +42,6 @@ app.use("/posts", postsRoutes);
 app.use("/questions", questionsRoutes);
 
 // set port, listen for requests
-app.listen(server_port, () => {
-  console.log(`Server is running on port ${server_port}.`);
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server is running on port ${process.env.PORT}.`);
 });

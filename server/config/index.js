@@ -6,7 +6,6 @@ const dotenv = require("dotenv").config({
 
 const envFile = {
   vue_app_server_endpoint: process.env.VUE_APP_SERVER_ENDPOINT,
-  vue_app_client_endpoint: process.env.VUE_APP_CLIENT_ENDPOINT,
   server_port: process.env.SERVER_PORT,
   client_port: process.env.CLIENT_PORT,
   mysql_host: process.env.MYSQL_HOST,

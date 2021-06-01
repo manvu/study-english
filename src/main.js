@@ -6,8 +6,6 @@ import App from "./App.vue";
 import router from "./config/router";
 import axios from "./config/axios"
 
-console.log(process.env.VUE_APP_SERVER_ENDPOINT);
-
 const app = createApp(App);
 
 app.use(store);
