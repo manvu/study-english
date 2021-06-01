@@ -59,7 +59,9 @@ const STRINGS = {
     MULTIPLE_CHOICE_MUST_HAVE_AT_LEAST_2_CHOICES: "Multiple choice question must have at least 2 choices",
     GAP_FILLING_QUESTION_MUST_HAVE_AT_LEAST_1_GAP: "Gap filling question must have at least 1 gap",
     MATCHING_QUESTION_MUST_HAVE_AT_LEAST_2_OPTIONS_ON_BOTH_SIDES: "Matching question must have at least 2 options on both sides",
-    INVALID_IS_ACTIVE_VALUE: "Invalid is active value."
+    INVALID_IS_ACTIVE_VALUE: "Invalid is active value.",
+    TIME_ALLOWED_MUST_BE_AT_LEAST_1_MINUTE: "Time allowed must be at least 1 minute.",
+    RATING_MUST_BE_BETWEEN_1_AND_5: "Rating must be between 1 and 5." 
 }
 
 module.exports = STRINGS

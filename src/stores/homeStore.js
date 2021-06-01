@@ -21,7 +21,10 @@ const quizStore = {
     updateRating(state, payload) {
       let quizId = payload.id;
       let quiz = state.quizzes.find((q) => q.quiz_id === quizId);
-      quiz.ratingGiven = payload.ratingGiven;
+
+      quiz.rating_given = payload.ratingGiven;
+      quiz.rating_count = payload.rating_count;
+      quiz.average_rating = payload.average_rating;
     },
     getDataForHome(state, payload) {
       state.quizzes = payload.quizzes;
@@ -74,11 +77,12 @@ const quizStore = {
       return axios(API_LIST.updateRating(payload.id, payload))
         .then((response) => {
           if (!response.data.error) {
-            payload.ratingGiven = payload.updateRating
+            payload = {...payload, ...response.data.response}
             context.commit("updateRating", payload);
+            return "OK"
           }
 
-          console.log(response);
+          return response.data.response
         })
         .catch((error) => {
           console.log(error);

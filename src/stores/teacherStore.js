@@ -140,9 +140,10 @@ const teacherStore = {
           if (!response.data.error) {
             payload.quiz = response.data.response;
             context.commit("createQuiz", payload);
+            return "OK"
           }
 
-          console.log(response);
+          return response.data.error;
         })
         .catch((error) => {
           console.log(error);
@@ -158,9 +159,10 @@ const teacherStore = {
           if (!response.data.error) {
             payload.quiz = response.data.response;
             context.commit("updateQuiz", payload);
+            return "OK"
           }
 
-          console.log(response);
+          return response.data.error;
         })
         .catch((error) => {
           console.log(error);

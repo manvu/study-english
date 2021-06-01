@@ -1,11 +1,7 @@
 <template>
-  <div>
-    <font-awesome-icon
-    v-if="isAuthenticated"
-      class="favorite"
-      :icon="star"
-      @click="toggleFavorite()"
-    ></font-awesome-icon>
+  <div v-if="isAuthenticated">
+    <font-awesome-icon v-if="favorite" class="favorite" :icon="faStarSolid" @click="toggleFavorite()"></font-awesome-icon>
+    <font-awesome-icon v-else class="favorite" :icon="faStarRegular" @click="toggleFavorite()"></font-awesome-icon>
   </div>
 </template>
 

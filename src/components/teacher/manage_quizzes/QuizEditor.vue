@@ -1,7 +1,14 @@
 <template>
   <div v-if="quiz" class="col-md-12">
+
     <h2>Selected Quiz: {{ quiz.quizId }}</h2>
     <div class="contact-form">
+          <div v-if="errorMessage" class="alert alert-danger mt-3">
+      {{ errorMessage }}
+    </div>
+    <div v-else-if="successMessage" class="alert alert-success mt-3">
+      {{ successMessage }}
+    </div>
       <div class="form-group">
         <label class="control-label col-sm-6" for="courseName"
           >Course Name:</label
@@ -82,9 +89,7 @@
           </select>
         </div>
       </div>
-      <questions-list
-        v-if="quiz.questions.length > 0"
-      ></questions-list>
+      <questions-list @setStatusMessages="setStatusMessages" v-if="quiz.questions.length > 0"></questions-list>
       <div class="mt-2 mb-2" v-else>
         There is no question created for this quiz yet
       </div>
@@ -108,6 +113,7 @@
   <question-editor-modal
     v-if="showQuestionEditor"
     @close="openQuestionEditorModal"
+    @setStatusMessages="setStatusMessages"
     :mode="questionEditorOpenMode"
     :quizId="quiz.quiz_id"
   ></question-editor-modal>
@@ -116,32 +122,33 @@
 <script>
 import QuestionEditorModal from "./QuestionEditorModal.vue";
 import QuestionsList from "./QuestionsList.vue";
-import CaseConverter from 'js-convert-case';
+import CaseConverter from "js-convert-case";
 
 export default {
   props: ["mode"],
-  emits: ["toggleShowQuizEditor"],
+  emits: ["toggleShowQuizEditor", "setStatusMessages"],
   provide() {
     return {
       openQuestionEditorModal: this.openQuestionEditorModal,
       closeQuestionEditorModal: this.closeQuestionEditorModal,
+      setStatusMessages: this.setStatusMessages
     };
   },
   components: { QuestionsList, QuestionEditorModal },
   computed: {
     editQuiz() {
       return this.$store.getters["teacherStore/getEditQuiz"];
-    }
+    },
   },
   watch: {
     editQuiz() {
       if (this.mode === "edit") {
-      const quiz = this.editQuiz
-      const convertedQuiz = CaseConverter.camelKeys(quiz)
-      this.quiz = convertedQuiz
-      this.quiz.isActive = this.quiz.isActive === 1 ? true : false;
+        const quiz = this.editQuiz;
+        const convertedQuiz = CaseConverter.camelKeys(quiz);
+        this.quiz = convertedQuiz;
+        this.quiz.isActive = this.quiz.isActive === 1 ? true : false;
       }
-    }
+    },
   },
   data() {
     return {
@@ -157,9 +164,16 @@ export default {
       allSkills: [],
       showQuestionEditor: false,
       questionEditorOpenMode: null,
+      errorMessage: "",
+      successMessage: "",
     };
   },
   methods: {
+    setStatusMessages(errorMessage = "", successMessage = "") {
+      debugger
+      this.errorMessage = errorMessage;
+      this.successMessage = successMessage;
+    },
     openQuestionEditorModal(questionId, mode) {
       this.questionEditorOpenMode = mode;
 
@@ -177,21 +191,60 @@ export default {
       this.showQuestionEditor = false;
     },
     cancel() {
-      this.$emit("toggleShowQuizEditor", { mode: this.mode, action: "close"});
+      this.$emit("toggleShowQuizEditor", { mode: this.mode, action: "close" });
     },
     handleSave() {
+      this.setStatusMessages();
+
       if (this.mode === "create") {
-        this.$store.dispatch("teacherStore/createQuiz", this.quiz);
+        this.$store
+          .dispatch("teacherStore/createQuiz", this.quiz)
+          .then((response) => {
+            
+            if (response === "OK") {
+              
+              this.$emit(
+                "setStatusMessages",
+                "",
+                `New quiz named ${this.quiz.description} has been created`
+              );
+              this.$emit("toggleShowQuizEditor", {
+                mode: this.mode,
+                action: "close",
+              });
+            } else {
+              this.errorMessage = response;
+            }
+          });
       } else if (this.mode === "edit") {
-        this.$store.dispatch("teacherStore/updateQuiz", this.quiz);
+        this.setStatusMessages();
+
+        this.$store
+          .dispatch("teacherStore/updateQuiz", this.quiz)
+          .then((response) => {
+            
+            if (response === "OK") {
+              this.$emit(
+                "setStatusMessages",
+                "",
+                `Quiz ${this.quiz.quizId} has been updated`
+              );
+              this.$emit("toggleShowQuizEditor", {
+                mode: this.mode,
+                action: "close",
+              });
+            } else {
+              this.errorMessage = response;
+            }
+          });
       }
     },
   },
   created() {
     if (this.mode === "edit") {
       const quiz = this.$store.getters["teacherStore/getEditQuiz"];
-      const convertedQuiz = CaseConverter.camelKeys(quiz)
-      this.quiz = convertedQuiz
+      const convertedQuiz = CaseConverter.camelKeys(quiz);
+      this.quiz = convertedQuiz;
       this.quiz.isActive = this.quiz.isActive === 1 ? true : false;
     }
 

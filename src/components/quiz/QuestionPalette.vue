@@ -2,21 +2,19 @@
   <div class="bg-purple" id="sidebar-wrapper">
     <div class="sidebar-heading">
       <h6>
-        <span><font-awesome-icon :icon="faBars"></font-awesome-icon> </span>
+        <span @click="toggleShowQuestions" class="question-palette-header"><font-awesome-icon :icon="faBars"></font-awesome-icon> 
         Question Palette
         <font-awesome-icon
           v-if="!showQuestionsSwitch"
-          @click="toggleShowQuestions"
           :icon="faCaretUp"
           class="showQuestionsIcon"
         ></font-awesome-icon>
         <font-awesome-icon
           v-else
-          @click="toggleShowQuestions"
           :icon="faCaretDown"
           class="showQuestionsIcon"
         ></font-awesome-icon>
-        &nbsp;
+        </span>
         <span class="float-right">
           <font-awesome-icon :icon="faClock"></font-awesome-icon>&nbsp;Time
           Left: {{ displayCountdownTimer }}
@@ -34,10 +32,22 @@
       </question-palette-item>
     </div>
     <div>
-      <button @click="submit" class="btn btn-primary">
+      <button @click="showDialogModal = true" class="btn btn-primary">
         <font-awesome-icon :icon="faPaperPlane"></font-awesome-icon> Submit
       </button>
     </div>
+    <dialog-modal v-if="showDialogModal">
+    <template #header>Wait a second...</template>
+    <template #body>You have <span class="unanswered-count"> {{ unansweredCount }} questions unanswered</span>. Are you sure to submit your quiz anyway?</template>
+    <template #footer>
+      <button class="btn btn-primary" @click="submit(); showDialogModal = false; " >
+        Save
+      </button> 
+      <button class="btn btn-secondary" @click="showDialogModal = false">
+        Close
+      </button>
+    </template>
+    </dialog-modal>
   </div>
 </template>
 
@@ -51,10 +61,11 @@ import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
 import "moment-duration-format";
 import QuestionPaletteItem from "./QuestionPaletteItem.vue";
+import DialogModal from "./DialogModal"
 
 export default {
   props: ["questions", "timer"],
-  components: { FontAwesomeIcon, QuestionPaletteItem },
+  components: { FontAwesomeIcon, QuestionPaletteItem, DialogModal },
   data() {
     return {
       timeLeft: 0,
@@ -62,9 +73,14 @@ export default {
       interval: 1000,
       timeout: null,
       showQuestionsSwitch: false,
+      showDialogModal: false,
     };
   },
   computed: {
+    unansweredCount() {
+      debugger
+      return this.questions.filter(q => q.answer_text === '').length
+    },
     displayCountdownTimer() {
       return moment.duration(this.timeLeft, "seconds").format("hh:mm:ss");
     },
@@ -188,5 +204,48 @@ button {
 
 .showQuestionsIcon {
   cursor: pointer;
+}
+
+.question-palette-header {
+  cursor: pointer;
+}
+
+.unanswered-count {
+  font-weight: bold;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 350px) {
+      h6 {
+    font-size: 14px;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+      h6 {
+    font-size: 24px;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+      h6 {
+    font-size: 24px;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    h6 {
+    font-size: 24px;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    h6 {
+    font-size: 28px;
+  }
 }
 </style>

@@ -19,7 +19,12 @@
       </div>
 
       <div class="row" v-for="quiz in quizzes" :key="quiz.quiz_id">
-        <div class="cell" data-title="ID">{{ quiz.quiz_id }} <span class="badge badge-pill" :class="badgeClass(quiz.skill_id)"> {{ quiz.skill_description }}</span></div>
+        <div class="cell" data-title="ID">
+          {{ quiz.quiz_id }}
+          <span class="badge badge-pill" :class="badgeClass(quiz.skill_id)">
+            {{ quiz.skill_description }}</span
+          >
+        </div>
         <div class="cell" data-title="Course Name">{{ quiz.course_name }}</div>
         <div class="cell" data-title="Active">
           {{ quiz.is_active === 1 ? "Yes" : "No" }}
@@ -32,11 +37,21 @@
           {{ quiz.time_allowed }}
         </div>
         <div class="cell" data-title="Average Rating">
-          {{ quiz.average_rating ? quiz.average_rating.toFixed(2) : Number(0).toFixed(2) }} {{ `(${quiz.rating_count ? quiz.rating_count : 0})` }}
+          {{
+            quiz.average_rating
+              ? quiz.average_rating.toFixed(2)
+              : Number(0).toFixed(2)
+          }}
+          {{ `(${quiz.rating_count ? quiz.rating_count : 0})` }}
           <font-awesome-icon
             class="button-item"
             :icon="faEraser"
-            @click="resetRating(quiz.quiz_id)"
+            @click="
+              modal.showModal = true;
+              modal.handler = resetRating;
+              modal.quizId = quiz.quiz_id;
+              modal.header = `Reset ratings for Quiz ${quiz.quiz_id} - ${quiz.description}`;
+            "
             :style="{ color: 'red' }"
           ></font-awesome-icon>
         </div>
@@ -50,7 +65,11 @@
             class="button-item ml-2"
             :icon="faTrashAlt"
             :style="{ color: 'red' }"
-            @click="deleteQuiz(quiz.quiz_id)"
+            @click="modal.showModal = true;
+              modal.handler = deleteQuiz;
+              modal.quizId = quiz.quiz_id;
+              modal.header = `Delete Quiz ${quiz.quiz_id} - ${quiz.description}`;
+              "
           ></font-awesome-icon>
         </div>
       </div>
@@ -88,6 +107,18 @@
   <div v-else>
     <h1>Loading data...</h1>
   </div>
+  <dialog-modal v-if="modal.showModal">
+    <template #header>{{modal.header}}</template>
+    <template #body></template>
+    <template #footer>
+      <button class="btn btn-primary" @click=" modal.handler(modal.quizId); modal.showModal = false; " >
+        Save
+      </button>
+      <button class="btn btn-secondary" @click="modal.showModal = false">
+        Close
+      </button>
+    </template>
+  </dialog-modal>
 </template>
 
 <script>
@@ -96,9 +127,11 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { faEraser } from "@fortawesome/free-solid-svg-icons";
 import { paginator } from "../../common/helper";
+import DialogModal from "./DialogModal";
 
 export default {
-  components: { FontAwesomeIcon },
+  components: { FontAwesomeIcon, DialogModal },
+  emits: ["toggleShowQuizEditor", "setStatusMessages"],
   data() {
     return {
       isLoading: true,
@@ -110,6 +143,13 @@ export default {
         pagesPerPage: 10,
         nextPage: null,
         prevPage: null,
+      },
+      modal: {
+        header: "",
+        body: "",
+        quizId: null,
+        showModal: false,
+        handler: null,
       },
     };
   },
@@ -129,10 +169,10 @@ export default {
   },
   watch: {
     latestQuizzes(value) {
-      this.quizzes = value
-      this.originalQuizzes = value
-      this.paginate()
-    }
+      this.quizzes = value;
+      this.originalQuizzes = value;
+      this.paginate();
+    },
   },
   created() {
     this.$store.dispatch("teacherStore/getDataForTeacher").then((response) => {
@@ -143,7 +183,7 @@ export default {
     });
   },
   methods: {
-        badgeClass(skillId) {
+    badgeClass(skillId) {
       const badges = {
         1: "secondary",
         2: "primary",
@@ -152,28 +192,52 @@ export default {
         5: "warning",
         6: "info",
       };
-      
-      return `badge-${badges[skillId]}`
+
+      return `badge-${badges[skillId]}`;
     },
     createQuiz() {
       this.$emit("toggleShowQuizEditor", { mode: "create", action: "open" });
     },
     editQuiz(quizId) {
-      this.$emit("toggleShowQuizEditor", { mode: "edit", quizId, action: "open" });
+      this.$emit('setStatusMessages')
+
+      this.$emit("toggleShowQuizEditor", {
+        mode: "edit",
+        quizId,
+        action: "open",
+      });
     },
     resetRating(quizId) {
-      this.$store
-        .dispatch("teacherStore/resetRating", { quizId: quizId })
-        .then((response) => {
-          if (response === "OK") {
-          } else {
-          }
-        });
+      this.$emit('setStatusMessages')
+
+      if (quizId) {
+        this.$store
+          .dispatch("teacherStore/resetRating", { quizId: quizId })
+          .then((response) => {
+            if (response === "OK") {
+              this.$emit('setStatusMessages', '', `Quiz ${quizId}'s ratings have been reset`)
+            } else {
+              this.$emit('setStatusMessages', response)
+            }
+          });
+      } else {
+        this.$emit('setStatusMessages', "Quiz Id must be specified.")
+      }
     },
     deleteQuiz: function (quizId) {
+      this.$emit('setStatusMessages')
+
       this.$store
         .dispatch("teacherStore/deleteQuiz", { quizId })
-        .then((response) => {});
+        .then((response) => {
+            if (response === "OK") {
+              this.$emit('setStatusMessages', '', `Quiz ${quizId} has been deleted`)
+              this.$emit("toggleShowQuizEditor", { mode: "delete", quizId, action: "close" });
+              
+            } else {
+              this.$emit('setStatusMessages', response)
+            }
+        });
     },
     paginate(currentPage, pagesPerPage) {
       const paginated = paginator(
@@ -327,7 +391,7 @@ tbody td:hover:before {
   color: #eee;
 }
 .row:nth-of-type(odd) {
-    background: #0d0f13;
+  background: #0d0f13;
   color: #eee;
 }
 .row.header {

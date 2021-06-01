@@ -1,7 +1,17 @@
 <template>
-  <quizzes-list @toggleShowQuizEditor="toggleShowQuizEditor"></quizzes-list>
+  <div v-if="errorMessage" class="alert alert-danger mt-3">
+    {{ errorMessage }}
+  </div>
+  <div v-else-if="successMessage" class="alert alert-success mt-3">
+    {{ successMessage }}
+  </div>
+  <quizzes-list
+    @setStatusMessages="setStatusMessages"
+    @toggleShowQuizEditor="toggleShowQuizEditor"
+  ></quizzes-list>
   <quiz-editor
     v-if="showQuizEditor"
+    @setStatusMessages="setStatusMessages"
     @toggleShowQuizEditor="toggleShowQuizEditor"
     :mode="mode"
   ></quiz-editor>
@@ -16,10 +26,16 @@ export default {
     return {
       showQuizEditor: false,
       mode: null,
+      errorMessage: "",
+      successMessage: "",
     };
   },
   components: { QuizzesList, QuizEditor },
   methods: {
+    setStatusMessages(errorMessage = "", successMessage = "") {
+      this.errorMessage = errorMessage;
+      this.successMessage = successMessage;
+    },
     toggleShowQuizEditor(data) {
       
       if (data.mode === "create") {
@@ -30,13 +46,11 @@ export default {
         } else {
           this.showQuizEditor = true;
         }
-      } else {
+      } else if (data.mode === "edit") {
         this.$store
           .dispatch("teacherStore/getQuizForEdit", { quizId: data.quizId })
           .then((response) => {
             this.mode = "edit";
-
-            
 
             if (data.action === "close") {
               this.showQuizEditor = false;
@@ -44,6 +58,10 @@ export default {
               this.showQuizEditor = true;
             }
           });
+      } else if (data.mode === "delete") {
+        if (this.showQuizEditor && data.quizId === this.$store.getters["teacherStore/getEditQuiz"].quiz_id) {
+          this.showQuizEditor = false
+        }
       }
     },
   },

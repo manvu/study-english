@@ -47,7 +47,7 @@ export default {
     };
   },
   created() {
-    debugger;
+    
     if (this.question.answer_text) {
       let items = this.question.answer_text.split(",").map((s) => s.split("."));
 

@@ -232,6 +232,9 @@ module.exports = {
     if (!validator.validateIsActiveQuestion(data.isActive)) {
       return sendFailure(STRINGS.INVALID_IS_ACTIVE_VALUE);
     }
+    if (!validator.validateTimeAllowed(data.timeAllowed)) {
+      return sendFailure(STRINGS.TIME_ALLOWED_MUST_BE_AT_LEAST_1_MINUTE);
+    }
 
     const isActive = data.isActive === true ? 1 : 0;
 
@@ -257,6 +260,9 @@ module.exports = {
 
     if (!validator.validateIsActiveQuestion(data.isActive)) {
       return sendFailure(STRINGS.INVALID_IS_ACTIVE_VALUE);
+    }
+    if (!validator.validateTimeAllowed(data.timeAllowed)) {
+      return sendFailure(STRINGS.TIME_ALLOWED_MUST_BE_AT_LEAST_1_MINUTE);
     }
 
     const isActive = data.isActive === true ? 1 : 0;
@@ -288,6 +294,9 @@ module.exports = {
     if (!quizId || !userId || quizId < 1 || userId < 0) {
       return sendFailure(STRINGS.INVALID_QUIZ_ID);
     }
+    if (!validator.validateRatingGiven(ratingGiven)) {
+      return sendFailure(STRINGS.RATING_MUST_BE_BETWEEN_1_AND_5)
+    }
 
     const ratingFound = await RatingModel.findOne(quizId, userId);
 
@@ -295,16 +304,26 @@ module.exports = {
       const data = { quizId, userId, ratingGiven };
       if (ratingFound.response.length === 0) {
         const rating = await RatingModel.addOne(data);
+        const getRating = await RatingModel.findOneByQuizId(quizId, userId)
 
         if (!rating.error && rating.response.affectedRows === 1) {
+          if (!getRating.error) {
+            return sendSuccess(200, getRating.response[0]);  
+          }
+
           return sendSuccess(200, null);
         } else {
           return sendFailure(STRINGS.CANNOT_UPDATE_RATING);
         }
       } else {
         const rating = await RatingModel.saveOne(data);
+        const getRating = await RatingModel.findOneByQuizId(quizId, userId)
 
         if (!rating.error && rating.response.affectedRows === 1) {
+          if (!getRating.error) {
+            return sendSuccess(200, getRating.response[0]);  
+          }
+
           return module.exports.getQuiz(quizId);
         } else {
           return sendFailure(STRINGS.CANNOT_UPDATE_RATING);

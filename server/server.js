@@ -4,7 +4,8 @@ const { corsOptions } = require("./config/init");
 const { server_port } = require("./config/index");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const scheduler = require("./services/scheduler/checkAttempts")
+const path = require("path");
+const scheduler = require("./services/scheduler/checkAttempts");
 
 /* 
   Import all routes in the application
@@ -23,6 +24,10 @@ const questionsRoutes = require("./api/routes/questions");
 app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../dist")));
+}
 
 // Use these routes
 app.use("/auth", authRoutes);

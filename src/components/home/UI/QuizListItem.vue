@@ -255,7 +255,16 @@ export default {
   .course {
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 350px;
+  }
+
+  .course-preview {
+    width: 350px;
+    max-width: 350px;
+  }
+
+  .progress-container {
+    width: 90px;
   }
 }
 

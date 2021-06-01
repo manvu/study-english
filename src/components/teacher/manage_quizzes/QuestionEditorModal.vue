@@ -92,7 +92,7 @@ import MatchingEditor from "./question_editor/MatchingEditor.vue";
 import MultipleChoiceEditor from "./question_editor/MultipleChoiceEditor";
 
 export default {
-  inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal", "setStatusMessages"],
   computed: {
     questionTypeId() {
       return this.question.type_id
@@ -146,6 +146,7 @@ export default {
           .then((response) => {
             if (response === "OK") {
               this.closeQuestionEditorModal();
+              this.setStatusMessages('', "A new question has been added.")
             } else {
               this.errorMessage = response
             }
@@ -160,7 +161,12 @@ export default {
             isActive: this.question.isActive,
           })
           .then((response) => {
-            this.closeQuestionEditorModal();
+                        if (response === "OK") {
+              this.closeQuestionEditorModal();
+              this.setStatusMessages('', `Question ${this.question.question_id} has been updated.`)
+            } else {
+              this.errorMessage = response
+            }
           });
       }
     },

@@ -122,5 +122,19 @@ module.exports = {
     }
 
     return false
+  },
+  validateTimeAllowed: function(timeAllowed) {
+    if (!timeAllowed) {
+      return false
+    } 
+
+    return true
+  },
+  validateRatingGiven: function(rating) {
+    if (rating !== 1 && rating !== 2 && rating !== 3 && rating !== 4 && rating !== 5) {
+      return false;
+    }
+
+    return true
   }
 };

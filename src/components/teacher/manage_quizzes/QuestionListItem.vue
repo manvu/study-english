@@ -30,7 +30,7 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 export default {
-  inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal", "setStatusMessages"],
   props: ["question"],
   components: { FontAwesomeIcon },
   computed: {
@@ -68,7 +68,13 @@ export default {
     },
     deleteQuestion: function (questionId) {
       this.$store.dispatch("teacherStore/deleteQuestion", { questionId }).then(response => {
-
+        debugger
+            if (response === "OK") {
+              this.setStatusMessages('', `Question ${questionId} has been deleted`)
+              
+            } else {
+              this.setStatusMessages(response)
+            }
       })
     },
   },
