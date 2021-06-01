@@ -1,6 +1,6 @@
 const mysql = require("mysql");
 const {
-  host,
+  mysql_host,
   mysql_user,
   mysql_port,
   mysql_password,
@@ -11,7 +11,7 @@ class Database {
   constructor() {
     this.pool = mysql.createPool({
       connectionLimit: 10,
-      host: host,
+      host: mysql_host,
       user: mysql_user,
       port: mysql_port,
       password: mysql_password,
