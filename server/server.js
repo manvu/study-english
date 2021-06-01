@@ -37,10 +37,6 @@ if (process.env.NODE_ENV === "production") {
     })
   );
   app.use(staticFileMiddleware);
-
-  app.get("/", function(req, res) {
-    res.render(path.join(__dirname + "../dist/index.html"));
-  });
 }
 
 // Use these routes
