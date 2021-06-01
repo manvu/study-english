@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
 const scheduler = require("./services/scheduler/checkAttempts");
-const history = require("connect-history-api-fallback");
+const history = require('connect-history-api-fallback');
 
 /* 
   Import all routes in the application
@@ -27,16 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 if (process.env.NODE_ENV === "production") {
-  const staticFileMiddleware = express.static(path.join(__dirname + "../dist"));
-
-  app.use(staticFileMiddleware);
-  app.use(
-    history({
-      disableDotRule: true,
-      verbose: true,
-    })
-  );
-  app.use(staticFileMiddleware);
+  app.use(express.static(path.join(__dirname, "../dist")));
 }
 
 // Use these routes
