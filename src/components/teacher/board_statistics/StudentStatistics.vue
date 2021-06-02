@@ -41,7 +41,7 @@ export default {
     this.statistics = this.$store.getters[
       "teacherStore/getBoardStatisticsByStudent"
     ];
-    debugger
+    
     console.log(this.statistics)
     if (this.statistics)
     this.isLoading = false

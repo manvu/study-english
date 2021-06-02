@@ -3,8 +3,11 @@
     <span v-if="type_id !== 1" class="subquestion-id"
       >{{ sequence_id }}.{{ displayedAnswer }}</span
     >
-    <span v-else :class="{ 'is-selected': answer === 1 }">
-      {{ characters[choice_id - 1] + ". " + choice_text }}
+
+    
+    <span v-else :class="{ 'is-selected': answer === 1}">
+      <span :class="{'circle': answer === 1 ? true : false}">{{ characters[choice_id - 1] }}</span>.{{choice_text}}
+      
     </span>
 
     <span v-if="type_id === 1">
@@ -12,7 +15,7 @@
       v-if="shouldDisplayIcon && isCorrect === true"
       class="ml-1"
       :icon="faCheckCircle"
-      :style="{ color: 'green', borderColor: 'white' }"
+      :style="{ color: 'greenyellow', borderColor: 'white' }"
     ></font-awesome-icon>
 
     <font-awesome-icon
@@ -27,7 +30,7 @@
       v-if="isCorrect === true"
       class="ml-1"
       :icon="faCheckCircle"
-      :style="{ color: 'green' }"
+      :style="{ color: 'greenyellow' }"
     ></font-awesome-icon>
 
     <font-awesome-icon
@@ -131,5 +134,13 @@ export default {
 
 .is-selected {
   font-weight: bold;
+}
+
+.circle {
+    border-radius: 50%;
+    border: solid #eee 2px;
+        padding: 3px;
+    margin-left: -4px;
+
 }
 </style>

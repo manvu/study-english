@@ -68,7 +68,7 @@ export default {
     },
     deleteQuestion: function (questionId) {
       this.$store.dispatch("teacherStore/deleteQuestion", { questionId }).then(response => {
-        debugger
+        
             if (response === "OK") {
               this.setStatusMessages('', `Question ${questionId} has been deleted`)
               

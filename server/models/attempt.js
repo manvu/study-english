@@ -12,9 +12,10 @@ class AttemptModel {
     ORDER BY attempt_id DESC LIMIT 1`);
   }
 
-  async findOne(quizId, userId) {
-    return await this.db.executeQuery(`SELECT rating_given FROM user_rating
-    WHERE user_rating.user_id = ${userId} AND user_rating.quiz_id = ${quizId}`);
+  async findOne(quizId, userId, attemptId) {
+    return await this.db.executeQuery(`SELECT ua.attempt_id, ua.user_id, ua.quiz_id, ua.start_time, ua.end_time
+    FROM user_attempt ua
+    WHERE ua.quiz_id = ${quizId} AND ua.user_id = ${userId} AND ua.attempt_id = ${attemptId}`)
   }
 
   async findAll() {

@@ -38,7 +38,8 @@
     </div>
     <dialog-modal v-if="showDialogModal">
     <template #header>Wait a second...</template>
-    <template #body>You have <span class="unanswered-count"> {{ unansweredCount }} questions unanswered</span>. Are you sure to submit your quiz anyway?</template>
+    <template #body><div v-if="unansweredCount > 0"> You have <span class="unanswered-count"> {{ unansweredCount }} questions unanswered</span>. Are you sure to submit your quiz anyway?</div>
+    <div v-else>Are you sure to submit your quiz?</div></template>
     <template #footer>
       <button class="btn btn-primary" @click="submit(); showDialogModal = false; " >
         Save
@@ -78,7 +79,7 @@ export default {
   },
   computed: {
     unansweredCount() {
-      debugger
+      
       return this.questions.filter(q => q.answer_text === '').length
     },
     displayCountdownTimer() {

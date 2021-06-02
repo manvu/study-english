@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-5 row">
+  <div class="mt-5 mb-5 row">
     <div class="col-1 col-sm-1 col-md-2 col-lg-3 col-xl-3"></div>
     <div class="col-10 col-sm-10 col-md-8 col-lg-6 col-xl-6">
       <div class="quiz-result">
@@ -12,7 +12,7 @@
         </div>
         <div class="quiz-result-header">
           <div class="left-column">
-            <h6>Time spent: 45 minutes</h6>
+            <h6>Time spent: {{ displayTimeTaken }}</h6>
             <h6>Result: {{ result.result.correct + result.result.partial * 0.5}}/{{ result.result.total}}</h6>
           </div>
           <div class="right-column">
@@ -28,6 +28,7 @@
                 :key="r.question_id"
                 :question_id="i + 1"
                 :answers="r.answers"
+                :question="questions[i]"
                 :type_id="r.answers[0].type_id"
               ></quiz-result-item>
             </tbody>
@@ -43,6 +44,8 @@
 import QuizResultItem from './QuizResultItem'
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import "moment-duration-format";
 
 export default {
   components: {QuizResultItem, FontAwesomeIcon},
@@ -50,10 +53,14 @@ export default {
         faCheckCircle() {
       return faCheckCircle;
     },
+        displayTimeTaken() {
+      return moment.duration(this.result.time_taken, "seconds").format("h [hours], m [minutes], s [seconds]");
+    },
   },
   created() {
     
     this.result = this.$store.getters["quizStore/getQuizResult"];
+    this.questions = this.$store.getters["questionStore/getQuestionList"];
     console.log(this.result)
   },
 };

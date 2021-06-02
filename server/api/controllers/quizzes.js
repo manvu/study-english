@@ -336,6 +336,7 @@ module.exports = {
   submitAndMark: async (data) => {
     const { quizId, userId, attemptId } = data;
 
+    const endTime = moment(Date.now())
     const getCorrectAnswers = await CorrectAnswerModel.findAll(quizId);
     const userAnswerQuestions = await UserAnswerModel.findAll(data);
     const response = { detailedAnswers: [], result: [], grade: null }
@@ -462,17 +463,18 @@ module.exports = {
       const grade = result.correct === numQuestions ? 100 : (eachQuestionMark * result.correct + (eachQuestionMark / 2) * result.partial)
 
       const updateMarked = await UserAnswerModel.markOne(userAnswersModels)
-      const attemptData = { userId, quizId, attemptId, endTime: moment(Date.now()).format(datetime_format), grade };
+      const attemptData = { userId, quizId, attemptId, endTime: endTime.format(datetime_format), grade };
       const closeAttempt = await AttemptModel.closeOne(attemptData)
+      const thisAttempt = await AttemptModel.findOne(quizId, userId, attemptId)
 
-      if(!updateMarked.error && !closeAttempt.error) {
+      if(!updateMarked.error && !closeAttempt.error && !thisAttempt.error) {
         response.result = result
         response.result.total = numQuestions
         response.accuracy = grade
         response.quiz_id = quizId
         response.attempt_id = attemptId
         response.userAnswers = userAnswers
-
+        response.time_taken = endTime.diff(thisAttempt.response[0].start_time, 'seconds')
   
         return sendSuccess(response)
       } else {
