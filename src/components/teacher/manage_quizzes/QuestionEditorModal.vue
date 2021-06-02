@@ -12,7 +12,7 @@
                       <div v-if="errorMessage" class="alert alert-danger mt-3">
             {{ errorMessage }}
           </div>
-            <div class="contact-form">
+            <div class="question-editor-form">
               <div class="form-group">
                 <label class="control-label" for="type">Type</label>
                 <div>
@@ -252,10 +252,10 @@ export default {
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
 }
-.contact-form label {
+.question-editor-form label {
   font-weight: 600;
 }
-.contact-form button {
+.question-editor-form button {
   color: #fff;
   font-weight: 600;
   width: 25%;

@@ -119,9 +119,14 @@ a:focus {
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
+  #sidebar {
+    max-width: unset !important;
+    min-width: unset !important;
+  }
+
   .wrapper {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: space-between;
   }
 }

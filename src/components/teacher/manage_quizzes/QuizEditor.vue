@@ -2,7 +2,7 @@
   <div v-if="quiz" class="col-md-12">
 
     <h2>Selected Quiz: {{ quiz.quizId }}</h2>
-    <div class="contact-form">
+    <div class="quiz-editor-form">
           <div v-if="errorMessage" class="alert alert-danger mt-3">
       {{ errorMessage }}
     </div>
@@ -275,10 +275,10 @@ export default {
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
 }
-.contact-form label {
+.quiz-editor-form label {
   font-weight: 600;
 }
-.contact-form button {
+.quiz-editor-form button {
   color: #fff;
   font-weight: 600;
   width: 25%;

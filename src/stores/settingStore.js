@@ -15,6 +15,9 @@ const settingStore = {
       // localStorage.setItem("firstName", payload.firstName);
       // localStorage.setItem("lastName", payload.lastName);
     },
+    uploadAvatar(state, payload) {
+      localStorage.setItem("avatarUrl", payload.savedFilename);
+    }
   },
   actions: {
     fetchUserInfo(context, payload) {
@@ -72,8 +75,12 @@ const settingStore = {
     uploadAvatar(context, payload) {
       return axios(API_LIST.uploadAvatar(payload))
         .then((response) => {
+          debugger
           if (!response.data.error) {
+            payload = response.data.response
+            context.commit("uploadAvatar", payload);
             return response.data.response;
+            
           }
 
           return response.data.error

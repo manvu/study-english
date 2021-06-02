@@ -240,7 +240,6 @@ export default {
         this.$store
           .dispatch("settingStore/uploadAvatar", formData)
           .then((response) => {
-            
             if (typeof response === "object") {
               this.avatar.currentStatus = STATUS_SUCCESS;
               this.avatar.mimeId = response.mimeId;
@@ -317,19 +316,20 @@ export default {
 .quiz-result-header {
   width: 100%;
   height: auto;
-  background-color: #dddddd;
+  background-color: #6d7fcc;
   white-space: initial;
   overflow: auto;
   padding: 20px 20px 0 20px;
-  color: #1c1c1c;
+  color: #f7f7f7;
 }
 
 .form-label {
+  color: #1c1c1c;
   font-weight: bold;
 }
 
 body {
-  background: #f5f5f5;
+  background: #1c1c1c;
   margin-top: 20px;
 }
 
@@ -348,11 +348,6 @@ label.btn {
   margin-bottom: 0;
 }
 
-.btn-outline-primary {
-  border-color: #26b4ff;
-  background: transparent;
-  color: #26b4ff;
-}
 
 .btn {
   cursor: pointer;
@@ -381,38 +376,5 @@ label.btn {
 .account-settings-links .list-group-item.active {
   font-weight: bold !important;
 }
-html:not(.dark-style) .account-settings-links .list-group-item.active {
-  background: transparent !important;
-}
-.account-settings-multiselect ~ .select2-container {
-  width: 100% !important;
-}
-.light-style .account-settings-links .list-group-item {
-  padding: 0.85rem 1.5rem;
-  border-color: rgba(24, 28, 33, 0.03) !important;
-}
-.light-style .account-settings-links .list-group-item.active {
-  color: #4e5155 !important;
-}
-.material-style .account-settings-links .list-group-item {
-  padding: 0.85rem 1.5rem;
-  border-color: rgba(24, 28, 33, 0.03) !important;
-}
-.material-style .account-settings-links .list-group-item.active {
-  color: #4e5155 !important;
-}
-.dark-style .account-settings-links .list-group-item {
-  padding: 0.85rem 1.5rem;
-  border-color: rgba(255, 255, 255, 0.03) !important;
-}
-.dark-style .account-settings-links .list-group-item.active {
-  color: #fff !important;
-}
-.light-style .account-settings-links .list-group-item.active {
-  color: #4e5155 !important;
-}
-.light-style .account-settings-links .list-group-item {
-  padding: 0.85rem 1.5rem;
-  border-color: rgba(24, 28, 33, 0.03) !important;
-}
+
 </style>

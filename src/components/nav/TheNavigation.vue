@@ -125,6 +125,7 @@ header {
 }
 
 nav {
+  
   height: 100%;
 }
 

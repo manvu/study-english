@@ -60,7 +60,7 @@
       <input
         type="checkbox"
         id="only-favorites"
-        class="form-check-input"
+
         name="only-favorites"
         value="only-favorites"
         v-model="filterEntity.onlyFavorites"
@@ -316,7 +316,7 @@ export default {
 
 #sort-and-filter label {
   font-weight: bold;
-  padding-right: 20px;
+  padding-right: 10px;
 }
 
 .quizzes-list-container {
@@ -335,6 +335,10 @@ export default {
   #sort-and-filter {
     display: block;
   }
+.quizzes-list-container {
+  display: block;
+}
+
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */

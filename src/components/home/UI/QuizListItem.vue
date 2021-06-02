@@ -26,7 +26,7 @@
             </span>
           </div>
 
-          <h5>
+          <h5 class="skill-wrapper">
             <span
               class="badge badge-pill"
               :class="badgeClass"
@@ -255,12 +255,14 @@ export default {
   .course {
     display: flex;
     flex-direction: column;
-    width: 350px;
+
   }
 
+
   .course-preview {
-    width: 350px;
-    max-width: 350px;
+    width: unset;
+    max-width: unset;
+    
   }
 
   .progress-container {
@@ -269,31 +271,33 @@ export default {
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
-  .course {
+@media only screen and (max-width: 600px) {
+    .discussion-title {
+    position: unset;
+    padding: unset;
+  }
+}
 
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 700px) {
+    .course {
+    width: unset;
   }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
-  .course {
-
-  }
+  
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-  .course {
-
-  }
+  
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-  .course {
-
-  }
+  
 }
 
 </style>
