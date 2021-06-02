@@ -82,7 +82,7 @@ a {
   margin-left: auto;
   margin-right: auto;
   border-radius: 5px;
-  background: RGBA(255, 255, 255, 1);
+  background-color: #6250e9 !important;
 
   -webkit-box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.45);
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.45);
@@ -194,5 +194,41 @@ a {
 
 .title {
   margin-bottom: 10px;
+}
+
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 600px) {
+   .module {
+     width: unset;
+     margin-left: unset;
+     margin-right: unset;
+     top: 8%;
+   }
+
+   #bg {
+     width: unset;
+   }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 700px) {
+    .course {
+    width: unset;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
 }
 </style>

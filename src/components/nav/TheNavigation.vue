@@ -1,8 +1,8 @@
 <template>
-  <header :class="{ headerExpanded: expanded }">
+  <header :class="{ headerAuthExpanded: isAuthenticated && expanded, headerUnauthExpanded: !isAuthenticated && expanded }">
     <nav
       class="navbar navbar-expand-lg navbar-dark bg-dark"
-      :class="{ navbarExpanded: expanded }"
+      :class="{ navbarAuthExpanded: isAuthenticated && expanded, navbarUnauthExpanded: !isAuthenticated && expanded }"
     >
       <button
         class="navbar-toggler"
@@ -173,25 +173,41 @@ a.active {
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-  .headerExpanded {
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .headerAuthExpanded {
     margin-bottom: 255px !important;
     transition: all 0.5s ease;
   }
 
-  .navbarExpanded {
+  .navbarAuthExpanded {
     padding-bottom: 325px !important;
+    transition: all 0.5s ease;
+  }
+
+    .headerUnauthExpanded {
+    margin-bottom: 70px !important;
+    transition: all 0.5s ease;
+  }
+
+  .navbarUnauthExpanded {
+    padding-bottom: 140px !important;
     transition: all 0.5s ease;
   }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
-  .headerExpanded {
+  .headerAuthExpanded {
     margin-bottom: 255px !important;
     transition: all 0.5s ease;
   }
 
-  .navbarExpanded {
+  .navbarAuthExpanded {
     padding-bottom: 325px !important;
     transition: all 0.5s ease;
   }

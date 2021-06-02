@@ -72,9 +72,11 @@ body {
 }
 
 a {
-  color: #ad5482;
+  display: block;
+  color: #f90d87;
   text-decoration: none;
   font-weight: bold;
+  text-align: center;
 }
 
 #bg {
@@ -209,5 +211,41 @@ a {
 .title {
   margin-bottom: 10px;
   font-size: 28px;
+}
+
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 600px) {
+   .module {
+     width: unset;
+     margin-left: unset;
+     margin-right: unset;
+     top: 8%;
+   }
+
+   #bg {
+     width: unset;
+   }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 700px) {
+    .course {
+    width: unset;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
 }
 </style>

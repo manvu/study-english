@@ -33,7 +33,7 @@
               >{{ skill_description }}</span
             >
           </h5>
-          <h4>{{ description }}</h4>
+          <h4 class="mb-4">{{ description }}</h4>
           <a @click="navigateToDiscussion" href="" class="discussion-title"
             >Discussion</a
           >
@@ -223,7 +223,7 @@ export default {
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
   color: #fff;
   font-size: 16px;
-  padding: 12px 25px;
+  padding: 6px 25px;
   position: absolute;
   bottom: 30px;
   right: 30px;
