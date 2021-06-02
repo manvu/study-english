@@ -450,7 +450,6 @@ tbody td:hover:before {
 .header button {
   color: #fff;
   font-weight: 600;
-  width: 20%;
 }
 
 .button-item {

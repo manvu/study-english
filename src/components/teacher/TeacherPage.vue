@@ -131,6 +131,19 @@ a:focus {
   }
 }
 
+@media only screen and (max-width: 768px) {
+  #sidebar {
+    max-width: unset !important;
+    min-width: unset !important;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+  }
+}
+
 #sidebar {
   min-width: 250px;
   max-width: 250px;

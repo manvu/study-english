@@ -60,7 +60,6 @@
       <input
         type="checkbox"
         id="only-favorites"
-
         name="only-favorites"
         value="only-favorites"
         v-model="filterEntity.onlyFavorites"
@@ -70,26 +69,26 @@
   </div>
   <div class="quizzes-list-container">
     <div v-if="!isLoading">
-      <div v-if="quizzes.length >0">
-      <quiz-list-item
-        v-for="quiz in quizzes"
-        :favorite="quiz.favorite"
-        :key="quiz.quiz_id"
-        :quiz_id="quiz.quiz_id"
-        :skill_id="quiz.skill_id"
-        :course_name="quiz.course_name"
-        :description="quiz.description"
-        :is_active="quiz.is_active"
-        :time_allowed="quiz.time_allowed"
-        :created_by="quiz.created_by"
-        :created_at="quiz.created_at"
-        :skill_description="quiz.skill_description"
-        :latestAttempt="quiz.latestAttempt"
-        :numberOfQuestions="quiz.number_of_questions"
-        :averageRating="quiz.average_rating"
-        :ratingCount="quiz.rating_count"
-        :ratingGiven="quiz.rating_given"
-      ></quiz-list-item>
+      <div v-if="quizzes.length > 0">
+        <quiz-list-item
+          v-for="quiz in quizzes"
+          :favorite="quiz.favorite"
+          :key="quiz.quiz_id"
+          :quiz_id="quiz.quiz_id"
+          :skill_id="quiz.skill_id"
+          :course_name="quiz.course_name"
+          :description="quiz.description"
+          :is_active="quiz.is_active"
+          :time_allowed="quiz.time_allowed"
+          :created_by="quiz.created_by"
+          :created_at="quiz.created_at"
+          :skill_description="quiz.skill_description"
+          :latestAttempt="quiz.latestAttempt"
+          :numberOfQuestions="quiz.number_of_questions"
+          :averageRating="quiz.average_rating"
+          :ratingCount="quiz.rating_count"
+          :ratingGiven="quiz.rating_given"
+        ></quiz-list-item>
       </div>
       <div v-else>
         <h3>No quizzes found.</h3>
@@ -335,37 +334,25 @@ export default {
   #sort-and-filter {
     display: block;
   }
-.quizzes-list-container {
-  display: block;
-}
-
+  .quizzes-list-container {
+    display: block;
+  }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
-  .course {
-    
-  }
+
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
-  .course {
-    
-  }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-  .course {
-    
-  }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-  .course {
-    
-  }
 }
 </style>

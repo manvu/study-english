@@ -281,6 +281,6 @@ export default {
 .quiz-editor-form button {
   color: #fff;
   font-weight: 600;
-  width: 25%;
+
 }
 </style>

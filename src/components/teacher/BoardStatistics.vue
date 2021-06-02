@@ -3,7 +3,11 @@
         <div class="header d-flex">
       <h2>Query Statistics</h2>
     </div>
+                  <div v-if="errorMessage" class="alert alert-danger ">
+          {{ errorMessage }}
+        </div>
     <div id="filter" class="details-wrapper">
+
       <div class="form-inline">
         <label>Filter by</label>
         <select
@@ -118,11 +122,24 @@ export default {
       selectedStudentId: "",
       selectedQuizId: "",
       students: [],
+      errorMessage: ""
     };
   },
   methods: {
+    clearErrorMessage: function() {
+      this.errorMessage = ""
+    },
     loadStatistics: function () {
+      this.clearErrorMessage();
       if (this.filterBy === "quiz") {
+        if (!this.selectedQuizId) {
+          this.errorMessage = "A quiz must be selected";
+        }
+
+        if (this.errorMessage) {
+          return;
+        }
+
         this.$store
           .dispatch("teacherStore/getBoardStatisticsByQuiz", {
             dateFrom: moment(this.dateFrom)
@@ -137,6 +154,14 @@ export default {
             this.statisticsLoadedBy = this.filterBy;
           });
       } else {
+        if (!this.selectedStudentId) {
+          this.errorMessage = "A student must be selected";
+        }
+
+        if (this.errorMessage) {
+          return;
+        }
+
         this.$store
           .dispatch("teacherStore/getBoardStatisticsByStudent", {
             dateFrom: moment(this.dateFrom)
@@ -199,5 +224,44 @@ export default {
   font-weight: bold;
   /* padding-left: 20px; */
   padding-right: 20px;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  #filter {
+    display: block;
+  }
+  .quizzes-list-container {
+    display: block;
+  }
+  .content-padding {
+    padding: unset;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 768px) {
+  #filter {
+    display: block;
+  }
+  .quizzes-list-container {
+    display: block;
+  }
+  .content-padding {
+    padding: unset;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 769px) {
+  
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
 }
 </style>
