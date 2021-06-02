@@ -57,7 +57,7 @@
           ></textarea>
         </div>
         <div class="create__footer">
-          <a href="#" @click="cancel" class="create__btn-cansel btn btn-light"
+          <a href="#" @click="cancel" class="create__btn-cansel btn btn-secondary"
             >Cancel</a
           >
           <a
@@ -230,11 +230,7 @@ export default {
   display: -webkit-flex;
   display: flex;
 }
-@media only screen and (max-width: 1039px) {
-  .create__head {
-    display: none;
-  }
-}
+
 .create__head > span {
   margin-left: auto;
   color: #8e9091;
@@ -383,10 +379,7 @@ export default {
   }
 }
 @media only screen and (max-width: 1039px) {
-  .create__btn-cansel {
-    padding-left: 0;
-    background-color: transparent;
-  }
+
 }
 @media only screen and (max-width: 1039px) {
   .create__btn-create {

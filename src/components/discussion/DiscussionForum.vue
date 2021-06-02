@@ -43,9 +43,11 @@
         >
       </div>
     </div>
+    <div class="form-inline">
     <button @click="searchThreads" class="btn btn-primary">
       <font-awesome-icon :icon="faSearch"></font-awesome-icon>
     </button>
+    </div>
   </div>
 
   <!-- MAIN -->
@@ -75,6 +77,7 @@
               :key="quiz.quiz_id"
               :value="quiz.quiz_id"
               class="dropdown-item"
+              :style="{'font-weight': filterEntity.selectedQuiz == quiz.quiz_id ? 'bold' : 'unset'}"
               @click="changeQuizId(quiz.quiz_id, quiz.description)"
               href="#"
               >{{ `${quiz.quiz_id} - ${quiz.description}` }}</a
@@ -527,5 +530,33 @@ export default {
 
 .dropdown-item:hover {
   color: #111;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  #sort-and-filter {
+    display: block;
+  }
+  .quizzes-list-container {
+    display: block;
+  }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .course {
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
 }
 </style>
