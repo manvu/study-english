@@ -127,7 +127,7 @@ p {
 .animate-border {
   position: relative;
   display: block;
-  width: 115px;
+  width: 160px;
   height: 3px;
   background: #007bff;
 }

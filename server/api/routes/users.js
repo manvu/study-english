@@ -17,7 +17,9 @@ const storage = multer.diskStorage({
   }
 })
 
-const upload = multer({ storage: storage, dest: 'public/assets/images/avatars/', fileFilter: imageFilter })
+const dest = path.join(__dirname, "../dist/public/assets/images/avatars/")
+const upload = multer({ storage: storage, dest, fileFilter: imageFilter })
+
 const authMiddleware = require("../middlewares/auth");
 const authTeacherMiddleware = require("../middlewares/authTeacher");
 
