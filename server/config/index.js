@@ -21,7 +21,10 @@ const envFile = {
   password_reset_expiry_time: process.env.PASSWORD_RESET_EXPIRY_TIME,
   datetime_format: process.env.DATETIME_FORMAT,
   appmail: process.env.APPMAIL,
-  appmail_password: process.env.APPMAIL_PASSWORD
+  appmail_password: process.env.APPMAIL_PASSWORD,
+  aws_access_key: process.env.AWS_ACCESS_KEY,
+  aws_secret_key: process.env.AWS_SECRET_KEY,
+  s3_bucket_name: process.env.S3_BUCKET_NAME,
 };
 
 module.exports = envFile;

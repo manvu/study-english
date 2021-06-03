@@ -35,7 +35,7 @@
             <div class="tab-pane fade active show" id="account-general">
               <div class="card-body media align-items-center">
                 <img
-                  :src="`${publicPath}assets/images/avatars/${avatarUrl}`"
+                  :src="`https://learningenglishapp-assets.s3-us-west-1.amazonaws.com/avatars/${avatarUrl}`"
                   alt=""
                   class="d-block ui-w-80"
                 />

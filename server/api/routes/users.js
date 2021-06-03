@@ -3,33 +3,48 @@ const router = express.Router();
 const usersController = require("../controllers/users");
 const avatarsController = require("../controllers/avatar");
 const { imageFilter } = require("../../misc/helper");
-const multer  = require('multer')
-const path = require('path')
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const resizeImg = require("resize-img");
+const {
+  s3_bucket_name,
+  aws_access_key,
+  aws_secret_key,
+} = require("../../config/index");
+const aws = require("aws-sdk");
+
+aws.config.region = "us-west-1";
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/assets/images/avatars/')
+  destination: function(req, file, cb) {
+    cb(null, "temp/");
   },
-  filename: function (req, file, cb) {
-    const userId = req.user.id
-    file.savedFilename = userId + "_" + Date.now() + path.extname(file.originalname)
-    cb(null, file.savedFilename) 
-  }
-})
+  filename: function(req, file, cb) {
+    const userId = req.user.id;
+    file.savedFilename =
+      userId + "_" + Date.now() + path.extname(file.originalname);
+    cb(null, file.savedFilename);
+  },
+});
 
-const dest = path.join(__dirname, "../dist/public/assets/images/avatars/")
-const upload = multer({ storage: storage, dest, fileFilter: imageFilter })
+const dest = path.join(__dirname, "./temp");
+const upload = multer({
+  limits: { fieldSize: 1 * 1024 * 1024 },
+  dest,
+  fileFilter: imageFilter,
+});
 
 const authMiddleware = require("../middlewares/auth");
 const authTeacherMiddleware = require("../middlewares/authTeacher");
 
-router.get("/all", authTeacherMiddleware,  async (req, res) => {
+router.get("/all", authTeacherMiddleware, async (req, res) => {
   const allUsers = await usersController.getUsers();
 
   res.json(allUsers);
 });
 
-router.post("/changepassword", authMiddleware,  async (req, res) => {
+router.post("/changepassword", authMiddleware, async (req, res) => {
   const data = {
     id: req.user.id,
     currentPassword: req.body.currentPassword,
@@ -64,30 +79,50 @@ router.put("/", authMiddleware, async (req, res) => {
 
   const user = await usersController.updateUser(data);
 
-  res.json(user)
+  res.json(user);
 });
 
-router.post('/avatar', [authMiddleware, upload.single('avatar')], async function (req, res, next) {
-  const savedFilename = req.file.savedFilename
-  const userId = req.user.id 
+router.post( "/avatar", [authMiddleware, upload.single("avatar")],
+  async (req, res) => {
+    aws.config.update({
+      accessKeyId: aws_access_key,
+      secretAccessKey: aws_secret_key,
+    });
 
-  const data = {savedFilename, userId}
+    const userId = req.user.id;
 
-  const insertAvatar = await avatarsController.insertAvatar(data)
-  const updateAvatar = await avatarsController.updateAvatar({...insertAvatar.response, userId})
+    const dimension = { width: 256, height: 256 };
 
-  res.json(insertAvatar)
-})
+    const image = await resizeImg(fs.readFileSync(req.file.path), dimension);
 
-router.put('/avatar', authMiddleware, async function (req, res, next) {
-  const mimeId = req.file.mimeId
-  const userId = req.user.id 
+    const savedFilename = `${req.file.filename}-${dimension.width}x${dimension.height}.png`;
 
-  const data = {mimeId, userId}
+    fs.writeFileSync(`${req.file.destination}/${savedFilename}`, image);
 
-  const updateAvatar = await avatarsController.updateAvatar(data)
+    const s3 = new aws.S3();
+    const params = {
+      Bucket: s3_bucket_name,
+      Key: `avatars/${savedFilename}`,
+      Expires: 60,
+      ContentType: req.file.mimetype,
+      Body: fs.createReadStream(`${req.file.destination}/${savedFilename}`),
+    };
+    s3.putObject(params, async function(err, response) {
+      if (err) {
+        console.log("Error uploading data: ", err);
+      } else {
+        const data = { savedFilename, userId };
 
-  res.json(updateAvatar)
-})
+        const insertAvatar = await avatarsController.insertAvatar(data);
+        const updateAvatar = await avatarsController.updateAvatar({
+          ...insertAvatar.response,
+          userId,
+        });
+
+        res.json(insertAvatar);
+      }
+    });
+  }
+);
 
 module.exports = router;

@@ -55,7 +55,7 @@
           <li v-if="isAuthenticated">
             <img
               class="profile-image"
-              :src="`${publicPath}assets/images/avatars/${avatarUrl}`"
+              :src="`https://learningenglishapp-assets.s3-us-west-1.amazonaws.com/avatars/${avatarUrl}`"
               alt=""
             />
           </li>
