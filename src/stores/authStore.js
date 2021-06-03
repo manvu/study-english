@@ -21,6 +21,9 @@ const authStore = {
         localStorage.getItem("firstName") !== "null"
           ? localStorage.getItem("firstName")
           : localStorage.getItem("email");
+          axios.defaults.headers.common["Authorization"] = !!localStorage.getItem("token")
+  ? `Bearer ${localStorage.getItem("token")}`
+  : "";
     },
     register(state, payload) {},
     signOut(state, payload) {

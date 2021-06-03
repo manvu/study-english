@@ -1,10 +1,19 @@
 <template>
-  <header :class="{ headerAuthExpanded: isAuthenticated && expanded, headerUnauthExpanded: !isAuthenticated && expanded }">
+  <header
+    :class="{
+      headerAuthExpanded: isAuthenticated && expanded,
+      headerUnauthExpanded: !isAuthenticated && expanded,
+    }"
+  >
     <nav
       class="navbar navbar-expand-lg navbar-dark bg-dark"
-      :class="{ navbarAuthExpanded: isAuthenticated && expanded, navbarUnauthExpanded: !isAuthenticated && expanded }"
+      :class="{
+        navbarAuthExpanded: isAuthenticated && expanded,
+        navbarUnauthExpanded: !isAuthenticated && expanded,
+      }"
     >
       <button
+        ref="navbarToggleButton"
         class="navbar-toggler"
         type="button"
         data-toggle="collapse"
@@ -77,6 +86,8 @@
 </template>
 
 <script>
+import path from "path";
+
 export default {
   data() {
     return {
@@ -84,7 +95,9 @@ export default {
       expanded: false,
     };
   },
+  watch: {},
   created() {
+    window.addEventListener("resize", this.windowResizeHandler);
     console.log(this.publicPath);
   },
   computed: {
@@ -102,6 +115,13 @@ export default {
     },
   },
   methods: {
+    windowResizeHandler() {
+      const width = document.documentElement.clientWidth;
+
+      if (width > 890 && this.expanded === true) {
+        this.$refs.navbarToggleButton.click();
+      }
+    },
     signOut() {
       this.$store.dispatch("signOut");
     },
@@ -125,7 +145,6 @@ header {
 }
 
 nav {
-  
   height: 100%;
 }
 
@@ -189,7 +208,7 @@ a.active {
     transition: all 0.5s ease;
   }
 
-    .headerUnauthExpanded {
+  .headerUnauthExpanded {
     margin-bottom: 70px !important;
     transition: all 0.5s ease;
   }

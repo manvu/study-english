@@ -6,11 +6,9 @@ const { imageFilter } = require("../../misc/helper");
 const multer  = require('multer')
 const path = require('path')
 
-const dest = path.join(__dirname, "../dist/public/assets/images/avatars/")
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, dest)
+    cb(null, 'public/assets/images/avatars/')
   },
   filename: function (req, file, cb) {
     const userId = req.user.id
@@ -19,7 +17,7 @@ const storage = multer.diskStorage({
   }
 })
 
-
+const dest = path.join(__dirname, "../dist/public/assets/images/avatars/")
 const upload = multer({ storage: storage, dest, fileFilter: imageFilter })
 
 const authMiddleware = require("../middlewares/auth");
