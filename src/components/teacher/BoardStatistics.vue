@@ -119,7 +119,7 @@ export default {
       statisticsLoadedBy: "",
       dateFrom: moment().subtract(1, "months").format("YYYY-MM-DD"),
       dateTo: moment().format("YYYY-MM-DD"),
-      selectedStudentId: "2",
+      selectedStudentId: "",
       selectedQuizId: "",
       students: [],
       errorMessage: ""
