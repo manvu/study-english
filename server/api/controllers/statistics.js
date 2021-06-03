@@ -57,7 +57,7 @@ function createPieChart(statsType, stats, additionalInfo) {
     if (!dateFrom) {
       text = "How many quizzes have you completed?";
     } else {
-      text = `How many quizzes has ${firstName} completed between ${dateFrom} and ${dateTo}`;
+      text = `Quizzes stats for ${firstName} between ${dateFrom} and ${dateTo}`;
     }
   } else {
     const { correct, partially_correct, incorrect, unanswered } = stats;
@@ -72,7 +72,7 @@ function createPieChart(statsType, stats, additionalInfo) {
     if (!dateFrom) {
       text = "How well do you perform?";
     } else {
-      text = `How well did ${firstName} perform between ${dateFrom} and ${dateTo}`;
+      text = `${firstName}'s performance between ${dateFrom} and ${dateTo}`;
     }
   }
 
@@ -92,7 +92,7 @@ function createPieChart(statsType, stats, additionalInfo) {
         offsetY: 0,
         floating: false,
         style: {
-          fontSize: "18px",
+          fontSize: "16px",
           fontWeight: "bold",
           fontFamily: undefined,
           color: "#eee",
@@ -101,14 +101,38 @@ function createPieChart(statsType, stats, additionalInfo) {
       labels,
       responsive: [
         {
-          breakpoint: 480,
+          breakpoint: 350,
           options: {
+            title: {
+              align: 'left'
+            },
             chart: {
-              width: 200,
+              width: 350,
             },
             legend: {
               position: "bottom",
             },
+            title: {
+              style: {
+                fontSize: "12px"
+              }
+            }
+          },
+        },
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 400,
+            },
+            legend: {
+              position: "bottom",
+            },
+            title: {
+              style: {
+                fontSize: "12px"
+              }
+            }
           },
         },
       ],

@@ -1,14 +1,13 @@
 <template>
   <div v-if="quiz" class="col-md-12">
-
     <h2>Selected Quiz: {{ quiz.quizId }}</h2>
-    <div class="quiz-editor-form">
-          <div v-if="errorMessage" class="alert alert-danger mt-3">
-      {{ errorMessage }}
-    </div>
-    <div v-else-if="successMessage" class="alert alert-success mt-3">
-      {{ successMessage }}
-    </div>
+    <div id="quiz-editor-form">
+      <div v-if="errorMessage" class="alert alert-danger mt-3">
+        {{ errorMessage }}
+      </div>
+      <div v-else-if="successMessage" class="alert alert-success mt-3">
+        {{ successMessage }}
+      </div>
       <div class="form-group">
         <label class="control-label col-sm-6" for="courseName"
           >Course Name:</label
@@ -89,7 +88,10 @@
           </select>
         </div>
       </div>
-      <questions-list @setStatusMessages="setStatusMessages" v-if="quiz.questions.length > 0"></questions-list>
+      <questions-list
+        @setStatusMessages="setStatusMessages"
+        v-if="quiz.questions.length > 0"
+      ></questions-list>
       <div class="mt-2 mb-2" v-else>
         There is no question created for this quiz yet
       </div>
@@ -131,7 +133,7 @@ export default {
     return {
       openQuestionEditorModal: this.openQuestionEditorModal,
       closeQuestionEditorModal: this.closeQuestionEditorModal,
-      setStatusMessages: this.setStatusMessages
+      setStatusMessages: this.setStatusMessages,
     };
   },
   components: { QuestionsList, QuestionEditorModal },
@@ -168,9 +170,16 @@ export default {
       successMessage: "",
     };
   },
+  mounted() {
+    var container = document.querySelector("#quiz-editor-form");
+
+    if (container) {
+      container.scrollIntoView(true);
+      document.getElementById("quiz-editor-form").scrollTop -= 100;
+    }
+  },
   methods: {
     setStatusMessages(errorMessage = "", successMessage = "") {
-      
       this.errorMessage = errorMessage;
       this.successMessage = successMessage;
     },
@@ -200,9 +209,7 @@ export default {
         this.$store
           .dispatch("teacherStore/createQuiz", this.quiz)
           .then((response) => {
-            
             if (response === "OK") {
-              
               this.$emit(
                 "setStatusMessages",
                 "",
@@ -222,7 +229,6 @@ export default {
         this.$store
           .dispatch("teacherStore/updateQuiz", this.quiz)
           .then((response) => {
-            
             if (response === "OK") {
               this.$emit(
                 "setStatusMessages",
@@ -275,12 +281,11 @@ export default {
   border-top-right-radius: 0.5rem;
   border-bottom-right-radius: 0.5rem;
 }
-.quiz-editor-form label {
+#quiz-editor-form label {
   font-weight: 600;
 }
-.quiz-editor-form button {
+#quiz-editor-form button {
   color: #fff;
   font-weight: 600;
-
 }
 </style>

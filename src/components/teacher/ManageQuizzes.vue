@@ -37,7 +37,6 @@ export default {
       this.successMessage = successMessage;
     },
     toggleShowQuizEditor(data) {
-      
       if (data.mode === "create") {
         this.mode = "create";
 
@@ -51,16 +50,24 @@ export default {
           .dispatch("teacherStore/getQuizForEdit", { quizId: data.quizId })
           .then((response) => {
             this.mode = "edit";
-
             if (data.action === "close") {
               this.showQuizEditor = false;
             } else {
+              var container = document.querySelector("#quiz-editor-form");
+
+              if (container) {
+                container.scrollIntoView();
+              }
               this.showQuizEditor = true;
             }
           });
       } else if (data.mode === "delete") {
-        if (this.showQuizEditor && data.quizId === this.$store.getters["teacherStore/getEditQuiz"].quiz_id) {
-          this.showQuizEditor = false
+        if (
+          this.showQuizEditor &&
+          data.quizId ===
+            this.$store.getters["teacherStore/getEditQuiz"].quiz_id
+        ) {
+          this.showQuizEditor = false;
         }
       }
     },

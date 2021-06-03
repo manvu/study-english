@@ -65,11 +65,12 @@
             class="button-item ml-2"
             :icon="faTrashAlt"
             :style="{ color: 'red' }"
-            @click="modal.showModal = true;
+            @click="
+              modal.showModal = true;
               modal.handler = deleteQuiz;
               modal.quizId = quiz.quiz_id;
               modal.header = `Delete Quiz ${quiz.quiz_id} - ${quiz.description}`;
-              "
+            "
           ></font-awesome-icon>
         </div>
       </div>
@@ -108,10 +109,16 @@
     <h1>Loading data...</h1>
   </div>
   <dialog-modal v-if="modal.showModal">
-    <template #header>{{modal.header}}</template>
+    <template #header>{{ modal.header }}</template>
     <template #body></template>
     <template #footer>
-      <button class="btn btn-primary" @click=" modal.handler(modal.quizId); modal.showModal = false; " >
+      <button
+        class="btn btn-primary"
+        @click="
+          modal.handler(modal.quizId);
+          modal.showModal = false;
+        "
+      >
         Save
       </button>
       <button class="btn btn-secondary" @click="modal.showModal = false">
@@ -199,7 +206,7 @@ export default {
       this.$emit("toggleShowQuizEditor", { mode: "create", action: "open" });
     },
     editQuiz(quizId) {
-      this.$emit('setStatusMessages')
+      this.$emit("setStatusMessages");
 
       this.$emit("toggleShowQuizEditor", {
         mode: "edit",
@@ -208,35 +215,46 @@ export default {
       });
     },
     resetRating(quizId) {
-      this.$emit('setStatusMessages')
+      this.$emit("setStatusMessages");
 
       if (quizId) {
         this.$store
           .dispatch("teacherStore/resetRating", { quizId: quizId })
           .then((response) => {
             if (response === "OK") {
-              this.$emit('setStatusMessages', '', `Quiz ${quizId}'s ratings have been reset`)
+              this.$emit(
+                "setStatusMessages",
+                "",
+                `Quiz ${quizId}'s ratings have been reset`
+              );
             } else {
-              this.$emit('setStatusMessages', response)
+              this.$emit("setStatusMessages", response);
             }
           });
       } else {
-        this.$emit('setStatusMessages', "Quiz Id must be specified.")
+        this.$emit("setStatusMessages", "Quiz Id must be specified.");
       }
     },
     deleteQuiz: function (quizId) {
-      this.$emit('setStatusMessages')
+      this.$emit("setStatusMessages");
 
       this.$store
         .dispatch("teacherStore/deleteQuiz", { quizId })
         .then((response) => {
-            if (response === "OK") {
-              this.$emit('setStatusMessages', '', `Quiz ${quizId} has been deleted`)
-              this.$emit("toggleShowQuizEditor", { mode: "delete", quizId, action: "close" });
-              
-            } else {
-              this.$emit('setStatusMessages', response)
-            }
+          if (response === "OK") {
+            this.$emit(
+              "setStatusMessages",
+              "",
+              `Quiz ${quizId} has been deleted`
+            );
+            this.$emit("toggleShowQuizEditor", {
+              mode: "delete",
+              quizId,
+              action: "close",
+            });
+          } else {
+            this.$emit("setStatusMessages", response);
+          }
         });
     },
     paginate(currentPage, pagesPerPage) {

@@ -58,6 +58,7 @@ export default {
 
 .chart {
   border: 1px solid #000;
+  padding: 30px;
 }
 
 @media screen and (max-width: 400px) {

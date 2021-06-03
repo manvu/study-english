@@ -1,5 +1,5 @@
 <template>
-  <div id="chart-area">
+  <div id="chart-area" class="">
     <span class="chart">
       <table id="bar-chart">
         <tr>
@@ -99,7 +99,29 @@ export default {
     return {
       barChart: {
         chartOptions: {
+          responsive: [
+            {
+              breakpoint: 380,
+              options: {
+                chart: {
+                  width: 315,
+                  height: 360
+                },
+              },
+            },
+            {
+              breakpoint: 769,
+              options: {
+                chart: {
+                  width: 700,
+                  height: 360
+                },
+              },
+            },
+
+          ],
           chart: {
+            width: 200,
             id: "quiz-statistics-summary",
             foreColor: "#eee",
           },
@@ -131,14 +153,6 @@ export default {
           },
         },
         series: [],
-        responsive: [
-          {
-            breakpoint: 480,
-          },
-          {
-            breakpoint: 768,
-          },
-        ],
       },
       pagination: {
         currentPage: 1,
@@ -158,6 +172,7 @@ export default {
       );
       this.barChart.series = this.statistics.summary.categories;
       this.barChart.chartOptions.title.text = `Score distribution for Quiz ${this.statistics.summary.quizId}`;
+
       this.attempts = this.statistics.attempts;
       this.originalAttempts = this.attempts;
       this.max = this.statistics.summary.max;
@@ -263,7 +278,7 @@ export default {
   font-weight: bold;
 }
 
-.chart-area {
+#chart-area {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
