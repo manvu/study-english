@@ -21,27 +21,19 @@
             <div class="progress">
               <div class="progress--after" :style="progressBar"></div>
             </div>
-            <span class="progress-text">
-              {{ progressText }} Challenges
-            </span>
+            <span class="progress-text"> {{ progressText }} Challenges </span>
           </div>
 
           <h5 class="skill-wrapper">
-            <span
-              class="badge badge-pill"
-              :class="badgeClass"
-              >{{ skill_description }}</span
-            >
+            <span class="badge badge-pill" :class="badgeClass">{{
+              skill_description
+            }}</span>
           </h5>
           <h4 class="mb-4">{{ description }}</h4>
           <a @click="navigateToDiscussion" href="" class="discussion-title"
             >Discussion</a
           >
-          <button
-            @click="navigateToQuiz"
-            v-if="latestAttempt"
-            class="btn"
-          >
+          <button @click="navigateToQuiz" v-if="latestAttempt" class="btn">
             Continue
           </button>
           <button
@@ -51,7 +43,12 @@
           >
             Start
           </button>
-          <button @click="navigateToQuiz" v-else-if="numberOfQuestions === 0" class="btn" disabled>
+          <button
+            @click="navigateToQuiz"
+            v-else-if="numberOfQuestions === 0"
+            class="btn"
+            disabled
+          >
             Start
           </button>
         </div>
@@ -92,20 +89,36 @@ export default {
         5: "warning",
         6: "info",
       };
-      
-      return `badge-${badges[this.skill_id]}`
+
+      return `badge-${badges[this.skill_id]}`;
+    },
+    isAuthenticated() {
+      return this.$store.getters["authStore/isAuthenticated"];
     },
     progressText() {
-      return (this.latestAttempt ? this.latestAttempt.answered : 0)  + "/" + this.numberOfQuestions
+      return (
+        (this.latestAttempt ? this.latestAttempt.answered : 0) +
+        "/" +
+        this.numberOfQuestions
+      );
     },
     progressBar() {
-      return {
-        width: this.latestAttempt ? (this.latestAttempt.answered / this.numberOfQuestions) * 100 + "%" : 0 + "%"
-      };
+      if (this.latestAttempt) {
+        if (this.latestAttempt.answered >= this.numberOfQuestions) {
+          return { width: 100 + "%" };
+        } else {
+          return {
+            width: (this.latestAttempt.answered / this.numberOfQuestions) * 100 + "%",
+          };
+        }
+      } else {
+        return { width: 0 + "%" };
+      }
     },
     favoriteQuiz() {
       return {
-        "course-info--yellow": this.favorite ? true : false,
+        "course-info--yellow":
+          this.favorite && this.isAuthenticated ? true : false,
       };
     },
   },
@@ -249,20 +262,16 @@ export default {
   right: 5px;
 }
 
-
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
   .course {
     display: flex;
     flex-direction: column;
-
   }
-
 
   .course-preview {
     width: unset;
     max-width: unset;
-    
   }
 
   .progress-container {
@@ -272,7 +281,7 @@ export default {
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (max-width: 600px) {
-    .discussion-title {
+  .discussion-title {
     position: unset;
     padding: unset;
   }
@@ -280,24 +289,20 @@ export default {
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (max-width: 700px) {
-    .course {
+  .course {
     width: unset;
   }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
-  
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-  
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-  
 }
-
 </style>

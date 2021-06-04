@@ -78,14 +78,6 @@ td {
   padding: 15px;
 }
 
-#customers th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #4caf50;
-  color: white;
-}
-
 .question-title {
   font-weight: bold;
 }

@@ -145,14 +145,6 @@ export default {
   overflow-x: hidden;
 }
 
-.bg-purple {
-  background-color: #222928;
-}
-
-.bg-purple-cover:hover {
-  background-color: #6355ce;
-}
-
 #sidebar-wrapper {
   width: 20rem;
   min-height: 100vh;

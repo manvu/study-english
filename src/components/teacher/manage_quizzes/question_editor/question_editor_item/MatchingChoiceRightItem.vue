@@ -27,7 +27,7 @@ export default {
     updateItem() {
       this.$emit("update", {
         letter: this.item.letter,
-        item: this.rightColumnText,
+        item: this.rightColumnText.replaceAll("'", "''"),
       });
     },
   },

@@ -1,6 +1,6 @@
 <template>
-  <div id="bg">
-    <div class="module">
+  <div id="background">
+    <div class="main-card">
       <form @submit.prevent="forgotPassword" class="form">
         <h2 class="title">FORGOT PASSWORD?</h2>
         <input
@@ -58,23 +58,20 @@ a {
   color: #ad5482;
   text-decoration: none;
   font-weight: bold;
-  /* margin-top: 40px; */
   text-align: center;
 }
 
-#bg {
+#background {
   position: relative;
   top: 20px;
   height: 350px;
   width: 800px;
-  /* background: url("https://i.imgur.com/3eP9Z4O.png") center no-repeat; */
   background-size: cover;
   margin-left: auto;
   margin-right: auto;
-  /* border: #fff 15px solid; */
 }
 
-.module {
+.main-card {
   position: relative;
   top: 15%;
   height: 80%;
@@ -88,43 +85,9 @@ a {
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.45);
 }
 
-.module ul {
+.main-card ul {
   list-style-type: none;
   margin: 0;
-}
-
-.tab {
-  float: left;
-  height: 60px;
-  width: 25%;
-  padding-top: 20px;
-  box-sizing: border-box;
-  background: #eeeeee;
-  text-align: center;
-  cursor: pointer;
-  transition: background 0.4s;
-}
-
-.tab:first-child {
-  -webkit-border-radius: 5px 0px 0px 0px;
-  border-radius: 5px 0px 0px 0px;
-}
-
-.tab:last-child {
-  -webkit-border-radius: 0px 5px 0px 0px;
-  border-radius: 0px 5px 0px 0px;
-}
-
-.tab:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-.activeTab {
-  background: #fff;
-}
-
-.activeTab .icon {
-  opacity: 1;
 }
 
 .icon {
@@ -199,14 +162,14 @@ a {
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (max-width: 600px) {
-   .module {
+   .main-card {
      width: unset;
      margin-left: unset;
      margin-right: unset;
      top: 8%;
    }
 
-   #bg {
+   #background {
      width: unset;
    }
 }

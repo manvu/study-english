@@ -79,15 +79,6 @@ export default {
   float: right;
 }
 
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 400px) {
   .modal-container {

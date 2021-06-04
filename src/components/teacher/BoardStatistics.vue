@@ -184,21 +184,17 @@ export default {
 <style scoped>
 .details-wrapper {
   display: flex;
-  /* justify-content: space-between; */
   align-items: center;
   margin-bottom: 3px;
   
 }
 
 .details-wrapper div {
-  /* flex: 1; */
-  padding: 1em; /* add some padding ?*/
-  /* text-align: center; */
-  /* border: 1px solid #000; */
+  padding: 1em; 
 }
 
 .details-wrapper div:last-child {
-  border: none; /* remove border ? */
+  border: none; 
 }
 
 .details-wrapper span {
@@ -222,7 +218,6 @@ export default {
 
 #filter label {
   font-weight: bold;
-  /* padding-left: 20px; */
   padding-right: 20px;
 }
 

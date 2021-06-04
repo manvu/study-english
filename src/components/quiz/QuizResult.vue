@@ -67,12 +67,7 @@ export default {
 </script>
 
 <style scoped>
-h1,
-h3,
-p,
-ol {
-  font-family: sans-serif;
-}
+h1, h3, p, ol { font-family: sans-serif; }
 
 .header-title {
   padding-bottom: 0px !important;
@@ -90,7 +85,6 @@ h2 {
   height: auto;
   background-color: #0d0f13;
   border-radius: 5px;
-  /* transform: translate(50%, 0%); */
   -webkit-box-shadow: 0px 0px 47px 9px rgba(0, 0, 0, 0.08);
   -moz-box-shadow: 0px 0px 47px 9px rgba(0, 0, 0, 0.08);
   box-shadow: 0px 0px 47px 9px rgba(0, 0, 0, 0.08);
@@ -119,10 +113,6 @@ h2 {
   font-size: 16px;
   margin: 10px;
   padding: 12px 25px;
-  /* position: relative; */
-  /* left: 675px; */
-  /* bottom: 30px; */
-  /* right: 0px; */
   letter-spacing: 1px;
   cursor: pointer;
 }

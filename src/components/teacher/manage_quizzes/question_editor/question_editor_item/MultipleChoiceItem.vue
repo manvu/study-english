@@ -34,7 +34,7 @@ export default {
     update() {
       this.$emit("update", {
         choice_id: this.id,
-        choice_text: this.choiceText,
+        choice_text: this.choiceText.replaceAll("'", "''"),
         is_correct_choice: this.checked,
       });
     },

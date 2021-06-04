@@ -3,7 +3,7 @@
     <div class="quiz-header"></div>
 
     <div class="instruction-wrapper">
-      <h3 class="instruction">{{ id + 1 + "." }} {{ instruction }}</h3>
+      <h3 class="instruction" v-html="id + 1 + '. ' + instruction"></h3>
     </div>
 
     <div class="question-body pb-3">
@@ -162,9 +162,7 @@ h2 {
   }
 }
 
-.instruction {
-  font-weight: bold;
-}
+
 
 .question-body {
   background-color: #23334b;
@@ -193,7 +191,7 @@ ol {
 }
 
 .instruction {
-  font-weight: bold;
+
   background-color: #6356ca;
   color: #eee;
 }

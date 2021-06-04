@@ -96,14 +96,6 @@ export default {
   color: #eee;
 }
 
-.bg-purple {
-  background-color: #5d51bd;
-}
-
-.bg-purple-cover:hover {
-  background-color: #6355ce;
-}
-
 .selected {
   color: #6355ce;
   background-color: #eee;

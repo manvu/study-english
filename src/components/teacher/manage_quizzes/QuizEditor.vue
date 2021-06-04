@@ -260,21 +260,12 @@ export default {
 </script>
 
 <style scoped>
-.contact {
-  padding: 4%;
-  height: 400px;
-  color: #eee;
-}
 .col-md-3 {
   background: #ff9b00;
   padding: 4%;
   border-top-left-radius: 0.5rem;
   border-bottom-left-radius: 0.5rem;
 }
-.contact-info {
-  margin-top: 10%;
-}
-
 .col-md-9 {
   background: #fff;
   padding: 3%;

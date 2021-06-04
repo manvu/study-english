@@ -52,7 +52,7 @@
             <div class="col-md-12 col-lg-6">
               <div class="footer-widget">
                 <div class="section-heading">
-                  <h3>Subscribe</h3>
+                  <h3>Subscribe to newsletter</h3>
                   <span class="animate-border border-black"></span>
                 </div>
                 <form action="#">
@@ -286,32 +286,6 @@ p {
   background-color: #b7242a;
 }
 
-.footer-awarad {
-  margin-top: 285px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 0;
-  -webkit-flex: 0 0 100%;
-  -moz-box-flex: 0;
-  -ms-flex: 0 0 100%;
-  flex: 0 0 100%;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-.footer-awarad p {
-  color: #fff;
-  font-size: 24px;
-  font-weight: 700;
-  margin-left: 20px;
-  padding-top: 15px;
-}
-
 .footer-info-text {
   margin: 26px 0 32px;
 }
@@ -392,7 +366,7 @@ p {
   position: absolute;
   top: 0;
   right: 0;
-  padding: 12px 24px 12px 17px;
+  padding: 6px 24px 6px 17px;
   border-top-right-radius: 25px;
   border-bottom-right-radius: 25px;
   border: 1px solid #007bff;
@@ -424,25 +398,6 @@ p {
   align-items: center;
 }
 
-.contact-icon {
-  position: absolute;
-}
-.contact-icon i {
-  font-size: 36px;
-  top: -5px;
-  position: relative;
-  color: #007bff;
-}
-
-.contact-info {
-  margin-left: 75px;
-  color: #fff;
-}
-.contact-info h3 {
-  font-size: 20px;
-  color: #fff;
-  margin-bottom: 0;
-}
 
 .copyright {
   padding: 28px 0;
@@ -470,32 +425,6 @@ p {
   padding-left: 20px;
 }
 
-.back-to-top {
-  position: relative;
-  z-index: 2;
-}
-.back-to-top .btn-dark {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  padding: 0;
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #2e2e2e;
-  border-color: #2e2e2e;
-  display: none;
-  z-index: 999;
-  -webkit-transition: all 0.3s linear;
-  -o-transition: all 0.3s linear;
-  transition: all 0.3s linear;
-}
-.back-to-top .btn-dark:hover {
-  cursor: pointer;
-  background: #fa6742;
-  border-color: #fa6742;
-}
-
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
   .copyright {
@@ -505,29 +434,23 @@ p {
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
-  .course {
-    
+    .copyright {
+    text-align: center;
   }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
-  .course {
-    
-  }
+ 
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
-  .course {
-    
-  }
+ 
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
-  .course {
-    
-  }
+ 
 }
 </style>

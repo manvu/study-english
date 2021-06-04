@@ -256,11 +256,7 @@ export default {
 
       return formData;
     },
-    saveAvatar() {
-      ;
-    },
     save() {
-      ;
       if (this.currentTab === 1) {
         this.$store
           .dispatch("settingStore/saveUserInfo", {

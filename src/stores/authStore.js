@@ -30,6 +30,7 @@ const authStore = {
       state.isAuthenticated = false;
       state.isTeacher = false;
       state.authenticatedUser = null;
+      window.location.href = '/'
     },
   },
   actions: {

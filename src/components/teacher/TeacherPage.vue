@@ -59,10 +59,6 @@ export default {
 </script>
 
 <style scoped>
-/*
-    DEMO STYLE
-*/
-
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 body {
   font-family: "Poppins", sans-serif;
@@ -106,10 +102,6 @@ a:focus {
   border-bottom: 1px dashed #ddd;
   margin: 40px 0;
 }
-
-/* ---------------------------------------------------
-    SIDEBAR STYLE
------------------------------------------------------ */
 
 .wrapper {
   display: flex;
@@ -215,33 +207,6 @@ ul ul a {
   background: #6d7fcc;
 }
 
-ul.CTAs {
-  padding: 20px;
-}
-
-ul.CTAs a {
-  text-align: center;
-  font-size: 0.9em !important;
-  display: block;
-  border-radius: 5px;
-  margin-bottom: 5px;
-}
-
-a.download {
-  background: #fff;
-  color: #7386d5;
-}
-
-a.article,
-a.article:hover {
-  background: #6d7fcc !important;
-  color: #fff !important;
-}
-
-/* ---------------------------------------------------
-    CONTENT STYLE
------------------------------------------------------ */
-
 #content {
   width: 100%;
   min-height: 100vh;
@@ -251,20 +216,4 @@ a.article:hover {
 .content-padding {
   padding: 20px;
 }
-
-/* ---------------------------------------------------
-    MEDIAQUERIES
------------------------------------------------------ */
-
-/* @media (max-width: 768px) {
-  #sidebar {
-    margin-left: -250px;
-  }
-  #sidebar.active {
-    margin-left: 0;
-  }
-  #sidebarCollapse span {
-    display: none;
-  }
-} */
 </style>

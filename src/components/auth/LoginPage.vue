@@ -1,6 +1,6 @@
 <template>
-  <div id="bg">
-    <div class="module">
+  <div id="background">
+    <div class="main-card">
       <form @submit.prevent="authenticate" class="form" autocomplete="on">
         <h2 class="title">LOG IN YOUR ACCOUNT</h2>
           <p class="mb-3" v-if="error">
@@ -106,7 +106,7 @@ a {
   text-align: center;
 }
 
-#bg {
+#background {
   position: relative;
   top: 20px;
   height: 700px;
@@ -116,7 +116,7 @@ a {
   margin-right: auto;
 }
 
-.module {
+.main-card {
   position: relative;
   top: 15%;
   height: 80%;
@@ -130,7 +130,7 @@ a {
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.45);
 }
 
-.module ul {
+.main-card ul {
   list-style-type: none;
   margin: 0;
 }
@@ -207,14 +207,14 @@ a {
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (max-width: 600px) {
-   .module {
+   .main-card {
      width: unset;
      margin-left: unset;
      margin-right: unset;
      top: 8%;
    }
 
-   #bg {
+   #background {
      width: unset;
    }
 }

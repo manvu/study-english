@@ -5,7 +5,7 @@ const PostModel = new(require("../../models/post"))();
 
 module.exports = {
   createThread: async (data) => {
-    const { subject, description, userId, selectedRelatedQuizId } = data;
+    const { subject, description, selectedRelatedQuizId } = data;
 
     if (!subject || subject.length < 20) {
       return sendFailure(STRINGS.THREAD_TITLE_MUST_BE_AT_LEAST_20_CHARACTERS);

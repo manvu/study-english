@@ -292,7 +292,6 @@ export default {
 
 #bar-chart td,
 #bar-chart th {
-  /* border: 1px solid #ddd; */
   padding: 15px;
 }
 

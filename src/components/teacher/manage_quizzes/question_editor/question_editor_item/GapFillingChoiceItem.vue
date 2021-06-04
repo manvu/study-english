@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     update: function () {
-      this.$emit("updateAnswer", this.id, this.keyAnswer);
+      this.$emit("updateAnswer", this.id, this.keyAnswer.replaceAll("'", "''"));
     },
   },
 };

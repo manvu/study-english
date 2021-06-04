@@ -72,7 +72,10 @@ function paginator(items, current_page, per_page_items) {
 	};
 }
 
-
+function avatar(url) {
+  debugger
+  return `https://learningenglishapp-assets.s3-us-west-1.amazonaws.com/avatars/${url}`
+}
 
 module.exports = {
   characters,
@@ -80,6 +83,6 @@ module.exports = {
   timeSince,
   convertISOToReadableFormat,
   paginator,
-  
+  avatar
 };
 

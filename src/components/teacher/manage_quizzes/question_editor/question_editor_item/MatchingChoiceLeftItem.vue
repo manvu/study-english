@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     updateItem() {
-      this.$emit("update", { letter: this.item.letter, item: this.leftColumnText, correct_answer: this.selectedOption})
+      this.$emit("update", { letter: this.item.letter, item: this.leftColumnText.replaceAll("'", "''"), correct_answer: this.selectedOption})
     }
   }
 };
