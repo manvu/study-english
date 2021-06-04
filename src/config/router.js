@@ -19,12 +19,15 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: "/", redirect: "/home" },
-    { path: "/home", name: "home", component: Home },
+    { path: "/home", name: "home", component: Home, meta: {
+      title: "Home Page"
+    } },
     {
       path: "/login",
       name: "login",
       component: LoginPage,
       meta: {
+        title: "Login",
         guest: true,
       },
     },
@@ -33,6 +36,7 @@ const router = createRouter({
       name: "forgotPassword",
       component: ForgotPassword,
       meta: {
+        title: "Forgot Password",
         guest: true,
       },
     },
@@ -43,6 +47,7 @@ const router = createRouter({
       name: "register",
       component: RegisterPage,
       meta: {
+        title: "Sign up",
         guest: true,
       },
     },
@@ -51,6 +56,7 @@ const router = createRouter({
       name: "quizzes",
       component: QuizPage,
       meta: {
+        title: "Select A Quiz",
         requiresAuth: true,
       },
     },
@@ -59,6 +65,7 @@ const router = createRouter({
       name: "quizzes.index",
       component: QuizPage,
       meta: {
+        title: "Start Quiz",
         requiresAuth: true,
       },
     },
@@ -67,6 +74,7 @@ const router = createRouter({
       name: "quiz-result",
       component: QuizResult,
       meta: {
+        title: "Result",
         requiresAuth: true,
       },
     },
@@ -75,6 +83,7 @@ const router = createRouter({
       name: "discussion",
       component: DiscussionForum,
       meta: {
+        title: "Discussion Forum",
         requiresAuth: true,
       },
     },
@@ -83,6 +92,7 @@ const router = createRouter({
       name: "discussion.index",
       component: DiscussionForum,
       meta: {
+        title: "Filtered Result | Discussion Forum",
         requiresAuth: false,
       },
     },
@@ -91,6 +101,7 @@ const router = createRouter({
       name: "threads.create",
       component: CreateThread,
       meta: {
+        title: "Create Thread",
         requiresAuth: true,
       },
     },
@@ -99,6 +110,7 @@ const router = createRouter({
       name: "statistics",
       component: StudentStatistics,
       meta: {
+        title: "Statistics",
         requiresAuth: true,
       },
     },
@@ -107,6 +119,7 @@ const router = createRouter({
       name: "teacher",
       component: TeacherPage,
       meta: {
+        title: "Management Console",
         requiresAuth: true,
         isTeacher: true,
       },
@@ -116,6 +129,7 @@ const router = createRouter({
       name: "settings",
       component: AccountSettings,
       meta: {
+        title: "Account Settings",
         requiresAuth: true,
       },
     },
@@ -131,6 +145,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  debugger
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (localStorage.getItem("token") == null) {
       next({

@@ -4,8 +4,7 @@
       <div class="row">
         <div class="col-md-12 col-lg-12">
           <div class="row">
-            <div class="col-md-6">
-            </div>
+            <div class="col-md-6"></div>
           </div>
           <div class="row">
             <div class="col-md-12 col-lg-6">
@@ -13,8 +12,11 @@
                 <div class="section-heading">
                   <h3>Follow us</h3>
                   <span class="animate-border border-black"></span>
+                  <p class="footer-info-text">
+                    Connect with us by following our pages on social media.
+                  </p>
                 </div>
-                
+
                 <div class="section-heading">
                   <div class="footer-social-link">
                     <ul>
@@ -47,13 +49,17 @@
                   </div>
                 </div>
               </div>
-
             </div>
             <div class="col-md-12 col-lg-6">
               <div class="footer-widget">
                 <div class="section-heading">
                   <h3>Subscribe to newsletter</h3>
                   <span class="animate-border border-black"></span>
+                  <p class="footer-info-text">
+                    We are dedicated to helping you leveling up your English
+                    command and connecting you with English-speaking communities
+                    all over the world.
+                  </p>
                 </div>
                 <form action="#">
                   <div class="form-row">
@@ -127,7 +133,7 @@ p {
 .animate-border {
   position: relative;
   display: block;
-  width: 160px;
+  width: 275px;
   height: 3px;
   background: #007bff;
 }
@@ -135,7 +141,7 @@ p {
 .animate-border:after {
   position: absolute;
   content: "";
-  width: 35px;
+  width: 170px;
   height: 3px;
   left: 0;
   bottom: 0;
@@ -290,8 +296,6 @@ p {
   margin: 26px 0 32px;
 }
 
-
-
 .footer-widget .section-heading {
   margin-bottom: 35px;
 }
@@ -398,7 +402,6 @@ p {
   align-items: center;
 }
 
-
 .copyright {
   padding: 28px 0;
   margin-top: 55px;
@@ -434,23 +437,18 @@ p {
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
-    .copyright {
-    text-align: center;
-  }
+
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
- 
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
- 
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
- 
 }
 </style>

@@ -86,6 +86,14 @@ export default {
   overflow-x: hidden;
 }
 
+.bg-purple {
+  background-color: #5d51bd;
+}
+
+.bg-purple-cover:hover {
+  background-color: #6355ce;
+}
+
 .list-group-item {
   background-color: #5d51bd;
   color: #eee;

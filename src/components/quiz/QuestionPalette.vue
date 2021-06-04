@@ -195,6 +195,14 @@ button {
   width: 100%;
 }
 
+.bg-purple {
+  background-color: #222928;
+}
+
+.bg-purple-cover:hover {
+  background-color: #6355ce;
+}
+
 .showQuestionsIcon {
   cursor: pointer;
 }
