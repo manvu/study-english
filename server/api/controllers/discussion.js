@@ -12,7 +12,7 @@ module.exports = {
     const quizzes = await QuizModel.findAll();
     const users = await UserModel.findAll();
 
-    if (!threads.error && !allSkills.error && !quizzes.error && !users.error) {
+    if (!threads.error && !allSkills.error && !quizzes.error && !users.error) {  
       return sendSuccess({
         threads: threads.response,
         skills: allSkills.response,

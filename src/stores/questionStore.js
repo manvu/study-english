@@ -34,9 +34,10 @@ const questionStore = {
             payload.expired_time = expired_time;
             payload.time_left = time_left;
             context.commit("getQuestionList", payload);
+            return "OK"
           }
 
-          console.log(response);
+          return response.data.response
         })
         .catch((error) => {
           console.log(error);

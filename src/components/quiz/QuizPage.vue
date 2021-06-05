@@ -6,7 +6,14 @@
         class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3"
       ></similar-quiz>
 
+      <div v-if="isLoading">
+        <h1>Loading data...</h1>
+      </div>
+      <div v-else-if="errorMessage">
+        <h3>{{ errorMessage }}</h3>
+      </div>
       <div
+        v-else
         id="quiz-content"
         class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9"
       >
@@ -44,6 +51,7 @@
           ></matching-question-item>
         </div>
       </div>
+
       <question-palette
         id="question-palette"
         v-if="quizId && !hideQuestionPalette"
@@ -75,6 +83,8 @@ export default {
       timer: {},
       hideQuestionPalette: true,
       quizId: null,
+      isLoading: true,
+      errorMessage: "",
     };
   },
   created() {
@@ -85,11 +95,20 @@ export default {
     if (quizId) {
       this.$store
         .dispatch("questionStore/getQuestionList", { quizId })
-        .then(() => {
-          this.questions = this.$store.getters["questionStore/getQuestionList"];
-          this.timer = this.$store.getters["questionStore/getTimer"];
-          this.hideQuestionPalette = false;
+        .then((response) => {
+          if (response === "OK") {
+            this.questions = this.$store.getters[
+              "questionStore/getQuestionList"
+            ];
+            this.timer = this.$store.getters["questionStore/getTimer"];
+            this.hideQuestionPalette = false;
+            this.isLoading = false;
+          } else {
+            this.errorMessage = response;
+          }
         });
+    } else {
+      this.isLoading = false;
     }
   },
 };
@@ -138,9 +157,8 @@ export default {
   #question-palette {
     position: sticky;
     bottom: 0;
-
   }
-  
+
   .quiz-container {
     /* position: relative; */
   }
