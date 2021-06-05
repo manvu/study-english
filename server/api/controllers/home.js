@@ -15,8 +15,6 @@ module.exports = {
       incompleteAttempts = { error: null, response: null };
     }
 
-    console.log(homeSummary)
-
     if (!homeSummary.error && !incompleteAttempts.error) {
       const response = homeSummary.response
 

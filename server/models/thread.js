@@ -73,6 +73,10 @@ class ThreadModel {
       VALUES ('${subject}', '${description}', '${userId}', '${selectedRelatedQuizId}');
       `);
   }
+
+  async deleteOne(id) {
+    return await this.db.executeQuery(`DELETE FROM discussion_thread WHERE thread_id = ${id}`)
+  }
 }
 
 module.exports = ThreadModel;

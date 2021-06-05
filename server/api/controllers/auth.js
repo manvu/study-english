@@ -110,6 +110,9 @@ module.exports = {
     if (!email || !password) {
       return sendFailure(STRINGS.EMAIL_AND_PASSWORD_CANNOT_BE_BLANK);
     }
+    if (!validateEmail(email)) {
+      return sendFailure(STRINGS.EMAIL_IS_NOT_IN_CORRECT_FORMAT);
+    }
 
     // Get user_id and password
     const validatedUser = await UserModel.findOneByEmail(email);
@@ -166,6 +169,10 @@ module.exports = {
   passwordReset: async (data) => {
     const { email } = data;
 
+    if (!validateEmail(email)) {
+      return sendFailure(STRINGS.EMAIL_IS_NOT_IN_CORRECT_FORMAT);
+    }
+
     if (email) {
       const validatedUser = await UserModel.findOneByEmail(email);
 
@@ -193,7 +200,7 @@ module.exports = {
             const statusCode = sendResult.response.substring(0, 3);
   
             if (statusCode === "250") {
-              return sendSuccess(200);
+              return sendSuccess(200, null);
             } else {
               return sendFailure(STRINGS.PLEASE_CHECK_YOUR_EMAIL);
             }

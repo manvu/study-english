@@ -1,6 +1,7 @@
 const { expect } = require("chai");
 const STRINGS = require("../../../config/strings");
 const threadsController = require("../../controllers/threads");
+const discussionHelper = require("../helpers/discussion");
 
 describe("ThreadsController: CreateThread", () => {
   it(`Should log ${STRINGS.THREAD_TITLE_MUST_BE_AT_LEAST_20_CHARACTERS}`, async () => {
@@ -8,85 +9,85 @@ describe("ThreadsController: CreateThread", () => {
       subject: "abc",
       description: "",
       selectedRelatedQuizId: "M",
-      userId: 1
-    }
+      userId: 1,
+    };
 
     const actual = await threadsController.createThread(data);
     expect(actual.statusCode).to.equal(400);
-    expect(actual.error).to.equal(STRINGS.THREAD_TITLE_MUST_BE_AT_LEAST_20_CHARACTERS);
+    expect(actual.error).to.equal(
+      STRINGS.THREAD_TITLE_MUST_BE_AT_LEAST_20_CHARACTERS
+    );
     expect(actual.response).to.equal(null);
-  })
+  });
 
-//   it(`Should log ${STRINGS.THREAD_DESCRIPTION_CANNOT_BE_LEFT_BLANK}`, async () => {
-//     const data = {
-//       email: "abc@gmail.com",
-//       password: "",
-//       gender: "M",
-//       profilePictureId: "1",
-//       roleId: "2"
-//     }
-
-//     const actual = await threadsController.register(data);
-//     expect(actual.statusCode).to.equal(400);
-//     expect(actual.error).to.equal(STRINGS.PASSWORD_MUST_BE_AT_LEAST());
-//     expect(actual.response).to.equal(null);
-//   })
-
-//   it(`Should log ${STRINGS.SELECT_RELATED_QUIZ_CANNOT_BE_LEFT_BLANK}`, async () => {
-//     const data = {
-//       email: "abc@gmail.com",
-//       password: "123456890",
-//       gender: "P",
-//       profilePictureId: "1",
-//       roleId: "2"
-//     }
-
-//     const actual = await threadsController.register(data);
-//     expect(actual.statusCode).to.equal(400);
-//     expect(actual.error).to.equal(STRINGS.INVALID_GENDER);
-//     expect(actual.response).to.equal(null);
-//   })
-
-//   it(`Should log ${STRINGS.INVALID_PROFILE_PICTURE_ID}`, async () => {
-//     const data = {
-//       email: "abc@gmail.com",
-//       password: "123456890",
-//       gender: "M",
-//       profilePictureId: "0",
-//       roleId: "2"
-//     }
-
-//     const actual = await threadsController.register(data);
-//     expect(actual.statusCode).to.equal(400);
-//     expect(actual.error).to.equal(STRINGS.INVALID_PROFILE_PICTURE_ID);
-//     expect(actual.response).to.equal(null);
-//   })
-// })
-
-// describe("ThreadsController: GetThread", () => {
-//   it(`Should log ${STRINGS.EMAIL_AND_PASSWORD_CANNOT_BE_BLANK}`, async () => {
-//     const data = {
-//       email: "",
-//       password: "123456f",
-//     };
-//     const actual = await threadsController.login(data);
-//     expect(actual.statusCode).to.equal(400);
-//     expect(actual.error).to.equal(STRINGS.EMAIL_AND_PASSWORD_CANNOT_BE_BLANK);
-//     expect(actual.response).to.equal(null);
-//   });
-});
-
-describe("ThreadsController: getThreads", () => {
-  it(`Should load all threads`, async () => {
+  it(`Should log ${STRINGS.THREAD_DESCRIPTION_CANNOT_BE_LEFT_BLANK}`, async () => {
     const data = {
-      email: "",
-      password: "123456f",
+      subject:
+        "Dolore mollit voluptate deserunt est enim ut aliqua esse laborum.",
+      description: "",
+      selectedRelatedQuizId: "M",
+      userId: 1,
     };
-    const actual = await threadsController.getThreads(data);
+
+    const actual = await threadsController.createThread(data);
     expect(actual.statusCode).to.equal(400);
-    expect(actual.error).to.equal(STRINGS.EMAIL_AND_PASSWORD_CANNOT_BE_BLANK);
+    expect(actual.error).to.equal(
+      STRINGS.THREAD_DESCRIPTION_CANNOT_BE_LEFT_BLANK
+    );
     expect(actual.response).to.equal(null);
+  });
+
+  it(`Should log ${STRINGS.SELECT_RELATED_QUIZ_CANNOT_BE_LEFT_BLANK}`, async () => {
+    const data = {
+      subject:
+        "Dolore mollit voluptate deserunt est enim ut aliqua esse laborum.",
+      description:
+        "Magna occaecat et ex elit aliqua veniam commodo in irure reprehenderit nulla incididunt.",
+      selectedRelatedQuizId: "",
+      userId: 1,
+    };
+
+    const actual = await threadsController.createThread(data);
+    expect(actual.statusCode).to.equal(400);
+    expect(actual.error).to.equal(
+      STRINGS.SELECT_RELATED_QUIZ_CANNOT_BE_LEFT_BLANK
+    );
+    expect(actual.response).to.equal(null);
+  });
+
+  it(`Should create a new thread successsfully`, async () => {
+    const data = {
+      subject:
+        "Dolore mollit voluptate deserunt est enim ut aliqua esse laborum.",
+      description:
+        "Magna occaecat et ex elit aliqua veniam commodo in irure reprehenderit nulla incididunt.",
+      selectedRelatedQuizId: "1",
+      userId: 1,
+    };
+
+    try {
+      const actual = await threadsController.createThread(data);
+      expect(actual.statusCode).to.equal(201);
+      expect(actual.error).to.be.null;
+      expect(actual.response).to.be.an("object");
+      expect(actual.response.newThreadId).to.be.an("number");
+
+      if (!actual.error) {
+        data.thread_id = actual.response.newThreadId;
+      }
+    } finally {
+      const result = await discussionHelper.deleteThreads([data]);
+    }
   });
 });
 
+describe("ThreadsController: getThread", () => {
+  it(`Should a thread with all its posts`, async () => {
+    const threadId = 1;
 
+    const actual = await threadsController.getThread(threadId);
+    expect(actual.statusCode).to.equal(200);
+    expect(actual.error).to.equal(null);
+    expect(actual.response).to.be.an("object");
+  });
+});

@@ -43,6 +43,15 @@ class UserModel {
     WHERE user_id = ${userId}`);
   }
 
+  async deleteOne(userId) {
+    return this.db.executeQuery(`
+    DELETE FROM user WHERE user_id = ${userId};
+    DELETE FROM user_attempt WHERE user_id = ${userId};
+    DELETE FROM user_answer_question WHERE user_id = ${userId};
+    DELETE FROM user_favorite WHERE user_id = ${userId};
+    DELETE FROM user_rating WHERE user_id = ${userId};`)
+  }
+
   async savePassword({userId, passwordHash, passwordSalt}) {
     return this.db.executeQuery(`UPDATE user
     SET password_salt = '${passwordSalt}', password_hash = '${passwordHash}'
