@@ -70,6 +70,7 @@
   <div class="quizzes-list-container">
     <div v-if="!isLoading">
       <div v-if="quizzes.length > 0">
+        <h3 class="m-3 text-center">Select a quiz to level up your English level</h3>
         <quiz-list-item
           v-for="quiz in quizzes"
           :favorite="quiz.favorite"
