@@ -168,6 +168,10 @@ module.exports = {
         allQuestionTypes: questionTypes.response,
       });
     } else {
+      console.log(homeSummary.error)
+      console.log(allSkills.error)
+      console.log(questionTypes.error)
+      
       return sendFailure(STRINGS.ERROR_LOADING_TEACHER_PAGE);
     }
   },

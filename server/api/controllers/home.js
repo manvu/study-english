@@ -31,6 +31,9 @@ module.exports = {
       
       return sendSuccess(response);
     } else {
+      console.log(homeSummary.error)
+      console.log(incompleteAttempts.error)
+
       return sendFailure(STRINGS.CANNOT_LOAD_QUIZ);
     }
   },
