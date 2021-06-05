@@ -74,10 +74,10 @@ const settingStore = {
         });
     },
     uploadAvatar(context, payload) {
-      debugger
+      
       return axios(API_LIST.uploadAvatar(payload))
         .then((response) => {
-          debugger
+          
           if (!response.data.error) {
             payload = response.data.response
             context.commit("uploadAvatar", payload);

@@ -1,7 +1,30 @@
 <template>
   <div v-if="!isLoading">
-    <div class="header d-flex">
-      <h2>Quiz List</h2>
+    <h2>Quiz List</h2>
+    <div class="header d-flex mb-2">
+      <button
+        class="btn btn-info dropdown-toggle"
+        type="button"
+        id="sort-by"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <strong> Sort By</strong>: {{ filterEntity.sortBy }}
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" @click="sort('Quiz Id')" href="#">Quiz Id</a>
+        <a class="dropdown-item" @click="sort('Course Name')" href="#"
+          >Course Name</a
+        >
+        <a class="dropdown-item" @click="sort('Skill Name')" href="#"
+          >Skill Name</a
+        >
+        <a class="dropdown-item" @click="sort('Attempts')" href="#">Attempts</a>
+        <a class="dropdown-item" @click="sort('Average Rating')" href="#"
+          >Average Rating</a
+        >
+      </div>
       <button type="button" @click="createQuiz" class="mb-2 btn btn-primary">
         Create Quiz
       </button>
@@ -151,6 +174,12 @@ export default {
         nextPage: null,
         prevPage: null,
       },
+      filterEntity: {
+        isFiltered: false,
+        sortBy: "Quiz Id",
+        quizId: "",
+        selectedQuiz: "All quizzes",
+      },
       modal: {
         header: "",
         body: "",
@@ -296,6 +325,21 @@ export default {
       this.pagination.currentPage = paginated.page;
       this.pagination.prevPage = paginated.pre_page;
       this.pagination.nextPage = paginated.next_page;
+    },
+    sort(sortBy) {
+      this.filterEntity.sortBy = sortBy;
+      if (sortBy === "Quiz Id") {
+        this.quizzes = this.quizzes.sort((a, b) => a.quiz_id - b.quiz_id);
+      } else if (sortBy === "Course Name") {
+        
+        this.quizzes = this.quizzes.sort((a, b) => a.course_name.localeCompare( b.course_name));
+      } else if (sortBy === "Skill Name") {
+        this.quizzes = this.quizzes.sort((a, b) => a.skill_description.localeCompare( b.skill_description)); 
+      } else if (sortBy === "Attempts") {
+        this.quizzes = this.quizzes.sort((a, b) => a.attempts - b.attempts);
+      } else {
+        this.quizzes = this.quizzes.sort((a, b) => a.average_rating - b.average_rating);
+      }
     },
   },
 };

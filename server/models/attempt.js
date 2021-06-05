@@ -89,9 +89,9 @@ class AttemptModel {
   async findManyIncompleteAttempts(userId) {
     return await this.db.executeQuery(`SELECT ua.attempt_id, ua.user_id, ua.quiz_id, ua.start_time, q.time_allowed, total_questions, unanswered, (total_questions - unanswered) as answered
     FROM user_attempt ua JOIN quiz q ON ua.quiz_id = q.quiz_id
-    JOIN (SELECT COUNT(*) as total_questions, SUM(CASE WHEN answer_text LIKE '' THEN 1 END) as unanswered, SUM(CASE WHEN answer_text NOT LIKE '' THEN 1 END) as answered, attempt_id, quiz_id, user_id
+    JOIN (SELECT COUNT(*) as total_questions, SUM(CASE WHEN answer_text LIKE '' THEN 1 ELSE 0 END) as unanswered, SUM(CASE WHEN answer_text NOT LIKE '' THEN 1 ELSE 0 END) as answered, attempt_id, quiz_id, user_id
     FROM user_answer_question uaq 
-    GROUP BY attempt_id, quiz_id, user_id ) t1 ON t1.attempt_id = ua.attempt_id
+    GROUP BY attempt_id, quiz_id, user_id ) t1 ON t1.attempt_id = ua.attempt_id AND t1.quiz_id = ua.quiz_id
     WHERE ua.user_id = ${userId} AND ua.end_time IS NULL
     ORDER BY ua.quiz_id, ua.attempt_id`)
   }

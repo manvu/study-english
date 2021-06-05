@@ -145,7 +145,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  debugger
+  
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (localStorage.getItem("token") == null) {
       next({
