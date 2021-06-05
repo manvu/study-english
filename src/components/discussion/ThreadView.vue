@@ -6,7 +6,7 @@
           <div class="card-header">
             <div class="media flex-wrap w-100 align-items-center">
               <img
-                :src="`${publicPath}assets/images/avatars/${thread.avatarUrl}`"
+              :src="`https://learningenglishapp-assets.s3-us-west-1.amazonaws.com/avatars/${thread.avatarUrl}`"
                 class="d-block ui-w-40 rounded-circle"
                 alt=""
               />
@@ -158,11 +158,14 @@ export default {
 
     let threadId = this.$route.params.id;
 
+    
+
     this.$store
       .dispatch("forumStore/getDataForDiscussionThread", { threadId })
       .then((response) => {
         this.thread = this.$store.getters["forumStore/getCurrentThread"];
         this.thread.originalPosts = this.thread.posts;
+        console.log(this.thread.avatarUrl)
         this.paginate();
       });
   },

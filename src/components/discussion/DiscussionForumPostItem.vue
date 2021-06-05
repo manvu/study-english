@@ -5,7 +5,7 @@
         <div class="card-header">
           <div class="media flex-wrap w-100 align-items-center">
             <img
-              :src="`${publicPath}assets/images/avatars/${p.avatarUrl}`"
+              :src="`https://learningenglishapp-assets.s3-us-west-1.amazonaws.com/avatars/${p.avatarUrl}`"
               class="d-block ui-w-40 rounded-circle"
               alt=""
             />

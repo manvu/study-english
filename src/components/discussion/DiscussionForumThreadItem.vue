@@ -7,7 +7,7 @@
       </div>
     <div class="cell" data-title="Related Quiz Id">Quiz {{ t.quiz_id }}</div>
     <div class="cell" data-title="Users">
-      <a href="#" class="avatar" ><img class="avatar" :src="`${publicPath}assets/images/avatars/${t.thread_starter_avatar_url}`" alt="avatar" data-dropdown-btn="user-b"
+      <a href="#" class="avatar" ><img class="avatar" :src="`https://learningenglishapp-assets.s3-us-west-1.amazonaws.com/avatars/${t.thread_starter_avatar_url}`" alt="avatar" data-dropdown-btn="user-b"
       /></a>
     </div>
     <div class="cell" data-title="Number of replies">{{ t.replies }}</div>

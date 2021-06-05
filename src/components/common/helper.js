@@ -73,7 +73,6 @@ function paginator(items, current_page, per_page_items) {
 }
 
 function avatar(url) {
-  
   return `https://learningenglishapp-assets.s3-us-west-1.amazonaws.com/avatars/${url}`
 }
 
