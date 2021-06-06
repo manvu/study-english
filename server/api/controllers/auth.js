@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { jwt_secret_key, jwt_expiry_time, password_reset_expiry_time, datetime_format } = require("../../config/index");
-const { hashPasswordAsync, checkPassword } = require("../../misc/helper");
+const { hashPasswordAsync, checkPassword, getAvatarUrl } = require("../../misc/helper");
 const STRINGS = require("../../config/strings");
 const { sendSuccess, sendFailure } = require("../../config/res");
 const {
@@ -75,7 +75,7 @@ module.exports = {
       if (user.response.affectedRows === 1) {
         const userId = user.response.insertId
         const isTeacher = roleId === 1 ? true : false
-        const avatarUrl =  "default-profile-picture.png"
+        const avatarUrl = getAvatarUrl(firstName)
 
         const token = jwt.sign(
           { id: userId, isTeacher: isTeacher },
@@ -155,7 +155,7 @@ module.exports = {
             }
           );
 
-          const avatarUrl = !mime.error && mime.response.length === 1 ? mime.response[0].image_url : "default-profile-picture.png"
+          const avatarUrl = !mime.error && mime.response.length === 1 ? mime.response[0].image_url : getAvatarUrl(firstName)
 
           return sendSuccess({ firstName, lastName, isTeacher, email, token, avatarUrl });
         } else {

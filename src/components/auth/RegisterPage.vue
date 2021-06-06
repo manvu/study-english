@@ -31,11 +31,15 @@ export default {
       error: "",
     };
   },
-  setup() {
-    return {};
-  },
   methods: {
     register() {
+      this.error = ""
+
+      if (this.password != this.confirmPassword) {
+        this.error = "Please enter confirm password the same as your password."
+        return
+      }
+
       this.$store
         .dispatch("authStore/register", {
           email: this.email,

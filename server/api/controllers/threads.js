@@ -1,4 +1,5 @@
 const { sendSuccess, sendFailure } = require("../../config/res");
+const { getAvatarUrl } = require("../../misc/helper");
 const STRINGS = require("../../config/strings");
 const ThreadModel = new(require("../../models/thread"))();
 const PostModel = new(require("../../models/post"))();
@@ -33,6 +34,18 @@ module.exports = {
   getThread: async (id) => {
     let thread = await ThreadModel.findOne(id);
     let posts = await PostModel.findMany(id);
+
+    if (!thread.error && !posts.error) {
+      if (thread.response[0].avatarUrl === "default-profile-picture.png") {
+        thread.response[0].avatarUrl = getAvatarUrl(thread.response[0].full_name)
+      }
+
+      for (const post of posts.response) {
+        if (post.avatarUrl === "default-profile-picture.png") {
+          post.avatarUrl = getAvatarUrl(post.full_name)
+        }
+      }
+    }
 
     return sendSuccess({ ...thread.response[0], posts: posts.response });
   }

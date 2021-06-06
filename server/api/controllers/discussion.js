@@ -1,5 +1,6 @@
 const { sendSuccess, sendFailure } = require("../../config/res");
 const STRINGS = require("../../config/strings");
+const { getAvatarUrl } = require("../../misc/helper");
 const ThreadModel = new (require("../../models/thread"))();
 const SkillModel = new (require("../../models/skill"))();
 const QuizModel = new (require("../../models/quiz"))();
@@ -13,6 +14,12 @@ module.exports = {
     const users = await UserModel.findAll();
 
     if (!threads.error && !allSkills.error && !quizzes.error && !users.error) {  
+      for (const thread of threads.response) {
+        if (thread.thread_starter_avatar_url === "default-profile-picture.png") {
+          thread.thread_starter_avatar_url = getAvatarUrl(thread.first_name)
+        }
+      }
+
       return sendSuccess({
         threads: threads.response,
         skills: allSkills.response,

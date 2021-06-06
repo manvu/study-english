@@ -45,9 +45,17 @@ function imageFilter(req, file, cb) {
   cb(null, true);
 };
 
+function getAvatarUrl(firstName) {
+  const baseUrl = "default/"
+  const firstCharacter = firstName.trim().charAt(0)
+
+  return `${baseUrl}${firstCharacter}.svg`
+}
+
 module.exports = {
   checkPassword,
   hashPasswordAsync,
   cleanObject,
-  imageFilter
+  imageFilter,
+  getAvatarUrl
 };
