@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import QuizListItem from "./UI/QuizListItem.vue";
+import QuizListItem from "./QuizListItem.vue";
 import { paginator } from "../common/helper";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 

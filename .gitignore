@@ -4,6 +4,7 @@ node_modules
 /public/assets/images/avatars
 server/api/routes/temp/*
 .nyc_output
+.VSCodeCounter
 
 # local env files
 .env.local

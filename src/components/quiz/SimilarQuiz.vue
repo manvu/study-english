@@ -14,7 +14,7 @@
         :class="selected(quiz.quiz_id)"
         >Quiz {{ quiz.quiz_id }} -         <span class="badge badge-pill" :class="badgeClass(quiz.skill_id)">{{
           quiz.skill_description
-        }}</span> - {{ quiz.description }}
+        }}</span> - {{ quiz.description }} <b v-if="currentQuiz == quiz.quiz_id || quiz.latestAttempt">- In progress</b>
 
       </a>
     </div>
@@ -48,6 +48,8 @@ export default {
       );
       this.quizzes = this.originalQuizzes;
       console.log(this.quizzes, "similar quiz");
+
+      debugger
 
       this.isLoading = false;
     });
