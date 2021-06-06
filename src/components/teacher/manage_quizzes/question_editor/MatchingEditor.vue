@@ -7,6 +7,7 @@
         id="question"
         rows="3"
         v-model="question"
+        placeholder="Enter your question..."
       ></textarea>
     </div>
   </div>
@@ -63,7 +64,7 @@ export default {
   },
   emits: ["handleSave"],
   props: ["mode"],
-  inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal", "setStatusMessages"],
   data() {
     return {
       leftItems: [],
@@ -110,6 +111,8 @@ export default {
       rightItem.item = item.item;
     },
     save() {
+      
+
       this.$emit("handleSave", {
         typeId: 3,
         items: { leftItems: this.leftItems, rightItems: this.rightItems },

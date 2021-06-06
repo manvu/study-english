@@ -1,7 +1,8 @@
 <template>
   <div class="form-group">
     <label class="control-label" for="paragraph-title">Paragraph Title</label>
-    <input type="text" class="form-control" v-model="paragraphTitle" />
+    <input type="text" class="form-control" v-model="paragraphTitle" 
+    placeholder="Enter paragraph title..." />
   </div>
   <div class="form-group">
     <div class="label-button-group">
@@ -9,7 +10,7 @@
       <button @click="createGap" :disabled="mode === 'edit'"  class="mb-3 btn btn-primary"> Create Gap </button>
     </div>
     <div class="">
-      <textarea name="question" id="question" rows="10" :disabled="mode === 'edit'"  v-model="question" ></textarea>
+      <textarea name="question" id="question" rows="10" :disabled="mode === 'edit'"  v-model="question" placeholder="Enter your gap filling question..." ></textarea>
     </div>
   </div>
   <div class="form-group">
@@ -37,7 +38,7 @@ import GapFillingChoiceItem from "./question_editor_item/GapFillingChoiceItem";
 export default {
   emits: ["handleSave"],
   props: ["mode"],
-  inject: ["openQuestionEditorModal", "closeQuestionEditorModal"],
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal", "setStatusMessages"],
   components: { GapFillingChoiceItem },
   watch: {},
   data() {

@@ -9,9 +9,9 @@
           </div>
 
           <div class="modal-body">
-                      <div v-if="errorMessage" class="alert alert-danger mt-3">
-            {{ errorMessage }}
-          </div>
+            <div v-if="errorMessage" class="alert alert-danger mt-3">
+              {{ errorMessage }}
+            </div>
             <div class="question-editor-form">
               <div class="form-group">
                 <label class="control-label" for="type">Type</label>
@@ -44,6 +44,7 @@
                     id="instruction"
                     rows="3"
                     placeholder="Choose the most suitable option to fill in the blank"
+                    @change="instructionHasChanged = true"
                     v-model="question.instruction"
                   ></textarea>
                 </div>
@@ -92,27 +93,37 @@ import MatchingEditor from "./question_editor/MatchingEditor.vue";
 import MultipleChoiceEditor from "./question_editor/MultipleChoiceEditor";
 
 export default {
-  inject: ["openQuestionEditorModal", "closeQuestionEditorModal", "setStatusMessages"],
+  inject: [
+    "openQuestionEditorModal",
+    "closeQuestionEditorModal",
+    "setStatusMessages",
+  ],
   computed: {
     questionTypeId() {
-      return this.question.type_id
-    }
+      return this.question.type_id;
+    },
   },
   props: ["mode", "quizId"],
   components: { MultipleChoiceEditor, GapFillingEditor, MatchingEditor },
   watch: {
     questionTypeId() {
-      this.errorMessage = ""
-    }
+      this.errorMessage = "";
+
+      if (this.instructionHasChanged === false) {
+        this.setDefaultInstruction();
+      }
+    },
   },
   data() {
     return {
       question: {
         type_id: 1,
         isActive: true,
-        instruction: "Think of <b>one</b> word only which can be used appropriately in <b>all three sentences</b>.",
-        quizId: 0
+        instruction:
+          "",
+        quizId: 0,
       },
+      instructionHasChanged: false,
       allQuestionTypes: [],
       errorMessage: "",
     };
@@ -120,10 +131,14 @@ export default {
   created() {
     if (this.mode === "edit") {
       this.question = this.$store.getters["teacherStore/getEditQuestion"];
-      this.question.instruction = this.question.instruction.replaceAll("<br>", '\n').replaceAll(`''`, `'`)
+      this.question.instruction = this.question.instruction
+        .replaceAll("<br>", "\n")
+        .replaceAll(`''`, `'`);
+      this.instructionHasChanged = true;
     } else {
-      const quiz = this.$store.getters["teacherStore/getEditQuiz"]
-      this.question.quizId = quiz.quiz_id
+      const quiz = this.$store.getters["teacherStore/getEditQuiz"];
+      this.question.quizId = quiz.quiz_id;
+      this.setDefaultInstruction()
     }
 
     this.allQuestionTypes = this.$store.getters[
@@ -133,39 +148,53 @@ export default {
     console.log(this.question);
   },
   methods: {
+    setDefaultInstruction() {
+      if (this.question.type_id === 1) {
+        this.question.instruction = "Select the correct answer(s).";
+      } else if (this.question.type_id === 2) {
+        this.question.instruction = "Complete the text with one word that best fits into each gap.";
+      } else if (this.question.type_id === 3) {
+        this.question.instruction = "Complete the question by selecting an appropriate option for each text on the left column.";
+      }
+    },
     save(otherProps) {
       if (this.mode === "create") {
-        
         this.$store
           .dispatch("teacherStore/createQuestion", {
             ...otherProps,
-            instruction: this.question.instruction.replaceAll("\n", '<br>').replaceAll("'", "''"),
+            instruction: this.question.instruction
+              .replaceAll("\n", "<br>")
+              .replaceAll("'", "''"),
             isActive: this.question.isActive,
             quizId: this.question.quizId,
           })
           .then((response) => {
             if (response === "OK") {
               this.closeQuestionEditorModal();
-              this.setStatusMessages('', "A new question has been added.")
+              this.setStatusMessages("", "A new question has been added.");
             } else {
-              this.errorMessage = response
+              this.errorMessage = response;
             }
           });
       } else if (this.mode === "edit") {
-        
         this.$store
           .dispatch("teacherStore/updateQuestion", {
             ...otherProps,
             questionId: this.question.question_id,
-            instruction: this.question.instruction.replaceAll("\n", '<br>').replaceAll("'", "''"),
+            instruction: this.question.instruction
+              .replaceAll("\n", "<br>")
+              .replaceAll("'", "''"),
             isActive: this.question.isActive,
           })
           .then((response) => {
-                        if (response === "OK") {
+            if (response === "OK") {
               this.closeQuestionEditorModal();
-              this.setStatusMessages('', `Question ${this.question.question_id} has been updated.`)
+              this.setStatusMessages(
+                "",
+                `Question ${this.question.question_id} has been updated.`
+              );
             } else {
-              this.errorMessage = response
+              this.errorMessage = response;
             }
           });
       }
@@ -195,7 +224,6 @@ export default {
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
-  
 }
 
 .modal-container {
@@ -212,11 +240,10 @@ export default {
   background: #6356ca;
 }
 
-
 .modal-body {
   overflow-y: auto;
   background: #111;
-    padding-left: 30px;
+  padding-left: 30px;
   padding-right: 30px;
 }
 

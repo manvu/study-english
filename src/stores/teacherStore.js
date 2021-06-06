@@ -70,7 +70,6 @@ const teacherStore = {
     },
     updateQuestion(state, payload) {
       const question = state.editQuiz.questions.find(q => q.question_id === payload.questionId)
-      question.question_id = payload.question_id
       question.type_id = payload.typeId
       question.items = payload.items
       question.question = payload.question

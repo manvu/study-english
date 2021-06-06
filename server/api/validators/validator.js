@@ -60,7 +60,8 @@ module.exports = {
     return true;
   },
   validateQuizId: function(quizId) {
-    if (!quizId || quizId < 0) {
+    const regExp = /^\d+$/g;
+    if (!quizId || regExp.test(regExp) || quizId < 0) {
       return false
     }
 

@@ -18,6 +18,7 @@ async function createInstruction(instruction) {
   if (!createInstruction.error) {
     return sendSuccess(201, createInstruction.response);
   } else {
+    console.log(createInstruction.error)
     return sendFailure(STRINGS.CANNOT_CREATE_INSTRUCTION);
   }
 }
@@ -28,6 +29,7 @@ async function getInstruction(instruction) {
   if (!findInstruction.error && findInstruction.response.length === 1) {
     return sendSuccess(findInstruction.response[0]);
   } else {
+    console.log(findInstruction.error)
     return sendFailure(STRINGS.CANNOT_LOAD_INSTRUCTION);
   }
 }
@@ -45,6 +47,7 @@ async function updateQuestionContent(
     if (!content.error) {
       return sendSuccess(201);
     } else {
+      console.log(content.error)
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   } else if (typeId === 2) {
@@ -53,6 +56,7 @@ async function updateQuestionContent(
     if (!content.error) {
       return sendSuccess(201);
     } else {
+      console.log(content.error)
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   } else if (typeId === 3) {
@@ -67,8 +71,12 @@ async function updateQuestionContent(
       if (!insertItems.error) {
         return sendSuccess(201);
       } else {
+        console.log(insertItems.error)
         return sendFailure(STRINGS.ERROR_OCCURRED);
       }
+    } else {
+      console.log(content.error)
+      return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   }
 }
@@ -80,6 +88,7 @@ async function getQuestionContent(id, typeId, questionData) {
     if (!content.error) {
       return sendSuccess({ ...questionData, items: content.response });
     } else {
+      console.log(content.error)
       return sendFailure(STRINGS.CANNOT_LOAD_QUESTION);
     }
   } else if (typeId === 2) {
@@ -88,6 +97,7 @@ async function getQuestionContent(id, typeId, questionData) {
     if (!content.error) {
       return sendSuccess({ ...questionData, items: content.response });
     } else {
+      console.log(content.error)
       return sendFailure(STRINGS.CANNOT_LOAD_QUESTION);
     }
   } else {
@@ -113,6 +123,7 @@ async function getQuestionContent(id, typeId, questionData) {
 
       return sendSuccess({ items: { leftItems, rightItems }, ...questionData });
     } else {
+      console.log(content.error)
       return sendFailure(STRINGS.CANNOT_LOAD_QUESTION);
     }
   }
@@ -120,21 +131,27 @@ async function getQuestionContent(id, typeId, questionData) {
 
 module.exports = {
   resetRatings: async (quizId) => {
-    const questions = await RatingModel.deleteAll(quizId);
+    const deleteAllRatings = await RatingModel.deleteAll(quizId);
 
-    if (!questions.error) {
-      return sendSuccess(questions.response);
+    if (!deleteAllRatings.error) {
+      return sendSuccess(deleteAllRatings.response);
     } else {
+      console.log(deleteAllRatings.error)
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
 
   getQuizForEdit: async (quizId) => {
+    if (!validator.validateQuizId(quizId)) {
+      return sendFailure(STRINGS.INVALID_QUIZ_ID);
+    }
+
     const questions = await QuestionModel.findManyByQuizIdForEdit(quizId);
 
     if (!questions.error) {
       return sendSuccess(questions.response);
     } else {
+      console.log(questions.error)
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
@@ -153,6 +170,7 @@ module.exports = {
         isActive: questionData.is_active == 1 ? true : false,
       });
     } else {
+      console.log(question.error)
       return sendFailure(STRINGS.CANNOT_LOAD_QUESTION);
     }
   },
@@ -185,18 +203,12 @@ module.exports = {
     if (!deleteQuiz.error) {
       return sendSuccess(202);
     } else {
+      console.log(deleteQuiz.error)
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
   updateQuestion: async (data) => {
-    const {
-      questionId,
-      instruction,
-      isActive,
-      typeId,
-      items,
-      correctAnswers,
-    } = data;
+    const { questionId, instruction, isActive, typeId, items, correctAnswers } = data;
 
     if (!validator.validateQuestionId(questionId)) {
       return sendFailure(STRINGS.INVALID_QUESTION_ID);
@@ -209,7 +221,13 @@ module.exports = {
 
       if (instructionId === 0) {
         const findInstruction = await getInstruction(instruction);
-        instructionId = findInstruction.response.instruction_id;
+
+        if (!findInstruction.error) {
+          instructionId = findInstruction.response.instruction_id;
+        } else {
+          console.log(deleteQuiz.error)
+          return sendFailure(STRINGS.CANNOT_CREATE_INSTRUCTION);
+        }
       }
 
       if (instructionId > 0) {
@@ -228,14 +246,20 @@ module.exports = {
           1
         );
 
-        if (!question.error) {
+        if (!question.error && !questionsContent.error) {
           return sendSuccess(202);
         } else {
+          console.log(question.error)
+          console.log(questionsContent.error)
           return sendFailure(STRINGS.ERROR_OCCURRED);
         }
+      } else {
+        console.log(create.error)
+        return sendFailure(STRINGS.CANNOT_CREATE_INSTRUCTION);
       }
     } else {
-      return sendFailure(STRINGS.ERROR_OCCURRED);
+      console.log(create.error)
+      return sendFailure(STRINGS.CANNOT_CREATE_INSTRUCTION);
     }
   },
   deleteQuestion: async (questionId) => {
@@ -248,6 +272,7 @@ module.exports = {
     if (!deleteQuestion.error) {
       return sendSuccess(202);
     } else {
+      console.log(deleteQuestion.error)
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },

@@ -46,20 +46,21 @@ export default {
           this.showQuizEditor = true;
         }
       } else if (data.mode === "edit") {
+        if (data.action === "close") {
+          this.showQuizEditor = false;
+          return;
+        }
         this.$store
           .dispatch("teacherStore/getQuizForEdit", { quizId: data.quizId })
           .then((response) => {
             this.mode = "edit";
-            if (data.action === "close") {
-              this.showQuizEditor = false;
-            } else {
-              var container = document.querySelector("#quiz-editor-form");
 
-              if (container) {
-                container.scrollIntoView();
-              }
-              this.showQuizEditor = true;
+            var container = document.querySelector("#quiz-editor-form");
+
+            if (container) {
+              container.scrollIntoView();
             }
+            this.showQuizEditor = true;
           });
       } else if (data.mode === "delete") {
         if (

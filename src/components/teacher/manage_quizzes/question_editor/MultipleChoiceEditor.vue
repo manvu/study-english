@@ -7,6 +7,7 @@
         id="question"
         rows="3"
         v-model="question"
+        placeholder="Enter your multiple choice question..."
       ></textarea>
     </div>
   </div>
@@ -42,6 +43,7 @@
 <script>
 import MultipleChoiceItem from "./question_editor_item/MultipleChoiceItem";
 export default {
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal", "setStatusMessages"],
   components: { MultipleChoiceItem },
   emits: ["handleSave"],
   props: ["mode"],
@@ -50,7 +52,7 @@ export default {
       items: [],
       currentAlphabeticCharacter: "@",
       currentChoiceId: 0,
-      question: "Test question",
+      question: "",
     };
   },
   methods: {
@@ -77,6 +79,7 @@ export default {
       choiceItem.is_correct_choice = item.is_correct_choice === true ? 1 : 0;
     },
     save() {
+      debugger
       this.$emit("handleSave", { typeId: 1, items: this.items, question: this.question.replaceAll("\n", '<br>').replaceAll("'", "''"), });
     },
   },
