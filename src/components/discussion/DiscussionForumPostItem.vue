@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card mb-4">
-        <div class="card-header">
+        <div class="card-header p-3">
           <div class="media flex-wrap w-100 align-items-center">
             <img
               :src="`https://learningenglishapp-assets.s3-us-west-1.amazonaws.com/avatars/${p.avatarUrl}`"
@@ -11,9 +11,7 @@
             />
             <div class="media-body ml-3">
               <a href="javascript:void(0)" data-abc="true">{{ p.full_name }}</a>
-              <div class="small">
-                {{ displayedPostPostedAt }} ago
-              </div>
+              <div class="small">{{ displayedPostPostedAt }} ago</div>
             </div>
             <div class="small ml-3">
               <div>
@@ -34,16 +32,35 @@
         >
           <div class="px-4 pt-3"></div>
           <div class="px-4 pt-3">
-            <button type="button" class="btn btn-primary">
+            <button type="button" class="btn btn-primary" @click="reply">
               <i class="ion ion-md-create"></i>&nbsp; Reply
             </button>
-            <button @click="deletePost" v-if="isTeacher" type="button" class="btn btn-danger">
+            <button
+              @click="showDialogModal = true"
+              v-if="isTeacher"
+              type="button"
+              class="btn btn-danger ml-2"
+            >
               <i class="ion ion-md-create"></i>&nbsp; Delete
             </button>
           </div>
         </div>
       </div>
     </div>
+
+    <dialog-modal v-if="showDialogModal">
+    <template #header>Deleting this post by {{ p.full_name }}</template>
+    <template #body><div v-if="unansweredCount > 0">Are you sure to proceed with this action?</div>
+    </template>
+    <template #footer>
+      <button class="btn btn-danger" @click="deletePost(); showDialogModal = false; " >
+        Delete
+      </button> 
+      <button class="btn btn-secondary" @click="showDialogModal = false">
+        Cancel
+      </button>
+    </template>
+    </dialog-modal>
   </div>
 </template>
 
@@ -53,9 +70,16 @@ import {
   timeSince,
   convertISOToReadableFormat,
 } from "../common/helper";
+import DialogModal from "../common/DialogModal"
 
 export default {
+  components: {DialogModal},
   props: ["p"],
+  data() {
+    return {
+      showDialogModal: false
+    }
+  },
   computed: {
     displayedMemberSince() {
       if (this.p.member_since) {
@@ -69,8 +93,8 @@ export default {
     isTeacher() {
       return this.$store.getters["authStore/isTeacher"];
     },
-        publicPath() {
-      return process.env.BASE_URL
+    publicPath() {
+      return process.env.BASE_URL;
     },
   },
   created() {
@@ -80,12 +104,15 @@ export default {
   },
   methods: {
     deletePost() {
-      
       this.$store
         .dispatch("forumStore/deletePost", { post_id: this.p.post_id })
-        .then((response) => {
-
-        });
+        .then((response) => {});
+    },
+    reply() {
+      var container = document.querySelector("#post-reply")
+      if (container) {
+        container.scrollIntoView();
+      }
     },
   },
 };
@@ -148,7 +175,7 @@ export default {
 }
 
 a {
-  color: #e91e63;
+  color: #59ed3b;
   text-decoration: none !important;
   background-color: transparent;
 }

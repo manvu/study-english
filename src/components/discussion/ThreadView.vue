@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card mb-4">
-          <div class="card-header">
+          <div class="card-header p-3">
             <div class="media flex-wrap w-100 align-items-center">
               <img
               :src="`https://learningenglishapp-assets.s3-us-west-1.amazonaws.com/avatars/${thread.avatarUrl}`"
@@ -31,14 +31,14 @@
               </div>
             </div>
           </div>
-          <div class="card-header thread-subject">{{ thread.subject }}</div>
+          <div class="card-header thread-subject pt-3 pb-3">{{ thread.subject }}</div>
           <div class="card-body" v-html="thread.content"></div>
           <div
             class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3"
           >
             <div class="px-4 pt-3"></div>
             <div class="px-4 pt-3">
-              <button type="button" class="btn btn-primary">
+              <button type="button" class="btn btn-primary" @click="reply">
                 <i class="ion ion-md-create"></i>&nbsp; Reply
               </button>
             </div>
@@ -107,6 +107,20 @@
   </div>
 
   <post-reply :threadId="thread.thread_id"></post-reply>
+
+  <dialog-modal v-if="showDialogModal">
+    <template #header>Wait a second...</template>
+    <template #body><div v-if="unansweredCount > 0"> You have <span class="unanswered-count"> {{ unansweredCount }} questions unanswered</span>. Are you sure to submit your quiz anyway?</div>
+    <div v-else>Are you sure to submit your quiz?</div></template>
+    <template #footer>
+      <button class="btn btn-primary" @click="submit(); showDialogModal = false; " >
+        Save
+      </button> 
+      <button class="btn btn-secondary" @click="showDialogModal = false">
+        Close
+      </button>
+    </template>
+    </dialog-modal>
 </template>
 
 <script>
@@ -118,6 +132,7 @@ import {
   convertISOToReadableFormat,
 } from "../common/helper";
 import { paginator } from "../common/helper";
+import DialogModal from "../common/DialogModal"
 
 export default {
   components: { PostReply, DiscussionForumPostItem },
@@ -133,6 +148,7 @@ export default {
         nextPage: null,
         prevPage: null,
       },
+      showDialogModal: false
     };
   },
   computed: {
@@ -170,6 +186,12 @@ export default {
       });
   },
   methods: {
+    reply() {
+      var container = document.querySelector("#post-reply")
+      if (container) {
+        container.scrollIntoView();
+      }
+    },
     paginate(currentPage, pagesPerPage) {
       const paginated = paginator(
         this.thread.posts,
@@ -270,7 +292,6 @@ export default {
   padding-top: 0;
   padding-bottom: 0;
   padding-right: 0.625rem;
-  height: 3.5rem;
   text-transform: uppercase;
   background-color: #6356ca;
   color: #eee;
@@ -308,7 +329,7 @@ export default {
 }
 
 a {
-  color: #e91e63;
+  color: #59ed3b;
   text-decoration: none !important;
   background-color: transparent;
 }

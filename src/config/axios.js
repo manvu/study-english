@@ -1,5 +1,6 @@
 import axios from "axios";
 
+axios.defaults.timeout = 5000
 axios.defaults.baseURL = process.env.VUE_APP_SERVER_ENDPOINT;
 axios.defaults.headers.common["Authorization"] = !!localStorage.getItem("token")
   ? `Bearer ${localStorage.getItem("token")}`

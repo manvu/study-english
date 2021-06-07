@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-50 card-body">
+  <div id="post-reply" class="container mt-50 card-body">
     <div class="row">
       <div class="col-md-6"></div>
     </div>
@@ -20,7 +20,7 @@
         <button @click="cancel" type="button" class="btn btn-dark">
           <i class="ion ion-md-create"></i>&nbsp; Cancel
         </button>
-        <button @click="submit" type="button" class="btn btn-primary">
+        <button @click="submit" type="button" class="btn btn-primary ml-3">
           <i class="ion ion-md-create"></i>&nbsp; Submit
         </button>
       </div>
@@ -37,7 +37,9 @@ export default {
     };
   },
   methods: {
-    cancel() {},
+    cancel() {
+      this.content = "";
+    },
     submit() {
       const threadId = this.threadId
       const content = this.content.replaceAll("\n", '<br>').replaceAll("'", "''")
