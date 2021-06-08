@@ -35,7 +35,7 @@ class Database {
       return new Promise((resolve) =>
         this.pool.getConnection((err, conn) => {
           if (err) {
-            resolve({ error: err, response: response });
+            resolve({ error: err, response: null });
           } else {
             this.pool.query(query, function(err, response, fields) {
               conn.release()
