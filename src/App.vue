@@ -12,8 +12,6 @@
 import TheNavigation from "./components/nav/TheNavigation.vue";
 import TheFooter from "./components/footer/TheFooter";
 
-// Tried to put this port number in .env file for recommended security tweaks
-
 export default {
   components: {
     TheNavigation,
@@ -27,8 +25,6 @@ export default {
       },
     },
   },
-  created: function () {},
-  methods: {},
 };
 </script>
 
@@ -40,11 +36,6 @@ export default {
 html {
   font-family: sans-serif;
   scroll-behavior: smooth;
-}
-
-input,
-select,
-textarea {
 }
 
 body {

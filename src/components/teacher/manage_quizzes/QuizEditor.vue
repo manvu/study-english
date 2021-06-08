@@ -156,10 +156,10 @@ export default {
     return {
       quiz: {
         quizId: " New ",
-        courseName: "CAE",
+        courseName: "CPE",
         isActive: true,
         timeAllowed: 30,
-        description: "Test",
+        description: "CPE Practice Test ",
         questions: [],
         skillId: 1,
       },

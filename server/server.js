@@ -1,9 +1,7 @@
 // StAuth10065: I, Man Vu, 000801665 certify that this material is my original work. No other person's work has been used without due acknowledgement. I have not made my work available to anyone else.
 
-
 const express = require("express");
 const app = express();
-const { corsOptions } = require("./config/init");
 const { server_port } = require("./config/index");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -25,16 +23,27 @@ const statisticsRoutes = require("./api/routes/statistics");
 const postsRoutes = require("./api/routes/posts");
 const questionsRoutes = require("./api/routes/questions");
 
+/**
+ * Set CORS policy in development environment to prevent CORS blocking
+ */
 if (process.env.NODE_ENV === "development") {
-  app.use(cors(corsOptions));
+  app.use(cors({
+    origin: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    preflightContinue: false,
+    optionsSuccessStatus: 204
+  }));
 }
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 if (process.env.NODE_ENV === "production") {
+  // Allowing refreshing current page without errors in production
   app.use(history());
   app.use(express.static(path.join(__dirname, "../dist")));
+
+  // Redirecting to https protocol when user is landing on http protocol
   app.use((req, res, next) => {
     if (req.header('x-forwarded-proto') !== 'https')
       res.redirect(`https://${req.header('host')}${req.url}`)
@@ -56,7 +65,7 @@ app.use("/api/posts", postsRoutes);
 app.use("/api/questions", questionsRoutes);
 
 if (process.env.NODE_ENV === "production") {
-  // set port, listen for requests
+  // In production, port number is automatically assigned by the hosting provider 
   app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is running on port ${process.env.PORT}.`);
   });

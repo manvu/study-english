@@ -98,7 +98,7 @@ class QuestionModel {
   async saveOne({ typeId, questionId, instructionId, isActive, paragraphTitle, question}) {
     if (typeId == 2) {
       return await this.db.executeQuery(` UPDATE question
-      SET instruction_id = ${instructionId}, is_active = ${isActive}, paragraph_title = ${paragraphTitle}
+      SET instruction_id = ${instructionId}, is_active = ${isActive}, paragraph_title = '${paragraphTitle}'
       WHERE question_id = ${questionId};`)
     } else {
       return await this.db.executeQuery(` UPDATE question

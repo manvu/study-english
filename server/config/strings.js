@@ -1,3 +1,6 @@
+/**
+ * This stores a list of messages that are sent to user, which is purposed to prevent hardcoding and is advantageous for internationalization in future
+ */
 const STRINGS = {
     EMAIL_AND_PASSWORD_CANNOT_BE_BLANK: "Email and password cannot be blank.",
     AUTHENTICATION_FAILED: "Authentication failed.",

@@ -1,9 +1,11 @@
 const path = require("path");
 const dotenv = require("dotenv").config({
-  path: path.resolve(__dirname, "../..", `.env.${process.env.NODE_ENV}`),
-  debug: true,
+  path: path.resolve(__dirname, "../..", `.env.${process.env.NODE_ENV}`)
 });
 
+/**
+ * Mapping environment variables to local variables that can be used throughout the app
+ */
 const envFile = {
   vue_app_server_endpoint: process.env.VUE_APP_SERVER_ENDPOINT,
   server_port: process.env.SERVER_PORT,

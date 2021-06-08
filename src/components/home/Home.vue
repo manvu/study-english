@@ -7,7 +7,7 @@
         id="sort-by"
         class="form-control"
         v-model="filterEntity.sortBy"
-        @change="sort"
+        @change="filterAndSort"
       >
         <option class="dropdown-item" href="#" value="rating">Rating</option>
         <option class="dropdown-item" href="#" value="quiz-number">
@@ -25,7 +25,7 @@
         id="sort-by"
         class="form-control"
         v-model="filterEntity.sortOrder"
-        @change="sort"
+        @change="filterAndSort"
       >
         <option class="dropdown-item" href="#" value="asc">Ascending</option>
         <option class="dropdown-item" href="#" value="desc">Descending</option>
@@ -38,7 +38,7 @@
         id="sort-by"
         class="form-control"
         v-model="filterEntity.ratings"
-        @change="filter"
+        @change="filterAndSort"
       >
         <option class="dropdown-item" href="#" value="0">All ratings</option>
         <option class="dropdown-item" href="#" value="4.5">
@@ -63,7 +63,7 @@
         name="only-favorites"
         value="only-favorites"
         v-model="filterEntity.onlyFavorites"
-        @change="filter"
+        @change="filterAndSort"
       />
     </div>
   </div>
@@ -216,6 +216,8 @@ export default {
       this.pagination.currentPage = paginated.page;
       this.pagination.prevPage = paginated.pre_page;
       this.pagination.nextPage = paginated.next_page;
+
+      // this.filterAndSort()
     },
     sort() {
       const reverse = this.filterEntity.sortOrder === "asc" ? 1 : -1;
@@ -252,11 +254,11 @@ export default {
 
         this.quizzes = this.originalQuizzes;
       }
-      this.paginate();
     },
     filterAndSort() {
       this.filter();
       this.sort();
+      this.paginate();
     },
   },
 };

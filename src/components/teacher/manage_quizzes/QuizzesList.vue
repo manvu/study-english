@@ -329,17 +329,23 @@ export default {
     sort(sortBy) {
       this.filterEntity.sortBy = sortBy;
       if (sortBy === "Quiz Id") {
-        this.quizzes = this.quizzes.sort((a, b) => a.quiz_id - b.quiz_id);
+        this.quizzes = this.originalQuizzes.sort((a, b) => a.quiz_id - b.quiz_id);
       } else if (sortBy === "Course Name") {
         
-        this.quizzes = this.quizzes.sort((a, b) => a.course_name.localeCompare( b.course_name));
+        this.quizzes = this.originalQuizzes.sort((a, b) => a.course_name.localeCompare( b.course_name));
       } else if (sortBy === "Skill Name") {
-        this.quizzes = this.quizzes.sort((a, b) => a.skill_description.localeCompare( b.skill_description)); 
+        this.quizzes = this.originalQuizzes.sort((a, b) => a.skill_description.localeCompare( b.skill_description)); 
       } else if (sortBy === "Attempts") {
-        this.quizzes = this.quizzes.sort((a, b) => a.attempts - b.attempts);
+        this.quizzes = this.originalQuizzes.sort((a, b) => a.attempts - b.attempts);
       } else {
-        this.quizzes = this.quizzes.sort((a, b) => a.average_rating - b.average_rating);
+        this.quizzes = this.originalQuizzes.sort((a, b) => a.average_rating - b.average_rating);
       }
+
+      this.paginate();
+    },
+    filterAndSort() {
+      this.sort();
+      this.paginate();
     },
   },
 };

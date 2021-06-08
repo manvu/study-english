@@ -155,7 +155,13 @@ module.exports = {
             }
           );
 
-          const avatarUrl = !mime.error && mime.response.length === 1 ? mime.response[0].image_url : getAvatarUrl(firstName)
+
+          let avatarUrl
+          if (!mime.error && mime.response.length === 1 && mime.response[0].image_url !== "default-profile-picture.png") {
+            avatarUrl = mime.response[0].image_url
+          } else {
+            avatarUrl = getAvatarUrl(firstName)
+          }
 
           return sendSuccess({ firstName, lastName, isTeacher, email, token, avatarUrl });
         } else {

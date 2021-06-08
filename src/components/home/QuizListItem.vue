@@ -49,7 +49,7 @@
             class="btn"
             disabled
           >
-            Start
+            Coming Soon
           </button>
         </div>
       </div>

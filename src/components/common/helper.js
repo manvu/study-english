@@ -53,12 +53,12 @@ const characters = {
   10: "L",
 };
 
-function paginator(items, current_page, per_page_items) {
-	let page = current_page || 1,
-	per_page = per_page_items || 10,
+function paginator(items, currentPage, itemsPerPage) {
+	let page = currentPage || 1,
+	per_page = itemsPerPage || 10,
 	offset = (page - 1) * per_page,
 
-	paginatedItems = items.slice(offset).slice(0, per_page_items),
+	paginatedItems = items.slice(offset).slice(0, itemsPerPage),
 	total_pages = Math.ceil(items.length / per_page);
 
 	return {

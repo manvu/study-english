@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const authController = require("../controllers/auth");
 
+/**
+ * This route handles user registration
+ */
 router.post("/register", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -24,6 +27,9 @@ router.post("/register", async (req, res) => {
   res.status(200).json(registerEntity);
 });
 
+/**
+ * This route handles user login
+ */
 router.post("/login", async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -36,6 +42,9 @@ router.post("/login", async (req, res) => {
   res.status(200).json(loginEntity);
 });
 
+/**
+ * This route handles sending reset passwords
+ */
 router.post("/forgotpassword", async (req, res) => {
   const email = req.body.email;
 

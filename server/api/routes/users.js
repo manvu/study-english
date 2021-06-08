@@ -82,7 +82,7 @@ router.put("/", authMiddleware, async (req, res) => {
   res.json(user);
 });
 
-router.post( "/avatar", [authMiddleware, upload.single("avatar")],
+router.post("/avatar", [authMiddleware, upload.single("avatar")],
   async (req, res) => {
     aws.config.update({
       accessKeyId: aws_access_key,
@@ -90,11 +90,8 @@ router.post( "/avatar", [authMiddleware, upload.single("avatar")],
     });
 
     const userId = req.user.id;
-
     const dimension = { width: 256, height: 256 };
-
     const image = await resizeImg(fs.readFileSync(req.file.path), dimension);
-
     const savedFilename = `${req.file.filename}-${dimension.width}x${dimension.height}.png`;
 
     fs.writeFileSync(`${req.file.destination}/${savedFilename}`, image);
