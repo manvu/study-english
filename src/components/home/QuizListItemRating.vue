@@ -27,7 +27,7 @@
         <span class="vote-number ml-1">({{ ratingCount }})</span>
       </span>
     </div>
-    <div v-if="voted">Thanks for voting!</div>
+    <div v-if="ratingGiven">Thanks for voting! You gave {{ratingGiven}} stars</div>
   </div>
 </template>
 
@@ -38,7 +38,7 @@ import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import { faStarHalfAlt } from "@fortawesome/free-solid-svg-icons";
 
 export default {
-  props: ["rating", "id", "ratingCount"],
+  props: ["rating", "id", "ratingCount", "ratingGiven"],
   components: { FontAwesomeIcon },
   data() {
     return {

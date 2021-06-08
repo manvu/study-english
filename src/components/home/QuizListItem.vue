@@ -8,6 +8,7 @@
           :id="quiz_id"
           :rating="averageRating"
           :ratingCount="ratingCount"
+          :ratingGiven="ratingGiven"
         ></quiz-list-item-rating>
       </div>
       <div class="course-info" :class="favoriteQuiz">
@@ -77,6 +78,7 @@ export default {
     "ratingCount",
     "latestAttempt",
     "favorite",
+    "ratingGiven"
   ],
   components: { QuizListItemRating, QuizListItemFavorite },
   computed: {
