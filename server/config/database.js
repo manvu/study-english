@@ -16,7 +16,7 @@ class Database {
    */
   constructor() {
     this.pool = mysql.createPool({
-      connectionLimit: 10,
+      connectionLimit: 30,
       host: mysql_host,
       user: mysql_user,
       port: mysql_port,
