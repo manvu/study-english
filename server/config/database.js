@@ -38,7 +38,6 @@ class Database {
             resolve({ error: err, response: null });
           } else {
             this.pool.query(query, function(err, response, fields) {
-              conn.release()
               conn.end()
               resolve({ error: err, response: response });
             });
