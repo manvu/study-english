@@ -1,8 +1,14 @@
 const mysql = require("mysql");
-const { mysql_host, mysql_user, mysql_port, mysql_password, database_name } = require("./index");
+const {
+  mysql_host,
+  mysql_user,
+  mysql_port,
+  mysql_password,
+  database_name,
+} = require("./index");
 
 /**
- * Database configuration that is consumed by models 
+ * Database configuration that is consumed by models
  */
 class Database {
   /**
@@ -17,17 +23,25 @@ class Database {
       password: mysql_password,
       database: database_name,
       debug: false,
-      multipleStatements: true 
+      multipleStatements: true,
     });
 
     /**
      * Function executes query passed in by model
+     * Release a connection when a query is done
      * @param {*} query Query passed in by model
      */
     this.executeQuery = async function(query) {
       return new Promise((resolve) =>
-        this.pool.query(query, function(err, response, fields) {
-          resolve({ error: err, response: response });
+        this.pool.getConnection((err, conn) => {
+          if (err) {
+            resolve({ error: err, response: response });
+          } else {
+            this.pool.query(query, function(err, response, fields) {
+              conn.release()
+              resolve({ error: err, response: response });
+            });
+          }
         })
       );
     };
