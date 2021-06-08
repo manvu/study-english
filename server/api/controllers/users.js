@@ -1,19 +1,14 @@
 const { sendSuccess, sendFailure } = require("../../config/res");
 const STRINGS = require("../../config/strings");
 const UserModel = new (require("../../models/user"))();
-const MimeTypeModel = new (require("../../models/mime_type"))();
-const {
-  validateEmail,
-  validatePassword,
-  validateProfilePictureId,
-  validateGender,
-  validateRoleId,
-  validateName,
-  validateNewPassword,
+const { validateEmail, validateGender, validateName, validateNewPassword,
 } = require("../validators/validator");
-const { hashPasswordAsync, checkPassword } = require("../../misc/helper");
+const { hashPasswordAsync } = require("../../misc/helper");
 
 module.exports = {
+  /**
+   * Function loads all users regardless of students or teachers
+   */
   getUsers: async () => {
     const users = await UserModel.findAll();
 
@@ -24,6 +19,9 @@ module.exports = {
     }
   },
 
+  /**
+   * Function loads only all students 
+   */
   getAllStudents: async () => {
     const students = await UserModel.findAllStudents();
 
@@ -34,18 +32,26 @@ module.exports = {
     }
   },
 
+  /**
+   * Function loads a user's information
+   */
   getUser: async (id) => {
-    let user = await UserModel.findOneById(id);
+    const user = await UserModel.findOneById(id);
 
     if (!user.error) {
       if (user.response.length === 0) {
-        return sendFailure(STRINGS.ERROR_OCCURRED);
+        return sendFailure(STRINGS.NO_SUCH_USER_EXISTS);
       } else {
         return sendSuccess(user.response[0]);
       }
+    } else {
+      console.log(user.error)
+      return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
-
+  /**
+   * Function that updates user's information except password
+   */
   updateUser: async (data) => {
     const { id, email, firstName, lastName, gender } = data;
 
@@ -76,13 +82,17 @@ module.exports = {
       if (userInfo.response.affectedRows === 1) {
         return sendSuccess(200);
       } else {
+        console.log(userInfo.error)
         return sendFailure(STRINGS.CANNOT_SAVE_USER_INFO);
       }
     } else {
+      console.log(userInfo.error)
       return sendFailure(STRINGS.CANNOT_SAVE_USER_INFO);
     }
   },
-
+  /**
+   * Function updates user password
+   */
   updatePassword: async (data) => {
     const { id, currentPassword, newPassword } = data;
 
@@ -99,6 +109,7 @@ module.exports = {
       if (userInfo.response.affectedRows === 1) {
         return sendSuccess(200);
       } else {
+        console.log(userInfo.error)
         return sendFailure(STRINGS.CANNOT_SAVE_NEW_PASSWORD);
       }
     } else {

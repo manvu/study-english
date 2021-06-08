@@ -13,26 +13,40 @@ const CorrectAnswerModel = new (require("../../models/correct_answer"))();
 const validator = require("../validators/validator");
 const { cleanObject } = require("../../misc/helper");
 
+/**
+ * Async function marks a quiz as a user's favorite 
+ * @param {*} param0 favorite's info
+ */
 async function markFavorite({ quizId, userId }) {
   const favorite = await FavoriteModel.addOne(quizId, userId);
 
   if (!favorite.error && favorite.response.affectedRows === 1) {
     return sendSuccess(null);
   } else {
+    console.log(favorite.error)
     return sendFailure(STRINGS.ERROR_OCCURRED);
   }
 }
 
+/**
+ * Async function unmarks a quiz as a user's favorite 
+ * @param {*} param0 favorite's info
+ */
 async function unmarkFavorite({ quizId, userId }) {
-  let favorite = await FavoriteModel.deleteOne(quizId, userId);
+  const unfavorite = await FavoriteModel.deleteOne(quizId, userId);
 
-  if (!favorite.error && favorite.response.affectedRows === 1) {
+  if (!unfavorite.error && unfavorite.response.affectedRows === 1) {
     return sendSuccess(200, null);
   } else {
+    console.log(unfavorite.error)
     return sendFailure(STRINGS.ERROR_OCCURRED);
   }
 }
 
+/**
+ * Async function creates a new attempt based on provided information
+ * @param {*} data All information about a new attempt
+ */
 async function createNewAttempt(data) {
   const { hasCompleted, latestAttempt, questionIds, quizId, userId } = data;
 
@@ -48,17 +62,28 @@ async function createNewAttempt(data) {
   };
 
   const newAttempt = await AttemptModel.addOne(newAttemptData);
-
   const addPlaceHolder = await AttemptModel.addManyPlaceholders(newAttemptData);
 
   if (!newAttempt.error && !addPlaceHolder.error) {
     const newAttempt = await UserAnswerModel.findAll(newAttemptData);
-    return newAttempt.response;
+    
+    if (!newAttempt.error) {
+      return newAttempt.response;
+    } else {
+      console.log(newAttempt.error)  
+      return false
+    }
   } else {
+    console.log(newAttempt.error)
+    console.log(addPlaceHolder.error)
     return false;
   }
 }
 
+/**
+ * Function loads incomplete attempt 
+ * @param {*} data 
+ */
 async function loadIncompleteAttempt(data) {
   const { latestAttempt, quizId, userId } = data;
 
@@ -70,21 +95,25 @@ async function loadIncompleteAttempt(data) {
   const questionsContent = await QuestionModel.loadContent(quizId);
   const userAnswerQuestions = await UserAnswerModel.findAll(userAnswerData);
 
-  if (
-    !questionsContent.error &&
-    !questions.error &&
-    !userAnswerQuestions.error
-  ) {
+  if ( !questionsContent.error && !questions.error && !userAnswerQuestions.error) {
     return {
       questions: questions.response,
       questionsContent: questionsContent.response,
       userAnswerQuestions: questionsContent.response,
     };
   } else {
+    console.log(questionsContent.error)
+    console.log(questions.error)
+    console.log(userAnswerQuestions.error)
+
     return false;
   }
 }
 
+/**
+ * Convert question content to object for mapping
+ * @param {*} object 
+ */
 function convertToObject(object) {
   let resObject = {};
 
@@ -99,133 +128,179 @@ function convertToObject(object) {
   return resObject;
 }
 
+/**
+ * Function loads the current quiz info
+ * @param {*} quizId 
+ * @param {*} userId 
+ * @param {*} attemptId 
+ */
 async function getCurrentQuizInfo (quizId, userId, attemptId) {
   const thisAttempt = await AttemptModel.findIncompleteAttempt(quizId, userId, attemptId)
 
   if (!thisAttempt.error) {
     const { time_allowed, start_time } = thisAttempt.response[0]
-    const currentMoment = moment();
+
     const expiredTime = moment(start_time).add(time_allowed, "minutes");
-    const difference = currentMoment.diff(expiredTime, "seconds"); 
+    const difference = moment().diff(expiredTime, "seconds"); 
 
     return sendSuccess({
       time_left: difference,
       expired_time: expiredTime,
     })
   } else {
+    console.log(thisAttempt.error)
     return sendFailure(STRINGS.ERROR_OCCURRED)
   }
 }
 
 module.exports = {
+  /**
+   * This function loads an incomplete attempt by student or creates a new attempt if they has completed their latest attempt or has never taken the quiz
+   */
   startQuiz: async (quizId, userId) => {
     let latestAttempt = await AttemptModel.findLatest(quizId, userId);
-    const hasCompleted =
-      latestAttempt.response.length === 1 &&
-      latestAttempt.response[0].end_time !== null;
-    const hasNeverTaken = latestAttempt.response.length === 0;
 
     if (!latestAttempt.error) {
-      if (hasCompleted || hasNeverTaken) {
-        // User has never attempted this quiz or has completed the quiz
-        const questions = await QuestionModel.findManyByQuizId({ quizId });
-        let questionsContent = await QuestionModel.loadContent(quizId);
+      const hasCompleted =
+        latestAttempt.response.length === 1 &&
+        latestAttempt.response[0].end_time !== null;
+      const hasNeverTaken = latestAttempt.response.length === 0;
 
-        const questionIds = questions.response.map((q) => q.question_id);
+      if (!latestAttempt.error) {
+        if (hasCompleted || hasNeverTaken) {
+          // User has never attempted this quiz or has completed the quiz
+          const questions = await QuestionModel.findManyByQuizId({ quizId });
+          let questionsContent = await QuestionModel.loadContent(quizId);
 
-        if (questionIds.length > 0) {
-          const data = {
-            hasCompleted,
-            latestAttempt,
-            questionIds,
-            quizId,
-            userId,
-          };
-          const newAttempt = await createNewAttempt(data);
+          if (!questions.error && !questionsContent.error) {
+            const questionIds = questions.response.map((q) => q.question_id);
 
-          const questions = await QuestionModel.findManyByQuizId({
-            quizId,
-            userId,
-            attemptId: newAttempt[0].attempt_id,
-          });
+            if (questionIds.length > 0) {
+              const data = {
+                hasCompleted,
+                latestAttempt,
+                questionIds,
+                quizId,
+                userId,
+              };
+              const newAttempt = await createNewAttempt(data);
 
-          const quizInfo = await getCurrentQuizInfo(quizId, userId, newAttempt[0].attempt_id)
+              if (!newAttempt.error) {
+                const questions = await QuestionModel.findManyByQuizId({
+                  quizId,
+                  userId,
+                  attemptId: newAttempt[0].attempt_id,
+                });
+  
+                const quizInfo = await getCurrentQuizInfo(quizId, userId, newAttempt[0].attempt_id)
+  
+                if (!questions.error && !quizInfo.error) {
+                  const response = {questions: questions.response, ...quizInfo.response}
 
-          const response = !quizInfo.error ? {questions: questions.response, ...quizInfo.response} : {questions: questions.response}
+                  questionsContent = helper.cleanObject(questionsContent.response);
+  
+                  let resObject = {};
+    
+                  for (const currentItem of questionsContent) {
+                    if (resObject[currentItem.question_id]) {
+                      resObject[currentItem.question_id].push(currentItem);
+                    } else {
+                      resObject[currentItem.question_id] = [currentItem];
+                    }
+                  }
+    
+                  for (const question of response.questions) {
+                    question.content = resObject[question.question_id];
+                  }
+    
+                  return sendSuccess(response);
+                } else {
+                  console.log(questions.error)
+                  console.log(quizInfo.error)  
+                  return sendFailure(STRINGS.CANNOT_LOAD_QUESTIONS)
+                }
+              } else {
+                console.log(newAttempt.error)
+                return sendFailure(STRINGS.CANNOT_CREATE_NEW_ATTEMPT)
+              }
 
 
-          questionsContent = helper.cleanObject(questionsContent.response);
-
-          let resObject = {};
-
-          for (const currentItem of questionsContent) {
-            if (resObject[currentItem.question_id]) {
-              resObject[currentItem.question_id].push(currentItem);
             } else {
-              resObject[currentItem.question_id] = [currentItem];
+              return sendFailure(STRINGS.ERROR_OCCURRED);
             }
+          } else {
+            console.log(questions.error)
+            console.log(questionsContent.error)
+            return sendFailure(STRINGS.CANNOT_LOAD_QUESTIONS);
           }
-
-          for (const question of response.questions) {
-            question.content = resObject[question.question_id];
-          }
-
-          return sendSuccess(response);
+          
         } else {
-          return sendFailure(STRINGS.ERROR_OCCURRED);
-        }
-      } else {
-        // User has attempted this quiz but has not completed it
-        const data = { latestAttempt, quizId, userId };
-        const incompleteAttempt = await loadIncompleteAttempt(data);
+          // User has attempted this quiz but has not completed it
+          const data = { latestAttempt, quizId, userId };
+          const incompleteAttempt = await loadIncompleteAttempt(data);
 
-        if (incompleteAttempt === false) {
-          return sendFailure(STRINGS.ERROR_OCCURRED);
-        } else {
-          const { questions, userAnswerQuestions } = incompleteAttempt;
+          if (incompleteAttempt === false) {
+            return sendFailure(STRINGS.ERROR_OCCURRED);
+          } else {
+            const { questions, userAnswerQuestions } = incompleteAttempt;
 
-          const quizInfo = await getCurrentQuizInfo(quizId, userId, latestAttempt.response[0].attempt_id)
+            const quizInfo = await getCurrentQuizInfo(quizId, userId, latestAttempt.response[0].attempt_id)
 
-          const response = !quizInfo.error ? {questions, ...quizInfo.response} : {questions}
+            if (!quizInfo.error) {
+              const response =  {questions, ...quizInfo.response} 
 
-          const questionsContent = helper.cleanObject(
-            incompleteAttempt.questionsContent
-          );
-
-          let resObject = {};
-
-          for (const currentItem of questionsContent) {
-            if (resObject[currentItem.question_id]) {
-              resObject[currentItem.question_id].push(currentItem);
+              const questionsContent = helper.cleanObject(
+                incompleteAttempt.questionsContent
+              );
+  
+              let resObject = {};
+  
+              for (const currentItem of questionsContent) {
+                if (resObject[currentItem.question_id]) {
+                  resObject[currentItem.question_id].push(currentItem);
+                } else {
+                  resObject[currentItem.question_id] = [currentItem];
+                }
+              }
+  
+              for (const question of response.questions) {
+                if (question.type_id === 1) {
+                  const content = resObject[question.question_id];
+                  question.number_of_selections = content.filter(choice => choice.is_correct_choice).length
+                  content.forEach(choice => delete choice.is_correct_choice)
+                }
+                question.content = resObject[question.question_id];
+              }
+  
+              return sendSuccess(response);
             } else {
-              resObject[currentItem.question_id] = [currentItem];
+              console.log(quizInfo.error)
+              return sendFailure(STRINGS.CANNOT_LOAD_QUESTIONS);
             }
           }
-
-          for (const question of response.questions) {
-            if (question.type_id === 1) {
-              const content = resObject[question.question_id];
-              question.number_of_selections = content.filter(choice => choice.is_correct_choice).length
-              content.forEach(choice => delete choice.is_correct_choice)
-            }
-            question.content = resObject[question.question_id];
-          }
-
-          return sendSuccess(response);
         }
       }
+    } else {
+      console.log(latestAttempt.error)
+      return sendFailure(STRINGS.CANNOT_LOAD_LATEST_ATTEMPT)
     }
   },
-
+  /**
+   * Loads a quiz by Id
+   */
   getQuiz: async (id) => {
-    let quiz = await QuizModel.findDetailed(id);
+    const quiz = await QuizModel.findDetailed(id);
 
     if (!quiz.error) {
       return sendSuccess(quiz.response[0]);
     } else {
+      console.log(quiz.error)
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
+  /**
+   * Function creates a quiz from teacher page
+   */
   createQuiz: async (data) => {
     const {} = data;
 
@@ -248,15 +323,11 @@ module.exports = {
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
+  /**
+   * Function updates a quiz from teacher page
+   */
   updateQuiz: async (data) => {
-    const {
-      quizId,
-      courseName,
-      description,
-      timeAllowed,
-      skillId,
-      userId,
-    } = data;
+    const { quizId } = data;
 
     if (!validator.validateIsActiveQuestion(data.isActive)) {
       return sendFailure(STRINGS.INVALID_IS_ACTIVE_VALUE);
@@ -272,9 +343,13 @@ module.exports = {
     if (!quiz.error && quiz.response.affectedRows === 1) {
       return module.exports.getQuiz(quizId);
     } else {
-      return sendFailure(STRINGS.ERROR_OCCURRED);
+      console.log(quiz.error)
+      return sendFailure(STRINGS.CANNOT_UPDATE_QUIZ);
     }
   },
+  /**
+   * Function toggles a quiz's favorite based on provided information
+   */
   toggleFavorite: async (data) => {
     const { quizId, userId } = data;
     let status = await FavoriteModel.findOne(quizId, userId);
@@ -286,9 +361,13 @@ module.exports = {
         return unmarkFavorite(data);
       }
     } else {
-      return sendFailure(STRINGS.ERROR_OCCURRED);
+      console.log(status.error)
+      return sendFailure(STRINGS.CANNOT_UPDATE_FAVORITE);
     }
   },
+  /**
+   * Function sets rating for quiz by a user
+   */
   setRating: async ({ quizId, userId, ratingGiven }) => {
     // Validation
     if (!quizId || !userId || quizId < 1 || userId < 0) {
@@ -313,6 +392,7 @@ module.exports = {
 
           return sendSuccess(200, null);
         } else {
+          console.log(rating.error)
           return sendFailure(STRINGS.CANNOT_UPDATE_RATING);
         }
       } else {
@@ -326,13 +406,18 @@ module.exports = {
 
           return module.exports.getQuiz(quizId);
         } else {
+          console.log(rating.error)
           return sendFailure(STRINGS.CANNOT_UPDATE_RATING);
         }
       }
     } else {
-      return sendFailure(STRINGS.ERROR_OCCURRED);
+      console.log(ratingFound.error)
+      return sendFailure(STRINGS.CANNOT_UPDATE_RATING);
     }
   },
+  /**
+   * Function handles submissions from students either by clicking on submit or timeout 
+   */
   submitAndMark: async (data) => {
     const { quizId, userId, attemptId } = data;
 
@@ -481,6 +566,8 @@ module.exports = {
         return sendFailure(STRINGS.ERROR_OCCURRED)
       }
     } else {
+      console.log(getCorrectAnswers.error)
+      console.log(userAnswerQuestions.error)
       return sendFailure(STRINGS.ERROR_OCCURRED)
     }
   },

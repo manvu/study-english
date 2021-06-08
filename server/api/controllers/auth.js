@@ -20,6 +20,9 @@ const passwordGenerator = require("generate-password");
 const moment = require("moment");
 
 module.exports = {
+  /**
+   * Function that registers a user
+   */
   register: async (data) => {
     const {
       email,
@@ -97,13 +100,17 @@ module.exports = {
           avatarUrl
         });
       } else {
+        console.log(user.error)
         return sendFailure(400, STRINGS.REGISTERING_USER_FAILED);
       }
     } else {
+      console.log(user.error)
       return sendFailure(STRINGS.CANNOT_REGISTER_USER_WITH_EMAIL(email));
     }
   },
-
+  /**
+   * Function that authenticates a user 
+   */
   login: async (data) => {
     const { email, password } = data;
 
@@ -169,6 +176,7 @@ module.exports = {
         }
       }
     } else {
+      console.log(validatedUser.error)
       return sendFailure(401, STRINGS.AUTHENTICATION_FAILED);
     }
   },
@@ -208,6 +216,7 @@ module.exports = {
             if (statusCode === "250") {
               return sendSuccess(200, null);
             } else {
+              console.log(sendResult.response)
               return sendFailure(STRINGS.PLEASE_CHECK_YOUR_EMAIL);
             }
           } else {

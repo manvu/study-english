@@ -12,6 +12,10 @@ const MModel = new (require("../../models/matching_option"))();
 const InstructionModel = new (require("../../models/instruction"))();
 const validator = require("../validators/validator");
 
+/**
+ * A helper function that creates instruction
+ * @param {*} instruction 
+ */
 async function createInstruction(instruction) {
   let createInstruction = await InstructionModel.addOne(instruction);
 
@@ -23,6 +27,10 @@ async function createInstruction(instruction) {
   }
 }
 
+/**
+ * A helper function that loads instruction
+ * @param {*} instruction 
+ */
 async function getInstruction(instruction) {
   const findInstruction = await InstructionModel.findOne(instruction);
 
@@ -34,6 +42,14 @@ async function getInstruction(instruction) {
   }
 }
 
+/**
+ * Function that updates the content of a question
+ * @param {*} questionId 
+ * @param {*} typeId 
+ * @param {*} items 
+ * @param {*} correctAnswers 
+ * @param {*} shuffleAnswers 
+ */
 async function updateQuestionContent(
   questionId,
   typeId,
@@ -81,6 +97,12 @@ async function updateQuestionContent(
   }
 }
 
+/**
+ * Function that loads question content
+ * @param {*} id 
+ * @param {*} typeId 
+ * @param {*} questionData 
+ */
 async function getQuestionContent(id, typeId, questionData) {
   if (typeId === 1) {
     let content = await MCModel.findMany(id);
@@ -130,6 +152,9 @@ async function getQuestionContent(id, typeId, questionData) {
 }
 
 module.exports = {
+  /**
+   * Function that reset all ratings given by student for a quiz
+   */
   resetRatings: async (quizId) => {
     const deleteAllRatings = await RatingModel.deleteAll(quizId);
 
@@ -140,7 +165,9 @@ module.exports = {
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
-
+  /**
+   * Function that loads a quiz for edit
+   */
   getQuizForEdit: async (quizId) => {
     if (!validator.validateQuizId(quizId)) {
       return sendFailure(STRINGS.INVALID_QUIZ_ID);
@@ -155,6 +182,9 @@ module.exports = {
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
+  /**
+   * Function that loads a question for editing 
+   */
   getQuestionForEdit: async (id) => {
     if (!id || id < 1) {
       return sendFailure(STRINGS.INVALID_QUESTION_ID);
@@ -174,6 +204,9 @@ module.exports = {
       return sendFailure(STRINGS.CANNOT_LOAD_QUESTION);
     }
   },
+  /**
+   * Function that loads information for teacher page
+   */
   getTeacherHome: async () => {
     let homeSummary = await QuizModel.findAllForTeacher();
     let allSkills = await SkillModel.findAll();
@@ -193,6 +226,9 @@ module.exports = {
       return sendFailure(STRINGS.ERROR_LOADING_TEACHER_PAGE);
     }
   },
+  /**
+   * Function that deletes a quiz
+   */
   deleteQuiz: async (quizId) => {
     if (!validator.validateQuizId(quizId)) {
       return sendFailure(STRINGS.INVALID_QUIZ_ID);
@@ -207,6 +243,9 @@ module.exports = {
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
+  /**
+   * Function that updates a question
+   */
   updateQuestion: async (data) => {
     const { questionId, instruction, isActive, typeId, items, correctAnswers } = data;
 

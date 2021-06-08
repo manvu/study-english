@@ -4,6 +4,9 @@ const postsController = require("../controllers/posts");
 const authMiddleware = require("../middlewares/auth");
 const authTeacherMiddleware = require("../middlewares/authTeacher");
 
+/**
+ * Route that creates a post
+ */
 router.post("/", authMiddleware, async (req, res) => {
   let threadId = req.body.threadId;
   let content = req.body.content;
@@ -14,6 +17,9 @@ router.post("/", authMiddleware, async (req, res) => {
   res.json(post);
 });
 
+/**
+ * Route that loads a post
+ */
 router.get("/:id", async (req, res) => {
   let postId = req.params.id;
 
@@ -22,6 +28,9 @@ router.get("/:id", async (req, res) => {
   res.json(post);
 });
 
+/**
+ * Route that deletes a post
+ */
 router.delete("/:id", authTeacherMiddleware, async (req, res) => {
   let postId = req.params.id;
 

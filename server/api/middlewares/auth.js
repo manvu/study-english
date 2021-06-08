@@ -6,6 +6,12 @@ const guestAccessibleURLs = {
   "/api/discussion": true
 } 
 
+/**
+ * Middleware for checking JWT authentication token which is used for protected routes
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 module.exports = (req, res, next) => {
   const authHeader = req.headers.authorization;
   
@@ -25,8 +31,6 @@ module.exports = (req, res, next) => {
       }
 
       req.user = { id: decoded.id, isTeacher: decoded.isTeacher };
-
-      // req.user = { id: 28, isTeacher: true };
       next();
     });
   } else {

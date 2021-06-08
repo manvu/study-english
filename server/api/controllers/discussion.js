@@ -7,6 +7,9 @@ const QuizModel = new (require("../../models/quiz"))();
 const UserModel = new (require("../../models/user"))();
 
 module.exports = {
+  /**
+   * Function loads data for discussion forum, including all threads, all skills, all quizzes and all users.
+   */
   getDataForDiscussion: async () => {
     const threads = await ThreadModel.findAll();
     const allSkills = await SkillModel.findAll();
@@ -27,9 +30,17 @@ module.exports = {
         users: users.response,
       });
     } else {
+      console.log(threads.error)
+      console.log(allSkills.error)
+      console.log(quizzes.error)
+      console.log(users.error)
+
       return sendFailure(STRINGS.CANNOT_LOAD_THREADS);
     }
   },
+  /**
+   * Function finds threads based on provided predicates from user
+   */
   findThreads: async (data) => {
     const { subject, quizId, userId, dateCreated } = data;
 
@@ -38,6 +49,7 @@ module.exports = {
     if (!threads.error) {
       return sendSuccess(threads.response);
     } else {
+      console.log(threads.error)
       return sendFailure(STRINGS.CANNOT_LOAD_THREADS);
     }
   },

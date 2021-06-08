@@ -16,18 +16,6 @@ const aws = require("aws-sdk");
 
 aws.config.region = "us-west-1";
 
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, "temp/");
-  },
-  filename: function(req, file, cb) {
-    const userId = req.user.id;
-    file.savedFilename =
-      userId + "_" + Date.now() + path.extname(file.originalname);
-    cb(null, file.savedFilename);
-  },
-});
-
 const dest = path.join(__dirname, "./temp");
 const upload = multer({
   limits: { fieldSize: 1 * 1024 * 1024 },
@@ -38,12 +26,18 @@ const upload = multer({
 const authMiddleware = require("../middlewares/auth");
 const authTeacherMiddleware = require("../middlewares/authTeacher");
 
+/**
+ * Route that loads all users
+ */
 router.get("/all", authTeacherMiddleware, async (req, res) => {
   const allUsers = await usersController.getUsers();
 
   res.json(allUsers);
 });
 
+/**
+ * Route that handles password change request
+ */
 router.post("/changepassword", authMiddleware, async (req, res) => {
   const data = {
     id: req.user.id,
@@ -56,18 +50,27 @@ router.post("/changepassword", authMiddleware, async (req, res) => {
   res.json(passwordChange);
 });
 
+/**
+ * Route that loads all students
+ */
 router.get("/students/all", authTeacherMiddleware, async (req, res) => {
   const allUsers = await usersController.getAllStudents();
 
   res.json(allUsers);
 });
 
+/**
+ * Route that loads user info
+ */
 router.get("/", authMiddleware, async (req, res) => {
   const user = await usersController.getUser(req.user.id);
 
   res.json(user);
 });
 
+/**
+ * Route that handles updating user info
+ */
 router.put("/", authMiddleware, async (req, res) => {
   const data = {
     id: req.user.id,
@@ -82,6 +85,9 @@ router.put("/", authMiddleware, async (req, res) => {
   res.json(user);
 });
 
+/**
+ * Route that handles uploading avatar to AWS Bucket and then calling controllers to update user's avatar
+ */
 router.post("/avatar", [authMiddleware, upload.single("avatar")],
   async (req, res) => {
     aws.config.update({

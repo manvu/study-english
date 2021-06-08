@@ -4,6 +4,9 @@ const HomeModel = new (require("../../models/home"))();
 const AttemptModel = new (require("../../models/attempt"))();
 
 module.exports = {
+  /**
+   * Function that loads that for home page
+   */
   getHomeSummary: async (userId) => {
     let homeSummary;
     let incompleteAttempts;

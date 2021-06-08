@@ -1,6 +1,12 @@
 const jwt = require("jsonwebtoken");
 const { jwt_secret_key } = require("../../config/index");
 
+/**
+ * Middleware for checking JWT authentication token and if user requesting is a teacher which is used for only teacher routes
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 module.exports = (req, res, next) => {
   const authHeader = req.headers.authorization;
 

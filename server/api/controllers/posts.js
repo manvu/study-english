@@ -3,6 +3,9 @@ const { sendSuccess, sendFailure } = require("../../config/res");
 const PostModel = new (require("../../models/post"))();
 
 module.exports = {
+  /**
+   * Function creates post based on provided information
+   */
   createPost: async (data) => {
     const { threadId, content, userId } = data;
 
@@ -24,13 +27,17 @@ module.exports = {
       if (!posts.error) {
         return sendSuccess(201, { ...posts.response[0], post_id: newPost.response.insertId});
       } else {
-        return sendFailure(STRINGS.CANNOT_CREATE_POST);
+        console.log(posts.error)
+        return sendFailure(STRINGS.CANNOT_LOAD_POST);
       }
     } else {
+      console.log(newPost.error)
       return sendFailure(STRINGS.CANNOT_CREATE_POST);
     }
   },
-
+  /**
+   * Function that loads a post by id
+   */
   getPost: async (id) => {
     if (!id || id < 1) {
       return sendFailure(STRINGS.INVALID_POST_ID)
@@ -41,20 +48,24 @@ module.exports = {
     if (!post.error) {
       return sendSuccess(post.response);
     } else {
+      console.log(post.error)
       return sendFailure(STRINGS.CANNOT_LOAD_POST);
     }
   },
-
+  /**
+   * Function that deletes a post by id
+   */
   deletePost: async (id) => {
     if (!id || id < 1) {
       return sendFailure(STRINGS.INVALID_POST_ID)
     }
 
-    let post = await PostModel.deleteOne(id);
+    const post = await PostModel.deleteOne(id);
 
     if (!post.error) {
       return sendSuccess(post.response);
     } else {
+      console.log(post.error)
       return sendFailure(STRINGS.CANNOT_LOAD_POST);
     }
   },

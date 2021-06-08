@@ -4,6 +4,10 @@ const StatisticsModel = new (require("../../models/statistics"))();
 const UserModel = new (require("../../models/user"))();
 const moment = require("moment");
 
+/**
+ * Function maps statistics by a quiz from provided attempts information
+ * @param {*} attempts attempts information
+ */
 function getBoardStatisticsSummaryByQuiz(attempts) {
   return {
     min: attempts.reduce((p, c) => (p.grade < c.grade ? p : c)),
@@ -34,6 +38,12 @@ function getBoardStatisticsSummaryByQuiz(attempts) {
   };
 }
 
+/**
+ * 
+ * @param {*} statsType 
+ * @param {*} stats 
+ * @param {*} additionalInfo 
+ */
 function createPieChart(statsType, stats, additionalInfo) {
   let data = [];
   let labels = [];

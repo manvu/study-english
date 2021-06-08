@@ -4,6 +4,9 @@ const UserModel = new (require("../../models/user"))();
 const MimeTypeModel = new (require("../../models/mime_type"))();
 
 module.exports = {
+  /**
+   * Function that inserts an avatar into mime_type table after it has been uploaded to AWS Bucket
+   */
   insertAvatar: async (data) => {
     const image_alt = `${data.userId}''s profile picture`;
 
@@ -22,10 +25,13 @@ module.exports = {
         return sendFailure(STRINGS.ERROR_OCCURRED);
       }
     } else {
+      console.log(newAvatar.error)
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },
-
+  /**
+   * Function that updates avatar of a user
+   */
   updateAvatar: async (data) => {
     const updateAvatar = await UserModel.saveProfilePicture(data);
 
@@ -36,6 +42,7 @@ module.exports = {
         return sendFailure(STRINGS.ERROR_OCCURRED);
       }
     } else {
+      console.log(updateAvatar.error)
       return sendFailure(STRINGS.ERROR_OCCURRED);
     }
   },

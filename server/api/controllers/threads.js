@@ -5,6 +5,9 @@ const ThreadModel = new(require("../../models/thread"))();
 const PostModel = new(require("../../models/post"))();
 
 module.exports = {
+  /**
+   * Function creates a thread from discussion area
+   */
   createThread: async (data) => {
     const { subject, description, selectedRelatedQuizId } = data;
 
@@ -20,17 +23,20 @@ module.exports = {
       return sendFailure(STRINGS.SELECT_RELATED_QUIZ_CANNOT_BE_LEFT_BLANK);
     }
 
-    let newThread = await ThreadModel.addOne(data);
+    const newThread = await ThreadModel.addOne(data);
 
     if (!newThread.error && newThread.response.affectedRows === 1) {
       const newThreadId = newThread.response.insertId;
 
       return sendSuccess(201, { newThreadId });
     } else {
-      return sendFailure(STRINGS.ERROR_OCCURRED);
+      console.log(newThread)
+      return sendFailure(STRINGS.CANNOT_CREATE_THREAD);
     }
   },
-
+  /**
+   * Function that gets a thread and all related posts by id
+   */
   getThread: async (id) => {
     let thread = await ThreadModel.findOne(id);
     let posts = await PostModel.findMany(id);
@@ -45,8 +51,12 @@ module.exports = {
           post.avatarUrl = getAvatarUrl(post.full_name)
         }
       }
-    }
 
-    return sendSuccess({ ...thread.response[0], posts: posts.response });
+      return sendSuccess({ ...thread.response[0], posts: posts.response });
+    } else {
+      console.log(thread.error )
+      console.log(posts.error )
+      return sendFailure(STRINGS.CANNOT_LOAD_THREAD)
+    }
   }
 };
