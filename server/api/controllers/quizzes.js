@@ -310,6 +310,9 @@ module.exports = {
     if (!validator.validateTimeAllowed(data.timeAllowed)) {
       return sendFailure(STRINGS.TIME_ALLOWED_MUST_BE_AT_LEAST_1_MINUTE);
     }
+    if (!validator.validateCourseName(data.courseName)) {
+      return sendFailure(STRINGS.COURSE_NAME_MUST_BE_AT_LEAST_3_CHARACTERS);
+    }
 
     const isActive = data.isActive === true ? 1 : 0;
 
@@ -334,6 +337,9 @@ module.exports = {
     }
     if (!validator.validateTimeAllowed(data.timeAllowed)) {
       return sendFailure(STRINGS.TIME_ALLOWED_MUST_BE_AT_LEAST_1_MINUTE);
+    }
+    if (!validator.validateCourseName(data.courseName)) {
+      return sendFailure(STRINGS.COURSE_NAME_MUST_BE_AT_LEAST_3_CHARACTERS);
     }
 
     const isActive = data.isActive === true ? 1 : 0;

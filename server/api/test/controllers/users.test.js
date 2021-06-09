@@ -28,9 +28,9 @@ describe("UsersController: getUsers", () => {
   });
 
   it(`Should fail to load a user`, async () => {
-    const actual = await usersController.getUser(1000);
+    const actual = await usersController.getUser(10000000);
     expect(actual.statusCode).to.equal(400);
-    expect(actual.error).to.equal(STRINGS.ERROR_OCCURRED);
+    expect(actual.error).to.equal(STRINGS.NO_SUCH_USER_EXISTS);
     expect(actual.response).to.be.null
   });
 });

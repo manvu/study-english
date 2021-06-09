@@ -42,7 +42,7 @@ module.exports = {
     let posts = await PostModel.findMany(id);
 
     if (!thread.error && !posts.error) {
-      if (thread.response[0].avatarUrl === "default-profile-picture.png") {
+      if (thread.response.length > 0 && thread.response[0].avatarUrl === "default-profile-picture.png") {
         thread.response[0].avatarUrl = getAvatarUrl(thread.response[0].full_name)
       }
 

@@ -93,6 +93,11 @@ import MatchingEditor from "./question_editor/MatchingEditor.vue";
 import MultipleChoiceEditor from "./question_editor/MultipleChoiceEditor";
 
 export default {
+  provide() {
+    return {
+      setQuestionStatusMessages: this.setQuestionStatusMessages
+    }
+  },
   inject: [
     "openQuestionEditorModal",
     "closeQuestionEditorModal",
@@ -148,6 +153,10 @@ export default {
     console.log(this.question);
   },
   methods: {
+    setQuestionStatusMessages(errorMessage = "", successMessage = "") {
+      this.errorMessage = errorMessage;
+      this.successMessage = successMessage;
+    },
     setDefaultInstruction() {
       if (this.question.type_id === 1) {
         this.question.instruction = "Select the correct answer(s).";

@@ -19,6 +19,7 @@ const STRINGS = {
     ACCESS_DENIED_MESSAGE: "You do not have the privilege to perform this action.",
     ERROR_OCCURRED: "Error occurred.",
     CANNOT_REGISTER_USER_WITH_EMAIL: (email = "$email") => `Email address is already taken - cannot register user with email ${email}`,
+    COURSE_NAME_MUST_BE_AT_LEAST_3_CHARACTERS: "Course name must be at least 3 characters.",
     THREAD_TITLE_MUST_BE_AT_LEAST_20_CHARACTERS: "Thread title must be at least 20 characters.",
     CONTENT_MUST_BE_AT_LEAST_30_CHARACTERS: "Content must be at least 30 characters.",
     THREAD_DESCRIPTION_CANNOT_BE_LEFT_BLANK: "Thread description cannot be left blank.",

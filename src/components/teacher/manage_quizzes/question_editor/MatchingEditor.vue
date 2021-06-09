@@ -64,7 +64,7 @@ export default {
   },
   emits: ["handleSave"],
   props: ["mode"],
-  inject: ["openQuestionEditorModal", "closeQuestionEditorModal", "setStatusMessages"],
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal", "setQuestionStatusMessages"],
   data() {
     return {
       leftItems: [],
@@ -111,7 +111,10 @@ export default {
       rightItem.item = item.item;
     },
     save() {
-      
+      if (this.leftItems.some(i => i.correct_answer === null)) {
+        this.setQuestionStatusMessages("You must specify correct options for all subquestions.")
+        return
+      }
 
       this.$emit("handleSave", {
         typeId: 3,

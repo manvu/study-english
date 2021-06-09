@@ -129,6 +129,12 @@ module.exports = {
       return false
     } 
 
+    const timeAmount = parseInt(timeAllowed)
+
+    if (timeAmount < 1) {
+      return false
+    }
+
     return true
   },
   validateRatingGiven: function(rating) {
@@ -137,5 +143,15 @@ module.exports = {
     }
 
     return true
+  },
+  validateCourseName: function(courseName) {
+    if (!courseName) {
+      return false;
+    }
+    if (courseName.length < 3) {
+      return false;
+    }
+
+    return true;
   }
 };

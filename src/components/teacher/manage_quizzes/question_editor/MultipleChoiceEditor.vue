@@ -43,7 +43,7 @@
 <script>
 import MultipleChoiceItem from "./question_editor_item/MultipleChoiceItem";
 export default {
-  inject: ["openQuestionEditorModal", "closeQuestionEditorModal", "setStatusMessages"],
+  inject: ["openQuestionEditorModal", "closeQuestionEditorModal", "setQuestionStatusMessages"],
   components: { MultipleChoiceItem },
   emits: ["handleSave"],
   props: ["mode"],
@@ -79,7 +79,11 @@ export default {
       choiceItem.is_correct_choice = item.is_correct_choice === true ? 1 : 0;
     },
     save() {
-      debugger
+      if (this.items.every(i => i.is_correct_choice === 0)) {
+        this.setQuestionStatusMessages("You must specify at least one correct choice.")
+        return
+      }
+
       this.$emit("handleSave", { typeId: 1, items: this.items, question: this.question.replaceAll("\n", '<br>').replaceAll("'", "''"), });
     },
   },
