@@ -167,7 +167,7 @@ export default {
       this.originalQuizzes = this.$store.getters["homeStore/getQuizList"];
       this.quizzes = this.$store.getters["homeStore/getQuizList"];
 
-      this.paginate();
+      this.filterAndSort()
       this.isLoading = false;
     });
   },
