@@ -1,6 +1,7 @@
 const STRINGS = require("../../config/strings");
 const { sendSuccess, sendFailure } = require("../../config/res");
 const PostModel = new (require("../../models/post"))();
+const { getAvatarUrl } = require("../../misc/helper");
 
 module.exports = {
   /**
@@ -25,6 +26,12 @@ module.exports = {
       let posts = await PostModel.findDetailed(newId);
 
       if (!posts.error) {
+        for (const post of posts.response) {
+          if (post.avatarUrl === "default-profile-picture.png") {
+            post.avatarUrl = getAvatarUrl(post.full_name)
+          }
+        }
+
         return sendSuccess(201, { ...posts.response[0], post_id: newPost.response.insertId});
       } else {
         console.log(posts.error)

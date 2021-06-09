@@ -3,7 +3,7 @@
     <div class="cell" data-title="Topic"> 
 
       <span class="subject"><a @click="navigateToThread(t.thread_id)"> {{ displayedSubject }} </a></span><br>
-      {{ displayedThreadContent }}  
+      <span></span>{{ displayedThreadContent }}  
       </div>
     <div class="cell" data-title="Related Quiz Id">Quiz {{ t.quiz_id }}</div>
     <div class="cell" data-title="Users">
@@ -25,7 +25,8 @@ export default {
       return this.truncate(this.t.subject, 50);
     },
     displayedThreadContent() {
-      return this.truncate(this.t.content, 55);
+      const htmlElement = new DOMParser().parseFromString(this.t.content, "text/html")
+      return this.truncate(htmlElement.documentElement.innerText, 55);
     },
     displayedLastActivity() {
       return this.timeSince(new Date(this.t.last_activity));

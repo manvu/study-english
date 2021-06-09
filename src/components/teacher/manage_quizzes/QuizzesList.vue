@@ -215,7 +215,7 @@ export default {
       this.quizzes = this.$store.getters["teacherStore/getQuizList"];
       this.originalQuizzes = this.quizzes;
       this.isLoading = false;
-      this.paginate();
+      this.sort("Quiz Id")
     });
   },
   methods: {

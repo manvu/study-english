@@ -6,6 +6,14 @@ const SkillModel = new (require("../../models/skill"))();
 const QuizModel = new (require("../../models/quiz"))();
 const UserModel = new (require("../../models/user"))();
 
+function assignAvatars(threads) {
+  for (const thread of threads) {
+    if (thread.thread_starter_avatar_url === "default-profile-picture.png") {
+      thread.thread_starter_avatar_url = getAvatarUrl(thread.first_name)
+    }
+  }
+}
+
 module.exports = {
   /**
    * Function loads data for discussion forum, including all threads, all skills, all quizzes and all users.
@@ -17,11 +25,7 @@ module.exports = {
     const users = await UserModel.findAll();
 
     if (!threads.error && !allSkills.error && !quizzes.error && !users.error) {  
-      for (const thread of threads.response) {
-        if (thread.thread_starter_avatar_url === "default-profile-picture.png") {
-          thread.thread_starter_avatar_url = getAvatarUrl(thread.first_name)
-        }
-      }
+      assignAvatars(threads.response)
 
       return sendSuccess({
         threads: threads.response,
@@ -47,6 +51,7 @@ module.exports = {
     const threads = await ThreadModel.findMany(data);
 
     if (!threads.error) {
+      assignAvatars(threads.response)
       return sendSuccess(threads.response);
     } else {
       console.log(threads.error)

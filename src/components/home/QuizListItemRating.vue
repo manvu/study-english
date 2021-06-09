@@ -27,7 +27,8 @@
         <span class="vote-number ml-1">({{ ratingCount }})</span>
       </span>
     </div>
-    <div v-if="ratingGiven">Thanks for voting! You gave {{ratingGiven}} stars</div>
+    <div v-if="voted">Thanks for voting!</div>
+    <div v-if="ratingGiven">You gave {{ratingGiven}} stars</div>
   </div>
 </template>
 

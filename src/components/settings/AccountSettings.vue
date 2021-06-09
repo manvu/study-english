@@ -49,7 +49,7 @@
                       type="file"
                       name="avatar"
                       accept="image/*"
-                      class="account-settings-fileinput"
+                      class="account-settings-avatar"
                       @change="fileChange"
                     />
                   </label>
@@ -59,7 +59,7 @@
                       type="file"
                       name="avatar"
                       accept="image/*"
-                      class="account-settings-fileinput"
+                      class="account-settings-avatar"
                       @change="saveAvatar"
                     />
                   </label>
@@ -168,10 +168,11 @@
     </div>
 
     <div class="text-right mt-3">
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button type="button" class="btn btn-secondary" @click="cancel">Cancel</button>
+      <button type="button" class="btn btn-primary ml-3" @click="save()">
         Save changes</button
-      >&nbsp;
-      <button type="button" class="btn btn-default">Cancel</button>
+      >
+      
     </div>
   </div>
 </template>
@@ -205,8 +206,8 @@ export default {
       return process.env.BASE_URL;
     },
     avatarUrl() {
-      return localStorage.getItem("avatarUrl")
-    }
+      return localStorage.getItem("avatarUrl");
+    },
   },
   data() {
     return {
@@ -255,6 +256,11 @@ export default {
       formData.append("avatar", this.avatar.uploadedFiles[0]);
 
       return formData;
+    },
+    cancel() {
+      this.$router.push({
+        name: "home",
+      });
     },
     save() {
       if (this.currentTab === 1) {
@@ -344,7 +350,6 @@ label.btn {
   margin-bottom: 0;
 }
 
-
 .btn {
   cursor: pointer;
 }
@@ -362,7 +367,7 @@ label.btn {
   overflow: hidden;
 }
 
-.account-settings-fileinput {
+.account-settings-avatar {
   position: absolute;
   visibility: hidden;
   width: 1px;
@@ -372,5 +377,4 @@ label.btn {
 .account-settings-links .list-group-item.active {
   font-weight: bold !important;
 }
-
 </style>

@@ -96,9 +96,9 @@
             <strong> Sort By</strong>: {{ filterEntity.sortBy }}
           </button>
           <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" @click="sort('Latest')" href="#">Latest</a>
-            <a class="dropdown-item" @click="sort('Oldest')" href="#">Oldest</a>
-            <a class="dropdown-item" @click="sort('Most Replies')" href="#"
+            <a class="dropdown-item" @click="filterAndSort('Latest')" href="#">Latest</a>
+            <a class="dropdown-item" @click="filterAndSort('Oldest')" href="#">Oldest</a>
+            <a class="dropdown-item" @click="filterAndSort('Most Replies')" href="#"
               >Most Replies</a
             >
           </div>
@@ -302,37 +302,36 @@ export default {
           "forumStore/getThreads"
         ].filter((thread) => thread.quiz_id === this.filterEntity.quizId);
         this.threads = this.originalThreads;
-
-        this.paginate();
       }
     },
     changeUserId(userId, firstName) {
       this.searchEntity.selectedUser = firstName;
       this.searchEntity.userId = userId;
-      this.filter();
+      this.filterAndSort(this.filterEntity.sortBy);
     },
     changeQuizId(quizId, description) {
       this.filterEntity.selectedQuiz = `${quizId} - ${description}`;
       this.filterEntity.quizId = quizId;
-      this.filter();
+      this.filterAndSort(this.filterEntity.sortBy);
     },
     sort(sortBy) {
       this.filterEntity.sortBy = sortBy;
       if (sortBy === "Latest") {
         this.threads = this.threads.sort(
-          (a, b) =>
-            moment(b.last_activity).format("YYYYMMDD") -
-            moment(a.last_activity).format("YYYYMMDD")
+          (a, b) => moment(b.last_activity) - moment(a.last_activity)
         );
       } else if (sortBy === "Oldest") {
         this.threads = this.threads.sort(
-          (a, b) =>
-            moment(a.last_activity).format("YYYYMMDD") -
-            moment(b.last_activity).format("YYYYMMDD")
+          (a, b) => moment(a.last_activity) - moment(b.last_activity)
         );
       } else {
         this.threads = this.threads.sort((a, b) => b.replies - a.replies);
       }
+    },
+    filterAndSort(sortBy) {
+      this.filter();
+      this.sort(sortBy);
+      this.paginate();
     },
     prevPage() {
       if (this.pagination.prevPage !== null) {

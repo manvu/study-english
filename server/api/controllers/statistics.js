@@ -9,6 +9,10 @@ const moment = require("moment");
  * @param {*} attempts attempts information
  */
 function getBoardStatisticsSummaryByQuiz(attempts) {
+  if (attempts.length === 0) {
+    return false
+  }
+
   return {
     min: attempts.reduce((p, c) => (p.grade < c.grade ? p : c)),
     max: attempts.reduce((p, c) => (p.grade > c.grade ? p : c)),

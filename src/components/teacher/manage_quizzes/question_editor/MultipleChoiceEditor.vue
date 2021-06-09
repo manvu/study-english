@@ -12,7 +12,7 @@
     </div>
   </div>
   <div class="form-group">
-    <label class="control-label" for="active">Choices</label>
+    <label class="control-label" for="active">Choices (Tick checkboxes that are correct answers)</label>
     <div v-if="items.length > 0">
       <multiple-choice-item
         v-for="item in items"

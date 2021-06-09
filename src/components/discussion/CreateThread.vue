@@ -16,7 +16,7 @@
             type="text"
             class="form-control"
             id="title"
-            placeholder="Please add thread subject"
+            placeholder="Thread Subject"
             v-model="subject"
             required
           />
@@ -243,6 +243,7 @@ export default {
   margin-right: 15px;
 }
 .create__label {
+  font-weight: 600;
   display: block;
   margin-bottom: 6px;
 }

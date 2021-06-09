@@ -93,7 +93,7 @@ const router = createRouter({
       component: DiscussionForum,
       meta: {
         title: "Filtered Result | Discussion Forum",
-        requiresAuth: false,
+        requiresAuth: true,
       },
     },
     {
