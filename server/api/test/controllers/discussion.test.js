@@ -31,6 +31,6 @@ describe("DiscussionController: getDataForDiscussion", () => {
     expect(actual.response.threads).to.be.an("array");
     expect(actual.response.users).to.be.an("array");
 
-    expect(actual.response.threads.length).to.be.equal(3);
+    expect(actual.response.threads.length).to.be.greaterThanOrEqual(3)
   });
 });

@@ -92,8 +92,11 @@
         @setStatusMessages="setStatusMessages"
         v-if="quiz.questions.length > 0"
       ></questions-list>
-      <div class="mt-2 mb-2" v-else>
+      <div class="mt-2 mb-2" v-else-if="mode !== 'create' && quiz.questions.length === 0">
         There is no question created for this quiz yet
+      </div>
+      <div v-else>
+        You can create questions only when the quiz has been created.
       </div>
       <button
         :disabled="mode === 'create'"
@@ -156,10 +159,10 @@ export default {
     return {
       quiz: {
         quizId: " New ",
-        courseName: "CPE",
+        courseName: "",
         isActive: true,
         timeAllowed: 30,
-        description: "CPE Practice Test ",
+        description: "",
         questions: [],
         skillId: 1,
       },

@@ -177,6 +177,13 @@ module.exports = {
     const summary = getBoardStatisticsSummaryByQuiz(attempts.response);
 
     if (!attempts.error) {
+      if (attempts.response.length === 0) {
+        return sendSuccess({
+          attempts: false,
+          summary: false
+        })
+      }
+
       return sendSuccess({
         attempts: attempts.response,
         summary: { ...summary, quizId },

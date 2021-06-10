@@ -18,23 +18,51 @@
         class="button-item ml-2"
         :icon="faTrashAlt"
         :style="{ color: 'red'}"
-        @click="deleteQuestion(question.question_id)"
+        @click="
+              modal.showModal = true;
+              modal.handler = deleteQuestion;
+              modal.questionId = question.question_id;
+              modal.header = `Delete question ${question.question_id}`;"
       ></font-awesome-icon>
     </div>
   </div>
+  <dialog-modal v-if="modal.showModal">
+    <template #header>{{ modal.header }}</template>
+    <template #body></template>
+    <template #footer>
+      <button class="btn btn-danger" @click=" modal.handler(modal.quizId); modal.showModal = false; ">
+        Delete
+      </button>
+      <button class="btn btn-secondary" @click="modal.showModal = false">
+        Close
+      </button>
+    </template>
+  </dialog-modal>
 </template>
 
 <script>
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import DialogModal from "./DialogModal"
 
 export default {
   inject: ["openQuestionEditorModal", "closeQuestionEditorModal", "setStatusMessages"],
   props: ["question"],
-  components: { FontAwesomeIcon },
+  components: { FontAwesomeIcon, DialogModal },
+  data() {
+    return {
+      modal: {
+        header: "",
+        handler: "",
+        body: "",
+        showModal: false
+      },
+      
+    }
+  },
   computed: {
-            badgeClass() {
+    badgeClass() {
       const badges = {
         1: "danger",
         2: "primary",
@@ -66,11 +94,11 @@ export default {
     editQuestion: function (questionId) {
       this.openQuestionEditorModal(questionId, "edit");
     },
-    deleteQuestion: function (questionId) {
-      this.$store.dispatch("teacherStore/deleteQuestion", { questionId }).then(response => {
+    deleteQuestion: function () {
+      this.$store.dispatch("teacherStore/deleteQuestion", { questionId: this.modal.questionId }).then(response => {
         
             if (response === "OK") {
-              this.setStatusMessages('', `Question ${questionId} has been deleted`)
+              this.setStatusMessages('', `Question ${this.modal.questionId} has been deleted`)
               
             } else {
               this.setStatusMessages(response)
@@ -137,22 +165,18 @@ tbody td:hover:before {
 
 .row {
   display: table-row;
-  background: #f6f6f6;
+  background: #23334b;
+  color: #eee;
 }
 .row:nth-of-type(odd) {
-  background: #e9e9e9;
+  background: #0d0f13;
+  color: #eee;
 }
 .row.header {
-  font-weight: 900;
   color: #ffffff;
-  background: #ea6153;
+  background: #6356ca;
 }
-.row.green {
-  background: #27ae60;
-}
-.row.blue {
-  background: #2980b9;
-}
+
 @media screen and (max-width: 580px) {
   .row {
     padding: 14px 0 7px;

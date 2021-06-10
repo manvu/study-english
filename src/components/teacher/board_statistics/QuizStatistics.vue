@@ -1,5 +1,5 @@
 <template>
-  <div id="chart-area" class="">
+  <div id="chart-area" v-if="currentStatistics.summary !== false">
     <span class="chart">
       <table id="bar-chart">
         <tr>
@@ -51,6 +51,9 @@
         :series="barChart.series"
       ></apexchart>
     </span>
+  </div>
+  <div v-else>
+    <h1>This quiz has never been taken.</h1>
   </div>
 </template>
 
@@ -167,6 +170,10 @@ export default {
   },
   methods: {
     process() {
+      if (this.statistics.summary === false) {
+        return
+      }
+
       this.barChart.chartOptions.xaxis.categories = Object.keys(
         this.statistics.summary.categories
       );

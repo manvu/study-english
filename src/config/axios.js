@@ -1,10 +1,11 @@
 import axios from "axios";
 
+// Set default timeout for axios requests
 axios.defaults.timeout = 5000
 axios.defaults.baseURL = process.env.VUE_APP_SERVER_ENDPOINT;
-axios.defaults.headers.common["Authorization"] = !!localStorage.getItem("token")
-  ? `Bearer ${localStorage.getItem("token")}`
-  : "";
+
+// Set Bearer JSON web token
+axios.defaults.headers.common["Authorization"] = !!localStorage.getItem("token") ? `Bearer ${localStorage.getItem("token")}` : "";
 axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 // Add a response interceptor

@@ -1,6 +1,16 @@
+/**
+ * Function truncates large texts
+ * @param {*} str 
+ * @param {*} n 
+ */
 function truncate(str, n) {
   return str.length > n ? str.substr(0, n - 1) + "..." : str;
 }
+
+/**
+ * Function that calculates time since 
+ * @param {*} date 
+ */
 function timeSince(date) {
   var seconds = Math.floor((new Date() - date) / 1000);
 
@@ -29,6 +39,10 @@ function timeSince(date) {
   return Math.floor(seconds) + " seconds";
 }
 
+/**
+ * Function that converts a date to a readable format
+ * @param {*} date 
+ */
 function convertISOToReadableFormat(date) {
   const dateTimeFormat = new Intl.DateTimeFormat("en", {
     year: "numeric",
@@ -53,25 +67,35 @@ const characters = {
   10: "L",
 };
 
+/**
+ * Function that paginates an array
+ * @param {*} items 
+ * @param {*} currentPage 
+ * @param {*} itemsPerPage 
+ */
 function paginator(items, currentPage, itemsPerPage) {
-	let page = currentPage || 1,
-	per_page = itemsPerPage || 10,
-	offset = (page - 1) * per_page,
+	const page = currentPage || 1
+	const per_page = itemsPerPage || 10
+	const offset = (page - 1) * per_page
 
-	paginatedItems = items.slice(offset).slice(0, itemsPerPage),
-	total_pages = Math.ceil(items.length / per_page);
+	const paginatedItems = items.slice(offset).slice(0, itemsPerPage)
+	const totalPages = Math.ceil(items.length / per_page);
 
 	return {
 		page: page,
 		per_page: per_page,
 		pre_page: page - 1 ? page - 1 : null,
-		next_page: (total_pages > page) ? page + 1 : null,
+		next_page: (totalPages > page) ? page + 1 : null,
 		total: items.length,
-		total_pages: total_pages,
+		total_pages: totalPages,
 		data: paginatedItems
 	};
 }
 
+/**
+ * Function that gets avatar url
+ * @param {*} url 
+ */
 function avatar(url) {
   return `https://learningenglishapp-assets.s3-us-west-1.amazonaws.com/avatars/${url}`
 }

@@ -104,7 +104,7 @@ module.exports = {
         return sendFailure(400, STRINGS.REGISTERING_USER_FAILED);
       }
     } else {
-      console.log(user.error)
+      // console.log(user.error)
       return sendFailure(STRINGS.CANNOT_REGISTER_USER_WITH_EMAIL(email));
     }
   },

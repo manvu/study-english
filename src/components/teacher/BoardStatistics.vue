@@ -9,7 +9,7 @@
     <div id="filter" class="details-wrapper">
 
       <div class="form-inline">
-        <label>Filter by</label>
+        <label>Query by</label>
         <select
           name="filterBy"
           id="filter-by"

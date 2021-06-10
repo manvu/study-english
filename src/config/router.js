@@ -14,6 +14,7 @@ import TeacherPage from "../components/teacher/TeacherPage";
 import StudentStatistics from "../components/statistics/StudentStatistics";
 import AccountSettings from "../components/settings/AccountSettings";
 
+// This file defines all routes in this application using Vue Router
 const router = createRouter({
   mode: "history",
   history: createWebHistory(),

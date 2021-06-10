@@ -39,7 +39,7 @@ class StatisticsModel {
 
   async findBoardStatisticsByQuizCompleted({userId, dateFrom, dateTo}) {
     return await this.db.executeQuery(`SELECT (SELECT COUNT(*) FROM (SELECT quiz_id FROM quiz  GROUP BY quiz_id) as T) as number_of_quizzes, 
-    (SELECT COUNT(*) FROM (SELECT * FROM user_attempt ua WHERE ua.user_id = ${userId} AND ua.end_time BETWEEN '${dateFrom}' AND '${dateTo}') as Y) as incomplete,
+    (SELECT COUNT(*) FROM (SELECT * FROM user_attempt ua WHERE ua.user_id = ${userId} AND ua.end_time IS NULL) as Y) as incomplete,
     (SELECT COUNT(*) FROM quiz q WHERE q.quiz_id NOT IN (SELECT quiz_id FROM user_attempt ua WHERE ua.user_id = ${userId} AND ua.end_time BETWEEN '${dateFrom}' AND '${dateTo}' GROUP BY quiz_id)) as unattempted`)
   }
 }

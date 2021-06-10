@@ -73,6 +73,7 @@
               modal.showModal = true;
               modal.handler = resetRating;
               modal.quizId = quiz.quiz_id;
+              modal.primaryButton = 'Reset';
               modal.header = `Reset ratings for Quiz ${quiz.quiz_id} - ${quiz.description}`;
             "
             :style="{ color: 'red' }"
@@ -92,7 +93,9 @@
               modal.showModal = true;
               modal.handler = deleteQuiz;
               modal.quizId = quiz.quiz_id;
+              modal.primaryButton = 'Delete';
               modal.header = `Delete Quiz ${quiz.quiz_id} - ${quiz.description}`;
+              
             "
           ></font-awesome-icon>
         </div>
@@ -136,13 +139,13 @@
     <template #body></template>
     <template #footer>
       <button
-        class="btn btn-primary"
+        class="btn btn-danger"
         @click="
           modal.handler(modal.quizId);
           modal.showModal = false;
         "
       >
-        Save
+        {{ modal.primaryButton }}
       </button>
       <button class="btn btn-secondary" @click="modal.showModal = false">
         Close
@@ -186,6 +189,7 @@ export default {
         quizId: null,
         showModal: false,
         handler: null,
+        primaryButton: ""
       },
     };
   },

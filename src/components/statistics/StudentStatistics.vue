@@ -1,27 +1,36 @@
 <template>
-  <div v-if="!isLoading" id="chartArea" class="mt-5">
-    <span v-if="statistics.quizStatistics" class="chart">
-      <apexchart
-        width="500"
-        type="pie"
-        :options="statistics.quizStatistics.chartOptions"
-        :series="statistics.quizStatistics.data"
-      ></apexchart>
-    </span>
-    <h3 v-else>No data about quiz statistics has been found about this user</h3>
+  <div v-if="!isTeacher">
+    <div v-if="!isLoading" id="chartArea" class="mt-5">
+      <span v-if="statistics.quizStatistics" class="chart">
+        <apexchart
+          width="500"
+          type="pie"
+          :options="statistics.quizStatistics.chartOptions"
+          :series="statistics.quizStatistics.data"
+        ></apexchart>
+      </span>
+      <h3 v-else>
+        No data about quiz statistics has been found about this user
+      </h3>
 
-    <span v-if="statistics.answerStatistics" class="chart">
-      <apexchart
-        width="500"
-        type="pie"
-        :options="statistics.answerStatistics.chartOptions"
-        :series="statistics.answerStatistics.data"
-      ></apexchart>
-    </span>
-    <h3 v-else>No data about answer statistics has been found about this user</h3>
-  </div>
-  <div v-else>
-    <h1>Loading data...</h1>
+      <span v-if="statistics.answerStatistics" class="chart">
+        <apexchart
+          width="500"
+          type="pie"
+          :options="statistics.answerStatistics.chartOptions"
+          :series="statistics.answerStatistics.data"
+        ></apexchart>
+      </span>
+      <h3 v-else>
+        No data about answer statistics has been found about this user
+      </h3>
+    </div>
+    <div v-else>
+      <h1>Loading data...</h1>
+    </div>
+  </div> 
+  <div class="container" v-else>
+    <h1 >Teacher is not allowed to access statistics.</h1>
   </div>
 </template>
 
@@ -32,15 +41,20 @@ export default {
   components: {
     apexchart: VueApexCharts,
   },
+  computed: {
+    isTeacher() {
+      return this.$store.getters["authStore/isTeacher"];
+    },
+  },
   data() {
     return {
-      isLoading: false
-    }
+      isLoading: false,
+    };
   },
   created() {
-    this.isLoading = true
+    this.isLoading = true;
     this.$store.dispatch("statisticsStore/loadData").then(() => {
-      this.isLoading = false
+      this.isLoading = false;
       this.statistics = this.$store.getters["statisticsStore/getStatistics"];
     });
   },

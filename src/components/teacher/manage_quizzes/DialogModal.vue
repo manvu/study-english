@@ -33,6 +33,10 @@ export default {
 </script>
 
 <style scoped>
+h3 {
+  color: #eee;
+}
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -71,6 +75,7 @@ export default {
 }
 
 .modal-body {
+  color: #eee;
   margin: 20px 0;
 }
 

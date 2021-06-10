@@ -41,6 +41,11 @@ const teacherStore = {
       quiz.time_allowed = payload.timeAllowed;
       quiz.skill_id = payload.skillId;
     },
+    resetRating(state, payload) {
+      const quiz = state.quizzes.find((q) => q.quiz_id === payload.quizId);
+      quiz.average_rating = 0
+      quiz.rating_count = 0
+    },
     deleteQuiz(state, payload) {
       state.quizzes = state.quizzes.filter((q) => q.quiz_id !== payload.quizId);
     },
@@ -230,7 +235,6 @@ const teacherStore = {
         });
     },
     updateQuestion(context, payload) {
-      
       return axios(API_LIST.updateQuestion(payload.questionId, payload))
         .then((response) => {
           if (!response.data.error) {
@@ -329,6 +333,7 @@ const teacherStore = {
       return axios(API_LIST.resetRating(payload.quizId))
         .then((response) => {
           if (!response.data.error) {
+            context.commit("resetRating", payload);
             return "OK";
           }
 

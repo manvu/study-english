@@ -16,7 +16,10 @@ const quizStore = {
     toggleFavorite(state, payload) {
       let quizId = payload.id;
       let quiz = state.quizzes.find((q) => q.quiz_id === quizId);
-      quiz.favorite = !quiz.favorite;
+
+      quiz.favorite = quiz.favorite === 1 ? 0 : 1;
+
+      state.quizzes = state.quizzes.filter(q => q.quiz_id > 0)
     },
     updateRating(state, payload) {
       let quizId = payload.id;

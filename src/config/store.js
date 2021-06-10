@@ -10,6 +10,7 @@ import statisticsStore from "../stores/statisticsStore";
 import settingStore from "../stores/settingStore";
 import teacherStore from "../stores/teacherStore";
 
+// Main Vuex store that puts all stores together
 const store = createStore({
   modules: {
     authStore,

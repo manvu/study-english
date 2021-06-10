@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row quiz-container">
+    <div v-if="!isTeacher" class="row quiz-container">
       <similar-quiz
         id="similar-quiz"
         class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3"
@@ -60,6 +60,9 @@
         :timer="timer"
       ></question-palette>
     </div>
+    <div v-else>
+      <h1>Teacher is not allowed to do quizzes</h1>
+    </div>
   </div>
 </template>
 
@@ -87,28 +90,37 @@ export default {
       errorMessage: "",
     };
   },
+  computed: {
+    isTeacher() {
+      return this.$store.getters["authStore/isTeacher"]
+    }
+  },
   created() {
-    const quizId = this.$route.params.id;
+    if (!this.isTeacher) {
+      const quizId = this.$route.params.id;
 
-    this.quizId = quizId;
+      this.quizId = quizId;
 
-    if (quizId) {
-      this.$store
-        .dispatch("questionStore/getQuestionList", { quizId })
-        .then((response) => {
-          if (response === "OK") {
-            this.questions = this.$store.getters[
-              "questionStore/getQuestionList"
-            ];
-            this.timer = this.$store.getters["questionStore/getTimer"];
-            this.hideQuestionPalette = false;
-            this.isLoading = false;
-          } else {
-            this.errorMessage = response;
-          }
-        });
+      if (quizId) {
+        this.$store
+          .dispatch("questionStore/getQuestionList", { quizId })
+          .then((response) => {
+            if (response === "OK") {
+              this.questions = this.$store.getters[
+                "questionStore/getQuestionList"
+              ];
+              this.timer = this.$store.getters["questionStore/getTimer"];
+              this.hideQuestionPalette = false;
+              this.isLoading = false;
+            } else {
+              this.errorMessage = response;
+            }
+          });
+      } else {
+        this.isLoading = false;
+      }
     } else {
-      this.isLoading = false;
+      this.isLoading = false
     }
   },
 };
